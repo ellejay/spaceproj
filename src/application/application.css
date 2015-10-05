@@ -1,0 +1,28 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+
+.root {
+    -fx-background-color: radial-gradient(center 50% 50%, radius 60%, reflect, #172A30, black );
+}
+.ball-style {
+    -fx-fill: radial-gradient(center 50% 18%, radius 50%, reflect, red, #CD2626 80% );
+}
+
+.ball-style-0 {
+    -fx-fill: pink;
+}
+ 
+.ball-style-1 {
+    -fx-fill: green;
+}
+ 
+.ball-style-2 {
+    -fx-fill: red;
+}
+ 
+.ball-style-3 {
+    -fx-fill: yellow;
+}
+
+.ball-style-4 {
+    -fx-fill: blue;
+}
