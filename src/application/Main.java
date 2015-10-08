@@ -11,7 +11,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -44,7 +43,10 @@ public class Main extends Application {
 
         for (Planet current: planets) {
         	Circle planet = new Circle(0, 0, 3);
-        	current.setGUIObject(planet);
+        	current.setGUIPlanet(planet);
+        	
+        	Circle orbit = new Circle(midPoint, midPoint, current.getOrbit() * SCREEN_SCALE);
+        	current.setGUIOrbit(orbit);
         }
  
         EventHandler<ActionEvent> planetMovement = new EventHandler<ActionEvent>() { 
@@ -57,7 +59,7 @@ public class Main extends Application {
                 	
                     // p(x) = x(0) + r * sin(a)
                     // p(y) = y(y) - r * cos(a)
-                    moveBall(current.getGUIObject(),
+                    moveBall(current.getGUIPlanet(),
                     		
                     		midPoint + (current.getOrbit() * SCREEN_SCALE) * 
                     		Math.sin(current.getAngle()),
@@ -79,16 +81,13 @@ public class Main extends Application {
         Pane root = new Pane();
         
         Circle sun = new Circle(midPoint, midPoint, 3);
-        sun.setFill(Color.ORANGE);
+        sun.getStyleClass().add("sun");
         root.getChildren().add(sun);
         
-        for (Planet current: planets) {
-        	Circle x = new Circle(midPoint, midPoint, current.getOrbit() * SCREEN_SCALE);
-        	x.setStroke(Color.GREY);
-        	x.setFill(Color.TRANSPARENT);
-        	root.getChildren().add(x);
+        for (Planet current: planets) {        	
+        	root.getChildren().add(current.getGUIOrbit());
         	
-        	root.getChildren().add(current.getGUIObject());
+        	root.getChildren().add(current.getGUIPlanet());
         }
         
         Scene scene = new Scene(root, SCENE_SIZE, SCENE_SIZE);

@@ -8,7 +8,8 @@ public class Planet {
 	private double orbit;
 	private double period;
 	private double angle;
-	private Circle gui_object;
+	private Circle gui_planet;
+	private Circle gui_orbit;
 	
 	public Planet(String name, double orbit, double period, double angle) {
 		this.name = name;
@@ -26,13 +27,22 @@ public class Planet {
 		
 	}
 	
-	public void setGUIObject(Circle gui_object) {
-		this.gui_object = gui_object;
-		this.gui_object.getStyleClass().add(this.getStyle());
+	public void setGUIOrbit(Circle gui_orbit) {
+		this.gui_orbit = gui_orbit;
+		this.gui_orbit.getStyleClass().add("planet-orbit-path");
 	}
 	
-	public Circle getGUIObject() {
-		return this.gui_object;
+	public Circle getGUIOrbit() {
+		return this.gui_orbit;
+	}
+	
+	public void setGUIPlanet(Circle gui_planet) {
+		this.gui_planet = gui_planet;
+		this.gui_planet.getStyleClass().add(this.getStyle());
+	}
+	
+	public Circle getGUIPlanet() {
+		return this.gui_planet;
 	}
 	
 	public String getStyle() {
