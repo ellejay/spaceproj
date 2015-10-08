@@ -5,9 +5,9 @@ import javafx.scene.shape.Circle;
 public class Planet {
 	
 	private String name;
-	private double orbit;
-	private double period;
-	private double angle;
+	private double orbit; // 10e6 km
+	private double period; // days
+	private double angle; // radians
 	private Circle gui_planet;
 	private Circle gui_orbit;
 	
@@ -19,12 +19,11 @@ public class Planet {
 	}
 	
 	public void incrementAngle() {
-		this.angle += Math.toRadians( (2 * Math.PI) / this.period );
+		this.angle += Math.toRadians( (2 * Math.PI) / (this.period));
 		
 		if (this.angle >= (2 * Math.PI)) {
 			this.angle -= 2 * Math.PI;
         }
-		
 	}
 	
 	public void setGUIOrbit(Circle gui_orbit) {

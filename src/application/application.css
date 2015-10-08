@@ -10,7 +10,7 @@
 
 .planet-orbit-path {
 	-fx-fill: transparent;
-	-fx-stroke: lightgrey;
+	-fx-stroke: darkgrey;
 }
 
 .planet-mercury {

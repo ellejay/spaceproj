@@ -18,10 +18,10 @@ import javafx.util.Duration;
 
 public class Main extends Application {
  
-	// Planet scale
-	private static final int SCREEN_SCALE = 50;
-    // Ball speed
-    private static final int STEP_DURATION_IN_MILLISECONDS = 100;
+	// Planet scale factor
+	private static final double SCREEN_SCALE = 0.2;
+    // Rotation speed
+    private static final double STEP_DURATION = 0.5; //milliseconds
     // Scene Size
     private static final int SCENE_SIZE = 700;
  
@@ -31,15 +31,15 @@ public class Main extends Application {
         final int midPoint = SCENE_SIZE / 2;
         
         List<Planet> planets = new ArrayList<>();
- 
-        planets.add(new Planet("mercury", 0.387, 0.241, 5.2));
-        planets.add(new Planet("venus", 0.723, 0.615, 1.8));
-        planets.add(new Planet("earth", 1.0, 1.0, 1.4));
-        planets.add(new Planet("mars", 1.524, 1.881, 3.6));
-        planets.add(new Planet("jupiter", 5.203, 11.86, 1.6));
-        planets.add(new Planet("saturn", 9.54, 29.46, 4.5));
-        planets.add(new Planet("uranus", 19.18, 84.01, 1.6));
-        planets.add(new Planet("neptune", 30.06, 164.8, 2.4));
+        
+        planets.add(new Planet("mercury", 57.92, 58.65, 5.2));
+        planets.add(new Planet("venus", 108.2, 224.7, 1.8));
+        planets.add(new Planet("earth", 149.6, 365.2, 1.4));
+        planets.add(new Planet("mars", 228.0, 687.0, 3.6));
+        planets.add(new Planet("jupiter", 779.1, 4333.0, 1.6));
+        planets.add(new Planet("saturn", 1426.0, 10759.0, 4.5));
+        planets.add(new Planet("uranus", 2870.0, 30685.0, 1.6));
+        planets.add(new Planet("neptune", 4493.0, 60200.0, 2.4));
 
         for (Planet current: planets) {
         	Circle planet = new Circle(0, 0, 3);
@@ -74,7 +74,7 @@ public class Main extends Application {
         
         
         final Timeline timeline = new Timeline(new KeyFrame(Duration.ZERO, planetMovement), 
-        		new KeyFrame(Duration.millis(STEP_DURATION_IN_MILLISECONDS)));
+        		new KeyFrame(Duration.millis(STEP_DURATION)));
  
         timeline.setCycleCount(Timeline.INDEFINITE);
  
@@ -86,7 +86,6 @@ public class Main extends Application {
         
         for (Planet current: planets) {        	
         	root.getChildren().add(current.getGUIOrbit());
-        	
         	root.getChildren().add(current.getGUIPlanet());
         }
         
@@ -110,7 +109,7 @@ public class Main extends Application {
  
     private void moveBall(Circle ball, double x, double y) {
         TranslateTransition move = new TranslateTransition(
-        		Duration.millis(STEP_DURATION_IN_MILLISECONDS), ball);
+        		Duration.millis(STEP_DURATION), ball);
         move.setToX(x);
         move.setToY(y);
         move.playFromStart();
