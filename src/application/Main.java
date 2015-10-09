@@ -21,16 +21,16 @@ public class Main extends Application {
 	// Planet scale factor
 	private static final double SCREEN_SCALE = 0.2;
     // Rotation speed
-    private static final double STEP_DURATION = 0.5; //milliseconds
+    private static final double STEP_DURATION = 3; //milliseconds
     // Scene Size
-    private static final int SCENE_SIZE = 700;
+    private static final int SCENE_SIZE = 600;
  
     
 	@Override
     public void start(Stage primaryStage) {
         final int midPoint = SCENE_SIZE / 2;
         
-        List<Planet> planets = new ArrayList<>();
+        final List<Planet> planets = new ArrayList<>();
         
         planets.add(new Planet("mercury", 57.92, 58.65, 5.2));
         planets.add(new Planet("venus", 108.2, 224.7, 1.8));

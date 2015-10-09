@@ -10,6 +10,7 @@ public class Planet {
 	private double angle; // radians
 	private Circle gui_planet;
 	private Circle gui_orbit;
+	private Star center;
 	
 	public Planet(String name, double orbit, double period, double angle) {
 		this.name = name;
@@ -19,7 +20,7 @@ public class Planet {
 	}
 	
 	public void incrementAngle() {
-		this.angle += Math.toRadians( (2 * Math.PI) / (this.period));
+		this.angle += Math.toRadians( (2 * Math.PI) / (this.period / 10));
 		
 		if (this.angle >= (2 * Math.PI)) {
 			this.angle -= 2 * Math.PI;
