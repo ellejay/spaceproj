@@ -2,23 +2,22 @@ package application;
 
 import javafx.scene.shape.Circle;
 
-public class Planet {
-	
-	private String name;
+public class Planet extends BodyInSpace {
+
 	private double orbit; // 10e6 km
 	private double period; // days
 	private double angle; // radians
-	private Circle gui_planet;
 	private Circle gui_orbit;
 	private Star center;
 	
-	public Planet(String name, double orbit, double period, double angle) {
-		this.name = name;
+	public Planet(String name, double orbit, double period, double angle, Star center) {
+		super(name, orbit, period);
 		this.orbit = orbit;
 		this.period = period;
 		this.angle = angle;
+		this.center = center;
 	}
-	
+
 	public void incrementAngle() {
 		this.angle += Math.toRadians( (2 * Math.PI) / (this.period / 10));
 		
@@ -37,20 +36,12 @@ public class Planet {
 	}
 	
 	public void setGUIPlanet(Circle gui_planet) {
-		this.gui_planet = gui_planet;
-		this.gui_planet.getStyleClass().add(this.getStyle());
-	}
-	
-	public Circle getGUIPlanet() {
-		return this.gui_planet;
+		this.gui_object = gui_planet;
+		this.gui_object.getStyleClass().add(this.getStyle());
 	}
 	
 	public String getStyle() {
 		return "planet-" + this.name;
-	}
-
-	public String getName() {
-		return this.name;
 	}
 	
 	public double getOrbit() {

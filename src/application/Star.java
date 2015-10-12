@@ -2,21 +2,11 @@ package application;
 
 import javafx.scene.shape.Circle;
 
-public class Star {
+public class Star extends BodyInSpace {
 	
-	private String name;
-	private Circle gui_star;
-	
-	public Star(String name) {
-		this.name = name;
+	public Star(String name, double diameter, double mass, Circle gui_obj) {
+		super(name, diameter, mass);
+		this.gui_object = gui_obj;
 	}
 	
-	public void setGUIStar(Circle star) {
-		this.gui_star = star;
-	}
-	
-	public Circle getGUIStar() {
-		return this.gui_star;
-	}
-
 }

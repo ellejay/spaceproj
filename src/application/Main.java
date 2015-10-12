@@ -32,14 +32,18 @@ public class Main extends Application {
         
         final List<Planet> planets = new ArrayList<>();
         
-        planets.add(new Planet("mercury", 57.92, 58.65, 5.2));
-        planets.add(new Planet("venus", 108.2, 224.7, 1.8));
-        planets.add(new Planet("earth", 149.6, 365.2, 1.4));
-        planets.add(new Planet("mars", 228.0, 687.0, 3.6));
-        planets.add(new Planet("jupiter", 779.1, 4333.0, 1.6));
-        planets.add(new Planet("saturn", 1426.0, 10759.0, 4.5));
-        planets.add(new Planet("uranus", 2870.0, 30685.0, 1.6));
-        planets.add(new Planet("neptune", 4493.0, 60200.0, 2.4));
+        Circle sun_obj = new Circle(midPoint, midPoint, 3);
+        sun_obj.getStyleClass().add("sun");
+        final Star sun = new Star("sun", 1392530, 1.9891e30, sun_obj);
+        
+        planets.add(new Planet("mercury", 57.92, 58.65, 5.2, sun));
+        planets.add(new Planet("venus", 108.2, 224.7, 1.8, sun));
+        planets.add(new Planet("earth", 149.6, 365.2, 1.4, sun));
+        planets.add(new Planet("mars", 228.0, 687.0, 3.6, sun));
+        planets.add(new Planet("jupiter", 779.1, 4333.0, 1.6, sun));
+        planets.add(new Planet("saturn", 1426.0, 10759.0, 4.5, sun));
+        planets.add(new Planet("uranus", 2870.0, 30685.0, 1.6, sun));
+        planets.add(new Planet("neptune", 4493.0, 60200.0, 2.4, sun));
 
         for (Planet current: planets) {
         	Circle planet = new Circle(0, 0, 3);
@@ -59,7 +63,7 @@ public class Main extends Application {
                 	
                     // p(x) = x(0) + r * sin(a)
                     // p(y) = y(y) - r * cos(a)
-                    moveBall(current.getGUIPlanet(),
+                    moveBall(current.getGUIObject(),
                     		
                     		midPoint + (current.getOrbit() * SCREEN_SCALE) * 
                     		Math.sin(current.getAngle()),
@@ -80,13 +84,11 @@ public class Main extends Application {
  
         Pane root = new Pane();
         
-        Circle sun = new Circle(midPoint, midPoint, 3);
-        sun.getStyleClass().add("sun");
-        root.getChildren().add(sun);
+        root.getChildren().add(sun_obj);
         
         for (Planet current: planets) {        	
         	root.getChildren().add(current.getGUIOrbit());
-        	root.getChildren().add(current.getGUIPlanet());
+        	root.getChildren().add(current.getGUIObject());
         }
         
         Scene scene = new Scene(root, SCENE_SIZE, SCENE_SIZE);
