@@ -1,0 +1,12 @@
+.root {
+     -fx-background-image: url("../model/stars.jpg");
+}
+
+.button {
+    -fx-text-fill: white;
+    -fx-background-color: #434343;
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(#2A5058, #61a2b1);
+}

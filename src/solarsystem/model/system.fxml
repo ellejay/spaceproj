@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane fx:controller="solarsystem.model.SolarSystemController" 
+    xmlns:fx="http://javafx.com/fxml" styleClass="root">
+  <padding><Insets top="25" right="25" bottom="10" left="25" /></padding>
+  
+  <center>
+  	<Pane fx:id="systemPane" prefWidth="500" prefHeight="500"/>
+  </center>
+  
+  <bottom>
+  
+  <GridPane alignment="center" hgap="20.0">
+  
+  <Button onAction="#buttonSpeedSlow" text="x0.25" 
+  	GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+  
+  <Button onAction="#buttonSpeedMed" text="x0.5"
+  	GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+  	
+  <Button onAction="#buttonSpeedFast" text="x1"
+  	GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+  
+  <Button onAction="#buttonSpeedLightning" text="x2"
+  	GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+  
+  </GridPane>
+  
+  </bottom>
+  
+  <right>
+  
+  <StackPane>
+  <Slider fx:id="zoomSlide" orientation="VERTICAL" min="0.065" max="1.35" value="0.7075" maxHeight="400"/>
+  </StackPane>
+  
+  </right>
+  
+  <stylesheets>
+    <URL value="@../css/window.css" />
+    <URL value="@../css/spacebodies.css"/>
+  </stylesheets>
+  
+</BorderPane>
