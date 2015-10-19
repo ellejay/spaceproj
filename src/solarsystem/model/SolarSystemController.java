@@ -28,7 +28,7 @@ public class SolarSystemController implements Initializable {
 	private static double SCREEN_SCALE = 0.7075;
 	// Rotation speed
 	private static double STEP_DURATION = 2; //milliseconds
-	private static double midPoint = 315;
+	private static double midPoint = 295;
 	private final List<Planet> planets = new ArrayList<>();
 	private Timeline timeline = null;
 	
@@ -147,6 +147,10 @@ public class SolarSystemController implements Initializable {
     private void updateSpeed(double speed) {
     	timeline.setRate(speed);
     	STEP_DURATION = speed;
+    }
+    
+    @FXML protected void stopTimeline(ActionEvent event) {    	
+    	timeline.pause();
     }
     
 }
