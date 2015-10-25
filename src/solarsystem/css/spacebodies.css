@@ -7,34 +7,34 @@
 	-fx-stroke: darkgrey;
 }
 
-.planet-mercury {
+.body-mercury {
     -fx-fill: #A8778C;
 }
  
-.planet-venus {
+.body-venus {
     -fx-fill: #AC8697;
 }
  
-.planet-earth {
+.body-earth {
     -fx-fill: #AF94A3;
 }
  
-.planet-mars {
+.body-mars {
     -fx-fill: #B3A3AE;
 }
 
-.planet-jupiter {
+.body-jupiter {
     -fx-fill: #B6B2BA;
 }
 
-.planet-saturn {
+.body-saturn {
     -fx-fill: #BAC1C5;
 }
 
-.planet-neptune {
+.body-neptune {
     -fx-fill: #BDCFD1;
 }
 
-.planet-uranus {
+.body-uranus {
     -fx-fill: #C1DEDC;
 }
