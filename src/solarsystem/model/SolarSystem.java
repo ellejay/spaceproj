@@ -1,4 +1,4 @@
-package solarsystem.model;
+package src.solarsystem.model;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

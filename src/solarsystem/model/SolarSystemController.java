@@ -1,9 +1,7 @@
-package solarsystem.model;
+package src.solarsystem.model;
  
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.animation.KeyFrame;
@@ -25,18 +23,11 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import solarsystem.objects.BodyInSpace;
+import src.solarsystem.objects.BodyInSpace;
+import src.solarsystem.model.SpaceObjects;
  
-public class SolarSystemController implements Initializable {
-	
-	// Planet scale factor
-	private static double SCREEN_SCALE = 0.7075;
-	// Rotation speed
-	private static double STEP_DURATION = 2; //milliseconds
-	private static double midPoint = 295;
-	private final List<BodyInSpace> planets = new ArrayList<>();
-	private Timeline timeline = null;
-	
+public class SolarSystemController extends SuperController implements Initializable {
+		
     @FXML private Text actiontarget;
     @FXML private Pane systemPane;
     @FXML private Slider zoomSlide;
@@ -45,7 +36,7 @@ public class SolarSystemController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setUp();
-    	
+        
         zoomSlide.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov,
 					Number old_val, Number new_val) {
@@ -62,29 +53,9 @@ public class SolarSystemController implements Initializable {
     
     
     public void setUp() {
-	
-		Circle sun_obj = new Circle(midPoint, midPoint, 3);
-		sun_obj.getStyleClass().add("sun");
-		final BodyInSpace sun = new BodyInSpace("sun", 0.0, 0.0, 0.0, null);
-		sun.setGUIPlanet(sun_obj);
-	
-		planets.add(new BodyInSpace("mercury", 57.92, 58.65, 5.2, sun));
-		planets.add(new BodyInSpace("venus", 108.2, 224.7, 1.8, sun));
-		planets.add(new BodyInSpace("earth", 149.6, 365.2, 1.4, sun));
-		planets.add(new BodyInSpace("mars", 228.0, 687.0, 3.6, sun));
-		planets.add(new BodyInSpace("jupiter", 779.1, 4333.0, 1.6, sun));
-		planets.add(new BodyInSpace("saturn", 1426.0, 10759.0, 4.5, sun));
-		planets.add(new BodyInSpace("uranus", 2870.0, 30685.0, 1.6, sun));
-		planets.add(new BodyInSpace("neptune", 4493.0, 60200.0, 2.4, sun));
+    	
+		planets = SpaceObjects.getPlanets();
 		
-		for (BodyInSpace current: planets) {
-			Circle planet = new Circle(0, 0, 3);
-			current.setGUIPlanet(planet);
-
-			Circle orbit = new Circle(midPoint, midPoint, current.getOrbit() * SCREEN_SCALE);
-			current.setGUIOrbit(orbit);
-		}
-
 		EventHandler<ActionEvent> planetMovement = new EventHandler<ActionEvent>() { 
 			@Override
 			public void handle(ActionEvent event) {
@@ -114,7 +85,9 @@ public class SolarSystemController implements Initializable {
 
 		timeline.setCycleCount(Timeline.INDEFINITE);
 		
-		systemPane.getChildren().add(sun_obj);
+		BodyInSpace sun = SpaceObjects.getSun();
+		sun.moveGUIObject(midPoint, midPoint);
+		systemPane.getChildren().add(sun.getGUIObject());
 
 		for (BodyInSpace current: planets) {        	
 			systemPane.getChildren().add(current.getGUIOrbit());
@@ -158,11 +131,14 @@ public class SolarSystemController implements Initializable {
     
     @FXML protected void stopTimeline(ActionEvent event) throws IOException { 
     	timeline.pause();
+    	
     	Stage stage; 
     	Parent root;
     	stage=(Stage) switchScene.getScene().getWindow();
-    	root = FXMLLoader.load(getClass().getResource("system2.fxml"));
+    	
+    	root = FXMLLoader.load(getClass().getResource("pathselect.fxml"));
     	Scene scene = new Scene(root, 650, 650);
+    	
         stage.setScene(scene);
         stage.show();
     }

@@ -1,4 +1,4 @@
-package solarsystem.objects;
+package src.solarsystem.objects;
 
 import javafx.scene.shape.Circle;
 
@@ -17,7 +17,7 @@ public class BodyInSpace {
 	private BodyInSpace center;
 	
 	public BodyInSpace(String name, double orbit, double period, 
-			double angle, BodyInSpace center) {
+			double angle, BodyInSpace center, double orbit_scale) {
 		this.name = name;
 		this.diameter = diameter;
 		this.mass = mass;
@@ -25,6 +25,12 @@ public class BodyInSpace {
 		this.period = period;
 		this.angle = angle;
 		this.center = center;
+
+		this.gui_object = new Circle(0, 0, 3);
+		this.gui_object.getStyleClass().add(this.getStyle());
+		
+		this.gui_orbit = new Circle(295, 295, orbit * orbit_scale);
+		this.gui_orbit.getStyleClass().add("planet-orbit-path");
 	}
 
 	public String getName() {
@@ -64,13 +70,13 @@ public class BodyInSpace {
 		this.gui_orbit.getStyleClass().add("planet-orbit-path");
 	}
 	
-	public Circle getGUIOrbit() {
-		return this.gui_orbit;
+	public void moveGUIObject(double point_x, double point_y){
+		this.gui_object.setLayoutX(point_x);
+		this.gui_object.setLayoutY(point_y);
 	}
 	
-	public void setGUIPlanet(Circle gui_planet) {
-		this.gui_object = gui_planet;
-		this.gui_object.getStyleClass().add(this.getStyle());
+	public Circle getGUIOrbit() {
+		return this.gui_orbit;
 	}
 	
 	public String getStyle() {
