@@ -33,6 +33,11 @@ public class BodyInSpace {
 		this.gui_orbit.getStyleClass().add("planet-orbit-path");
 	}
 
+	public void resetPlanet() {
+		this.gui_object = new Circle(0, 0, 3);
+		this.gui_object.getStyleClass().add(this.getStyle());
+	}
+	
 	public String getName() {
 		return this.name;
 	}

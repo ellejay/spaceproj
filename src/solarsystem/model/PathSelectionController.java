@@ -5,11 +5,13 @@ import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Slider;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Circle;
 import src.solarsystem.objects.BodyInSpace;
 import src.solarsystem.model.SpaceObjects;
  
@@ -29,14 +31,22 @@ public class PathSelectionController extends SuperController implements Initiali
 				public void changed(ObservableValue<? extends Number> ov,
 						Number old_val, Number new_val) {
 					SCREEN_SCALE = (double) new_val;
-					for (BodyInSpace current: planets) {        	
-						systemPane.getChildren().remove(current.getGUIOrbit());
-						Circle orbit = new Circle(midPoint, midPoint, current.getOrbit() * SCREEN_SCALE);
-						current.setGUIOrbit(orbit);
-						systemPane.getChildren().add(orbit);
+					
+					for (BodyInSpace current: planets) {
+						current.getGUIOrbit().setRadius(current.getOrbit() * SCREEN_SCALE);
 						
-						//current.moveGUIObject(0, 0);
-						current.getGUIObject().relocate(0.0, 0.0);
+						if ((double) new_val > 0.455) {
+							current.getGUIObject().setRadius(4);
+						}
+						else {
+							current.getGUIObject().setRadius(3);
+						}
+						
+						current.getGUIObject().setCenterX(midPoint + (current.getOrbit() * SCREEN_SCALE) * 
+								Math.sin(current.getAngle()));
+				
+						current.getGUIObject().setCenterY(midPoint - (current.getOrbit() * SCREEN_SCALE) * 
+								Math.cos(current.getAngle()));
 					}
 				}
 			});
@@ -45,11 +55,46 @@ public class PathSelectionController extends SuperController implements Initiali
 		sun.moveGUIObject(midPoint, midPoint);
 		systemPane.getChildren().add(sun.getGUIObject());
 		
-		for (BodyInSpace current: planets) {        	
+		for (BodyInSpace current: planets) {
+			current.getGUIOrbit().setRadius(current.getOrbit() * SCREEN_SCALE);
 			systemPane.getChildren().add(current.getGUIOrbit());
+		}
+		
+		for (BodyInSpace current: planets) {   
+			current.resetPlanet();
+			
+			current.getGUIObject().setCenterX(midPoint + (current.getOrbit() * SCREEN_SCALE) * 
+					Math.sin(current.getAngle()));
+	
+			current.getGUIObject().setCenterY(midPoint - (current.getOrbit() * SCREEN_SCALE) * 
+					Math.cos(current.getAngle()));
+			
 			systemPane.getChildren().add(current.getGUIObject());
+			
+			current.getGUIObject().setOnMouseClicked(new EventHandler<MouseEvent>()
+	        {
+	            @Override
+	            public void handle(MouseEvent t) {
+	                System.out.println(current.getName());
+	            }
+	        });
 		}
 		
 	}
+	
+	@FXML protected void moveLeft(ActionEvent event){
+		systemPane.setTranslateX(systemPane.getTranslateX() + 20);
+	}
+	
+	@FXML protected void moveRight(ActionEvent event){
+		systemPane.setTranslateX(systemPane.getTranslateX() - 20);
+	}
 
+	@FXML protected void moveUp(ActionEvent event){
+		systemPane.setTranslateY(systemPane.getTranslateY() + 20);
+	}
+	
+	@FXML protected void moveDown(ActionEvent event){
+		systemPane.setTranslateY(systemPane.getTranslateY() - 20);
+	}
 }
