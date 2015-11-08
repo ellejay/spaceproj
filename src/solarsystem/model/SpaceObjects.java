@@ -1,6 +1,6 @@
-package src.solarsystem.model;
+package solarsystem.model;
 
-import src.solarsystem.objects.BodyInSpace;
+import solarsystem.objects.BodyInSpace;
 
 public class SpaceObjects {
 	

@@ -1,4 +1,4 @@
-package src.solarsystem.model;
+package solarsystem.model;
  
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -12,8 +12,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import src.solarsystem.objects.BodyInSpace;
-import src.solarsystem.model.SpaceObjects;
+import solarsystem.objects.BodyInSpace;
+import solarsystem.model.SpaceObjects;
  
 public class PathSelectionController extends SuperController implements Initializable {
 	

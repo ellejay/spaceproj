@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane fx:controller="src.solarsystem.model.PathSelectionController" 
+<BorderPane fx:controller="solarsystem.model.PathSelectionController" 
     xmlns:fx="http://javafx.com/fxml" styleClass="root">
   <padding><Insets top="25" right="25" bottom="10" left="25" /></padding>
   

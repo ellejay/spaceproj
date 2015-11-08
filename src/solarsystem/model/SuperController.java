@@ -1,7 +1,7 @@
-package src.solarsystem.model;
+package solarsystem.model;
 
 import javafx.animation.Timeline;
-import src.solarsystem.objects.BodyInSpace;
+import solarsystem.objects.BodyInSpace;
 
 public class SuperController {
 	

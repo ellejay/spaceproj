@@ -1,4 +1,4 @@
-package src.solarsystem.model;
+package solarsystem.model;
  
 import java.io.IOException;
 import java.net.URL;
@@ -23,8 +23,8 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import src.solarsystem.objects.BodyInSpace;
-import src.solarsystem.model.SpaceObjects;
+import solarsystem.objects.BodyInSpace;
+import solarsystem.model.SpaceObjects;
  
 public class SolarSystemController extends SuperController implements Initializable {
 		

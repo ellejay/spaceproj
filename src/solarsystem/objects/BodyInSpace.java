@@ -1,4 +1,4 @@
-package src.solarsystem.objects;
+package solarsystem.objects;
 
 import javafx.scene.shape.Circle;
 
