@@ -18,30 +18,12 @@
   
   <StackPane>
   <Slider fx:id="zoomSlide" orientation="VERTICAL" min="0.065" max="1.35" value="0.7075" maxHeight="400"/>
+  
+  <Button onAction="#centerPlanets" text="Centre" translateY="280"/>
   </StackPane>
   
   </right>
-  
-   <bottom>
-  
-  <GridPane alignment="CENTER" hgap="20.0">
-  
-  <Button onAction="#moveLeft" text="Left" 
-  	GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-  
-  <Button onAction="#moveRight" text="Right"
-  	GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-  
-  <Button onAction="#moveUp" text="Up"
-  	GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-  
-  <Button onAction="#moveDown" text="Down"
-  	GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-  
-  </GridPane>
-  
-  </bottom>
-  
+   
   
   <stylesheets>
     <URL value="@../resources/css/window.css" />

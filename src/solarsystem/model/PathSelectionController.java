@@ -10,6 +10,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Slider;
+import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import solarsystem.objects.BodyInSpace;
@@ -36,7 +37,7 @@ public class PathSelectionController extends SuperController implements Initiali
 						current.getGUIOrbit().setRadius(current.getOrbit() * SCREEN_SCALE);
 						
 						if ((double) new_val > 0.455) {
-							current.getGUIObject().setRadius(4);
+							current.getGUIObject().setRadius(8);
 						}
 						else {
 							current.getGUIObject().setRadius(3);
@@ -79,22 +80,47 @@ public class PathSelectionController extends SuperController implements Initiali
 	            }
 	        });
 		}
+
+		EventHandler<MouseEvent> moveSystem = new EventHandler<MouseEvent>() {
+			
+			double startX;
+			double startY;
+
+			@Override
+			public void handle(MouseEvent event) {
+				
+				if (event.getEventType() == MouseDragEvent.MOUSE_DRAG_ENTERED) {
+					startX = event.getX();
+					startY = event.getY();
+				}
+				else {
+					systemPane.setTranslateX(systemPane.getTranslateX() + (event.getX() - startX));
+					systemPane.setTranslateY(systemPane.getTranslateY() + (event.getY() - startY));
+				}
+				
+			}
+			
+		};
+		
+		EventHandler<MouseEvent> startDrag = new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent event) {
+				systemPane.startFullDrag();
+				
+			}
+			
+		};
+		
+		systemPane.addEventHandler(MouseDragEvent.DRAG_DETECTED, startDrag);
+		systemPane.addEventHandler(MouseDragEvent.MOUSE_DRAG_ENTERED, moveSystem);	
+		systemPane.addEventHandler(MouseDragEvent.MOUSE_DRAG_OVER, moveSystem);
+		systemPane.addEventHandler(MouseDragEvent.MOUSE_DRAG_EXITED, moveSystem);
 		
 	}
 	
-	@FXML protected void moveLeft(ActionEvent event){
-		systemPane.setTranslateX(systemPane.getTranslateX() + 20);
-	}
-	
-	@FXML protected void moveRight(ActionEvent event){
-		systemPane.setTranslateX(systemPane.getTranslateX() - 20);
-	}
-
-	@FXML protected void moveUp(ActionEvent event){
-		systemPane.setTranslateY(systemPane.getTranslateY() + 20);
-	}
-	
-	@FXML protected void moveDown(ActionEvent event){
-		systemPane.setTranslateY(systemPane.getTranslateY() - 20);
+	@FXML protected void centerPlanets(ActionEvent event){
+		systemPane.setTranslateX(0);
+		systemPane.setTranslateY(0);
 	}
 }
