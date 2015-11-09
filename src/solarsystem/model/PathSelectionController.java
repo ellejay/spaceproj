@@ -1,6 +1,7 @@
 package solarsystem.model;
  
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
@@ -115,7 +116,7 @@ public class PathSelectionController extends SuperController implements Initiali
 		systemPane.addEventHandler(MouseDragEvent.MOUSE_DRAG_EXITED, moveSystem);
 		
 		
-		
+		ArrayList<String[]> route = new ArrayList<String[]>();
 		
 		
 		EventHandler<MouseEvent> planetLander = new EventHandler<MouseEvent>() {
@@ -127,11 +128,52 @@ public class PathSelectionController extends SuperController implements Initiali
 			@Override
 			public void handle(MouseEvent event) {	
 				String name = null;
+				String[] dest = new String[2];
+				
+				for (String[] blah: route) {
+					System.out.print(blah[0] + " " + blah[1] + " / ");
+				}
+				System.out.print("\n");
+				
 				for (BodyInSpace current: planets) {
 					if (event.getTarget().equals(current.getGUIObject())){
 						name = current.getName();
-						System.out.println(name);
+						//System.out.println(name);
+						dest[0] = name;
+						
 						contextFileMenu.show(systemPane, event.getScreenX(), event.getScreenY());
+						orbitItem.setOnAction(new EventHandler<ActionEvent>() {
+							@Override
+							public void handle(ActionEvent event) {
+								//System.out.println("--> Orbit");
+								dest[1] = "orbit";
+								route.add(dest);
+							}
+						});
+						
+						landItem.setOnAction(new EventHandler<ActionEvent>() {
+							@Override
+							public void handle(ActionEvent event) {
+								//System.out.println("---> Land");
+								dest[1] = "land";
+								route.add(dest);
+							}
+						});
+						
+						try{
+							String[] prev = route.get(route.size() - 1);
+							
+							System.out.println(prev[0] + " " + prev[1]);
+							if (prev[0] != name || prev[1] != "orbit") {
+								landItem.setDisable(true);
+								orbitItem.setDisable(false);
+							}
+							else {
+								landItem.setDisable(false);
+							}
+						} catch (ArrayIndexOutOfBoundsException e) {
+							orbitItem.setDisable(true);
+						}
 					}
 				}
 				if (name == null) {
