@@ -9,7 +9,10 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -71,14 +74,6 @@ public class PathSelectionController extends SuperController implements Initiali
 					Math.cos(current.getAngle()));
 			
 			systemPane.getChildren().add(current.getGUIObject());
-			
-			current.getGUIObject().setOnMouseClicked(new EventHandler<MouseEvent>()
-	        {
-	            @Override
-	            public void handle(MouseEvent t) {
-	                System.out.println(current.getName());
-	            }
-	        });
 		}
 
 		EventHandler<MouseEvent> moveSystem = new EventHandler<MouseEvent>() {
@@ -98,6 +93,8 @@ public class PathSelectionController extends SuperController implements Initiali
 					systemPane.setTranslateY(systemPane.getTranslateY() + (event.getY() - startY));
 				}
 				
+				event.consume();
+				
 			}
 			
 		};
@@ -116,6 +113,38 @@ public class PathSelectionController extends SuperController implements Initiali
 		systemPane.addEventHandler(MouseDragEvent.MOUSE_DRAG_ENTERED, moveSystem);	
 		systemPane.addEventHandler(MouseDragEvent.MOUSE_DRAG_OVER, moveSystem);
 		systemPane.addEventHandler(MouseDragEvent.MOUSE_DRAG_EXITED, moveSystem);
+		
+		
+		
+		
+		
+		EventHandler<MouseEvent> planetLander = new EventHandler<MouseEvent>() {
+			
+			MenuItem orbitItem = new MenuItem("Orbit");
+			MenuItem landItem = new MenuItem("Land");
+			ContextMenu contextFileMenu = new ContextMenu(orbitItem, landItem);
+
+			@Override
+			public void handle(MouseEvent event) {	
+				String name = null;
+				for (BodyInSpace current: planets) {
+					if (event.getTarget().equals(current.getGUIObject())){
+						name = current.getName();
+						System.out.println(name);
+						contextFileMenu.show(systemPane, event.getScreenX(), event.getScreenY());
+					}
+				}
+				if (name == null) {
+			        contextFileMenu.hide();
+				}
+				
+				event.consume();
+			}
+			
+		};
+		
+
+		systemPane.addEventHandler(MouseEvent.MOUSE_CLICKED, planetLander);
 		
 	}
 	
