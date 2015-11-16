@@ -7,6 +7,10 @@
 	-fx-stroke: darkgrey;
 }
 
+.body-moon {
+	-fx-fill: yellow;
+}
+
 .body-mercury {
     -fx-fill: #A8778C;
 }

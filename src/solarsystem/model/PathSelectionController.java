@@ -38,7 +38,7 @@ public class PathSelectionController extends SuperController implements Initiali
 					SCREEN_SCALE = (double) new_val;
 					
 					for (BodyInSpace current: planets) {
-						current.getGUIOrbit().setRadius(current.getOrbit() * SCREEN_SCALE);
+						current.adjustGUIOrbit(current.getOrbit() * SCREEN_SCALE);
 						
 						if ((double) new_val > 0.455) {
 							current.getGUIObject().setRadius(8);
@@ -47,32 +47,36 @@ public class PathSelectionController extends SuperController implements Initiali
 							current.getGUIObject().setRadius(3);
 						}
 						
-						current.getGUIObject().setCenterX(midPoint + (current.getOrbit() * SCREEN_SCALE) * 
-								Math.sin(current.getAngle()));
-				
-						current.getGUIObject().setCenterY(midPoint - (current.getOrbit() * SCREEN_SCALE) * 
-								Math.cos(current.getAngle()));
+						current.moveGUIObject(
+								(current.getParent().getX() + 
+								(current.getOrbit() * SCREEN_SCALE) * 
+								Math.sin(current.getAngle())), 
+								
+								(current.getParent().getY() - 
+								(current.getOrbit() * SCREEN_SCALE) * 
+								Math.cos(current.getAngle())));
 					}
 				}
 			});
 
-		BodyInSpace sun = SpaceObjects.getSun();
-		sun.moveGUIObject(midPoint, midPoint);
-		systemPane.getChildren().add(sun.getGUIObject());
+		systemPane.getChildren().add(SpaceObjects.getSun().getGUIObject());
 		
 		for (BodyInSpace current: planets) {
-			current.getGUIOrbit().setRadius(current.getOrbit() * SCREEN_SCALE);
+			current.adjustGUIOrbit(current.getOrbit() * SCREEN_SCALE);
 			systemPane.getChildren().add(current.getGUIOrbit());
 		}
 		
 		for (BodyInSpace current: planets) {   
 			current.resetPlanet();
 			
-			current.getGUIObject().setCenterX(midPoint + (current.getOrbit() * SCREEN_SCALE) * 
-					Math.sin(current.getAngle()));
-	
-			current.getGUIObject().setCenterY(midPoint - (current.getOrbit() * SCREEN_SCALE) * 
-					Math.cos(current.getAngle()));
+			current.moveGUIObject(
+					(current.getParent().getX() + 
+					(current.getOrbit() * SCREEN_SCALE) * 
+					Math.sin(current.getAngle())), 
+					
+					(current.getParent().getY() - 
+					(current.getOrbit() * SCREEN_SCALE) * 
+					Math.cos(current.getAngle())));
 			
 			systemPane.getChildren().add(current.getGUIObject());
 		}

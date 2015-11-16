@@ -62,6 +62,11 @@ public class BodyInSpace {
 		return pos_y;
 	}
 	
+	public void setPosition(double x, double y) {
+		pos_x = x;
+		pos_y = y;
+	}
+	
 	public void incrementAngle() {
 		this.angle += Math.toRadians( (2 * Math.PI) / (this.period / 10));
 		
@@ -70,14 +75,18 @@ public class BodyInSpace {
         }
 	}
 	
-	public void setGUIOrbit(Circle gui_orbit) {
-		this.gui_orbit = gui_orbit;
-		this.gui_orbit.getStyleClass().add("planet-orbit-path");
+	public void adjustGUIOrbit(double radius) {
+		this.gui_orbit.setRadius(radius);
+		this.gui_orbit.setCenterX(this.center.getX());
+		this.gui_orbit.setCenterY(this.center.getY());
 	}
 	
 	public void moveGUIObject(double point_x, double point_y){
-		this.gui_object.setLayoutX(point_x);
-		this.gui_object.setLayoutY(point_y);
+		this.gui_object.setCenterX(point_x);
+		this.gui_object.setCenterY(point_y);
+		
+		this.pos_x = point_x;
+		this.pos_y = point_y;
 	}
 	
 	public Circle getGUIOrbit() {
@@ -100,4 +109,7 @@ public class BodyInSpace {
 		return this.angle;
 	}
 	
+	public BodyInSpace getParent() {
+		return this.center;
+	}
 }

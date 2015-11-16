@@ -42,10 +42,7 @@ public class SolarSystemController extends SuperController implements Initializa
 					Number old_val, Number new_val) {
 				SCREEN_SCALE = (double) new_val;
 				for (BodyInSpace current: planets) {        	
-					systemPane.getChildren().remove(current.getGUIOrbit());
-					Circle orbit = new Circle(midPoint, midPoint, current.getOrbit() * SCREEN_SCALE);
-					current.setGUIOrbit(orbit);
-					systemPane.getChildren().add(orbit);
+					current.adjustGUIOrbit(current.getOrbit() * SCREEN_SCALE);
 				}
 			}
 		});
@@ -66,13 +63,18 @@ public class SolarSystemController extends SuperController implements Initializa
 
 					// p(x) = x(0) + r * sin(a)
 					// p(y) = y(y) - r * cos(a)
-					moveBall(current.getGUIObject(),
-
-							midPoint + (current.getOrbit() * SCREEN_SCALE) * 
-							Math.sin(current.getAngle()),
-
-							midPoint - (current.getOrbit() * SCREEN_SCALE) * 
-							Math.cos(current.getAngle()));
+					
+					double moveX = current.getParent().getX() + (current.getOrbit() * SCREEN_SCALE) * 
+							Math.sin(current.getAngle());
+					
+					double moveY = current.getParent().getY() - (current.getOrbit() * SCREEN_SCALE) * 
+							Math.cos(current.getAngle());
+					
+					current.setPosition(moveX, moveY);
+					
+					moveBall(current.getGUIObject(), moveX, moveY);
+					
+					//current.moveGUIObject(moveX, moveY);
 
 				}
 
@@ -89,7 +91,8 @@ public class SolarSystemController extends SuperController implements Initializa
 		sun.moveGUIObject(midPoint, midPoint);
 		systemPane.getChildren().add(sun.getGUIObject());
 
-		for (BodyInSpace current: planets) {        	
+		for (BodyInSpace current: planets) {  
+			current.adjustGUIOrbit(current.getOrbit() * SCREEN_SCALE);
 			systemPane.getChildren().add(current.getGUIOrbit());
 			systemPane.getChildren().add(current.getGUIObject());
 		}

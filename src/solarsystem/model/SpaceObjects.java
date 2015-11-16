@@ -16,9 +16,10 @@ public class SpaceObjects {
 	static BodyInSpace saturn = new BodyInSpace("saturn", 1426.0, 10759.0, 4.5, sun, SCREEN_SCALE);
 	static BodyInSpace uranus = new BodyInSpace("uranus", 2870.0, 30685.0, 1.6, sun, SCREEN_SCALE);
 	static BodyInSpace neptune = new BodyInSpace("neptune", 4493.0, 60200.0, 2.4, sun, SCREEN_SCALE);
+	static BodyInSpace moon = new BodyInSpace("moon", 20.0, 50.0, 1.2, earth, SCREEN_SCALE);
 	
 
-	private static BodyInSpace[] planets = {mercury, venus, earth, mars, jupiter, saturn, uranus, neptune};
+	private static BodyInSpace[] planets = {mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, moon};
 	
 	public static BodyInSpace[] getPlanets() {
 		return planets;
@@ -28,4 +29,8 @@ public class SpaceObjects {
 		return sun;
 	}
 
+	public static BodyInSpace getMoon() {
+		return moon;
+	}
+	
 }
