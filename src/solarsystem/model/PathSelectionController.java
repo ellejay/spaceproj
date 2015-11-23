@@ -1,22 +1,31 @@
 package solarsystem.model;
  
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
+
+import com.sun.prism.paint.Color;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import solarsystem.objects.BodyInSpace;
 import solarsystem.model.SpaceObjects;
  
@@ -152,6 +161,19 @@ public class PathSelectionController extends SuperController implements Initiali
 								//System.out.println("--> Orbit");
 								dest[1] = "orbit";
 								route.add(dest);
+
+								Parent root;
+								try {
+									root = FXMLLoader.load(getClass().getResource("orbitdialog.fxml"));
+									Stage dialog = new Stage();
+									dialog.setTitle("FXML Space");
+									dialog.setScene(new Scene(root, 200, 150));
+									dialog.showAndWait();
+								} catch (IOException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+
 							}
 						});
 						

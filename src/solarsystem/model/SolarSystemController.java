@@ -71,6 +71,7 @@ public class SolarSystemController extends SuperController implements Initializa
 							Math.cos(current.getAngle());
 					
 					current.setPosition(moveX, moveY);
+					current.adjustGUIOrbit(current.getOrbit() * SCREEN_SCALE);
 					
 					moveBall(current.getGUIObject(), moveX, moveY);
 					
