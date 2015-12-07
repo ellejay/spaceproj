@@ -12,5 +12,6 @@ public class SuperController {
  	protected Timeline timeline = null;
  	// Rotation speed
  	protected static double STEP_DURATION = 2; //milliseconds
+ 	protected static double[] orbitParams = new double[2];
 
 }

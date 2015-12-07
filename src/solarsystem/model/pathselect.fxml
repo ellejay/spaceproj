@@ -23,6 +23,13 @@
   </StackPane>
   
   </right>
+  
+  <bottom>
+  <Pane>
+  <Label fx:id="routeList" styleClass="route_label" text="Start Journey:"/>
+  </Pane>
+  
+  </bottom>
    
   
   <stylesheets>

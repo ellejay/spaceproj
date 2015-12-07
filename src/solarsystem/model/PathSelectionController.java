@@ -3,10 +3,7 @@ package solarsystem.model;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Optional;
 import java.util.ResourceBundle;
-
-import com.sun.prism.paint.Color;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -18,10 +15,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -33,6 +29,7 @@ public class PathSelectionController extends SuperController implements Initiali
 	
     @FXML private Pane systemPane;
     @FXML private Slider zoomSlide;
+    @FXML private Label routeList;
     
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -129,7 +126,8 @@ public class PathSelectionController extends SuperController implements Initiali
 		systemPane.addEventHandler(MouseDragEvent.MOUSE_DRAG_EXITED, moveSystem);
 		
 		
-		ArrayList<String[]> route = new ArrayList<String[]>();
+		ArrayList<String> routePlanets = new ArrayList<String>();
+		ArrayList<double[]> routeOrbit = new ArrayList<double[]>();
 		
 		
 		EventHandler<MouseEvent> planetLander = new EventHandler<MouseEvent>() {
@@ -140,27 +138,21 @@ public class PathSelectionController extends SuperController implements Initiali
 
 			@Override
 			public void handle(MouseEvent event) {	
-				String name = null;
-				String[] dest = new String[2];
-				
-				for (String[] blah: route) {
-					System.out.print(blah[0] + " " + blah[1] + " / ");
-				}
-				System.out.print("\n");
+				double[] landed = {0, 0};
+				boolean planetFound = false;
 				
 				for (BodyInSpace current: planets) {
 					if (event.getTarget().equals(current.getGUIObject())){
-						name = current.getName();
-						//System.out.println(name);
-						dest[0] = name;
+						String name = current.getName();
+						planetFound = true;
 						
 						contextFileMenu.show(systemPane, event.getScreenX(), event.getScreenY());
+						
 						orbitItem.setOnAction(new EventHandler<ActionEvent>() {
 							@Override
 							public void handle(ActionEvent event) {
-								//System.out.println("--> Orbit");
-								dest[1] = "orbit";
-								route.add(dest);
+								
+								routeList.setText(routeList.getText() + " " + name + " Orbit :");
 
 								Parent root;
 								try {
@@ -169,6 +161,10 @@ public class PathSelectionController extends SuperController implements Initiali
 									dialog.setTitle("FXML Space");
 									dialog.setScene(new Scene(root, 200, 150));
 									dialog.showAndWait();
+									
+									routePlanets.add(name);
+									routeOrbit.add(orbitParams);
+									
 								} catch (IOException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
@@ -180,17 +176,18 @@ public class PathSelectionController extends SuperController implements Initiali
 						landItem.setOnAction(new EventHandler<ActionEvent>() {
 							@Override
 							public void handle(ActionEvent event) {
-								//System.out.println("---> Land");
-								dest[1] = "land";
-								route.add(dest);
+								routePlanets.add(name);
+								routeOrbit.add(landed);
+								routeList.setText(routeList.getText() + " " + name + " Surface :");
 							}
 						});
 						
 						try{
-							String[] prev = route.get(route.size() - 1);
+							int lastItem = routePlanets.size() - 1;
+							String prev = routePlanets.get(lastItem);
+							double[] prevOrbit = routeOrbit.get(lastItem);
 							
-							System.out.println(prev[0] + " " + prev[1]);
-							if (prev[0] != name || prev[1] != "orbit") {
+							if (prev != name || (prevOrbit[0] == 0.0 && prevOrbit[1] == 0.0)) {
 								landItem.setDisable(true);
 								orbitItem.setDisable(false);
 							}
@@ -202,7 +199,7 @@ public class PathSelectionController extends SuperController implements Initiali
 						}
 					}
 				}
-				if (name == null) {
+				if (!planetFound) {
 			        contextFileMenu.hide();
 				}
 				

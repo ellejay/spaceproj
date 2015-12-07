@@ -1,4 +1,4 @@
-.body-sun {
+.body-Sun {
 	-fx-fill: sienna;
 }
 
@@ -7,38 +7,38 @@
 	-fx-stroke: darkgrey;
 }
 
-.body-moon {
+.body-Moon {
 	-fx-fill: yellow;
 }
 
-.body-mercury {
+.body-Mercury {
     -fx-fill: #A8778C;
 }
  
-.body-venus {
+.body-Venus {
     -fx-fill: #AC8697;
 }
  
-.body-earth {
+.body-Earth {
     -fx-fill: #AF94A3;
 }
  
-.body-mars {
+.body-Mars {
     -fx-fill: #B3A3AE;
 }
 
-.body-jupiter {
+.body-Jupiter {
     -fx-fill: #B6B2BA;
 }
 
-.body-saturn {
+.body-Saturn {
     -fx-fill: #BAC1C5;
 }
 
-.body-neptune {
+.body-Neptune {
     -fx-fill: #BDCFD1;
 }
 
-.body-uranus {
+.body-Uranus {
     -fx-fill: #C1DEDC;
 }
