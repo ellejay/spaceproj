@@ -7,8 +7,12 @@
 	-fx-stroke: darkgrey;
 }
 
-.body-Moon {
+.body-Spaceship {
 	-fx-fill: yellow;
+}
+
+.body-Moon {
+	-fx-fill: #AF94A3;
 }
 
 .body-Mercury {

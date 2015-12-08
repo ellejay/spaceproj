@@ -14,6 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -30,6 +31,7 @@ public class PathSelectionController extends SuperController implements Initiali
     @FXML private Pane systemPane;
     @FXML private Slider zoomSlide;
     @FXML private Label routeList;
+    @FXML private Button startButton;
     
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -151,8 +153,6 @@ public class PathSelectionController extends SuperController implements Initiali
 						orbitItem.setOnAction(new EventHandler<ActionEvent>() {
 							@Override
 							public void handle(ActionEvent event) {
-								
-								routeList.setText(routeList.getText() + " " + name + " Orbit :");
 
 								Parent root;
 								try {
@@ -164,6 +164,9 @@ public class PathSelectionController extends SuperController implements Initiali
 									
 									routePlanets.add(name);
 									routeOrbit.add(orbitParams);
+									
+									routeList.setText(routeList.getText() + " " + name + " Orbit " + orbitParams[0] + " " + 
+												      orbitParams[1] + " :");
 									
 								} catch (IOException e) {
 									// TODO Auto-generated catch block
@@ -217,4 +220,17 @@ public class PathSelectionController extends SuperController implements Initiali
 		systemPane.setTranslateX(0);
 		systemPane.setTranslateY(0);
 	}
+	
+	@FXML protected void startJourney(ActionEvent event) throws IOException { 
+    	
+    	Stage stage; 
+    	Parent root;
+    	stage=(Stage) startButton.getScene().getWindow();
+    	
+    	root = FXMLLoader.load(getClass().getResource("journeyanimation.fxml"));
+    	Scene scene = new Scene(root, 650, 650);
+    	
+        stage.setScene(scene);
+        stage.show();
+    }
 }

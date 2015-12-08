@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane fx:controller="solarsystem.model.PathSelectionController" 
+<BorderPane fx:controller="solarsystem.model.JourneyController" 
     xmlns:fx="http://javafx.com/fxml" styleClass="root">
   <padding><Insets top="25" right="25" bottom="10" left="25" /></padding>
   
@@ -18,22 +18,11 @@
   
   <StackPane>
   <Slider fx:id="zoomSlide" orientation="VERTICAL" min="0.065" max="1.35" value="0.7075" maxHeight="400"/>
-  
-  <Button onAction="#centerPlanets" text="Centre" translateY="260"/>
-  
-  <Button fx:id="startButton" onAction="#startJourney" text="Start Journey" translateY="290"/>
-  
+ 
+  <Button fx:id="switchScene" onAction="#stopTimeline" text="New Journey" translateY="295"/>
   </StackPane>
   
   </right>
-  
-  <bottom>
-  <Pane>
-  <Label fx:id="routeList" styleClass="route_label" text="Start Journey:"/>
-  </Pane>
-  
-  </bottom>
-   
   
   <stylesheets>
     <URL value="@../resources/css/window.css" />
