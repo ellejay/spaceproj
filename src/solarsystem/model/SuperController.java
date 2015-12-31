@@ -1,5 +1,7 @@
 package solarsystem.model;
 
+import java.util.ArrayList;
+
 import javafx.animation.Timeline;
 import solarsystem.objects.BodyInSpace;
 
@@ -13,5 +15,7 @@ public class SuperController {
  	// Rotation speed
  	protected static double STEP_DURATION = 2; //milliseconds
  	protected static double[] orbitParams = new double[2];
+ 	protected ArrayList<String> routePlanets;
+ 	protected ArrayList<double[]> routeOrbit;
 
 }

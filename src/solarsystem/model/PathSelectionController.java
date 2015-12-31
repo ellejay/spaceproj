@@ -128,8 +128,8 @@ public class PathSelectionController extends SuperController implements Initiali
 		systemPane.addEventHandler(MouseDragEvent.MOUSE_DRAG_EXITED, moveSystem);
 		
 		
-		ArrayList<String> routePlanets = new ArrayList<String>();
-		ArrayList<double[]> routeOrbit = new ArrayList<double[]>();
+		routePlanets = new ArrayList<String>();
+		routeOrbit = new ArrayList<double[]>();
 		
 		
 		EventHandler<MouseEvent> planetLander = new EventHandler<MouseEvent>() {

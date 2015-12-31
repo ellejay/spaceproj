@@ -89,16 +89,42 @@ public class JourneyController extends SuperController implements Initializable 
 		};
 
 
-		timeline = new Timeline(new KeyFrame(Duration.ZERO, planetMovement), 
+		BodyInSpace sun = SpaceObjects.getSun();
+		sun.moveGUIObject(midPoint, midPoint);
+
+		BodyInSpace spaceship = new BodyInSpace("Spaceship", 10.0, 600, 1.4, planets[2], SCREEN_SCALE);
+		
+		EventHandler<ActionEvent> spaceshipMove = new EventHandler<ActionEvent>() { 
+			@Override
+			public void handle(ActionEvent event) {
+
+					spaceship.incrementAngle();
+
+					// p(x) = x(0) + r * sin(a)
+					// p(y) = y(y) - r * cos(a)
+					
+					double moveX = spaceship.getParent().getX() + (spaceship.getOrbit() * SCREEN_SCALE) * 
+							Math.sin(spaceship.getAngle());
+					
+					double moveY = spaceship.getParent().getY() - (spaceship.getOrbit() * SCREEN_SCALE) * 
+							Math.cos(spaceship.getAngle());
+					
+					spaceship.setPosition(spaceship.getX(), spaceship.getY() + 1);
+					spaceship.adjustGUIOrbit(spaceship.getOrbit() * SCREEN_SCALE);
+					
+					moveBall(spaceship.getGUIObject(), spaceship.getX(), (spaceship.getY() + 1) % 500 );
+
+			}
+		};
+
+		timeline = new Timeline(new KeyFrame(Duration.ZERO, planetMovement),
+				new KeyFrame(Duration.ZERO, spaceshipMove),
 				new KeyFrame(Duration.millis(STEP_DURATION)));
 
 		timeline.setCycleCount(Timeline.INDEFINITE);
 		
-		BodyInSpace sun = SpaceObjects.getSun();
-		sun.moveGUIObject(midPoint, midPoint);
 		systemPane.getChildren().add(sun.getGUIObject());
 		
-		BodyInSpace spaceship = new BodyInSpace("Spaceship", 0.0, 0.0, 0.0, sun, SCREEN_SCALE);
 		systemPane.getChildren().add(spaceship.getGUIObject());
 
 		for (BodyInSpace current: planets) {  
