@@ -2,7 +2,6 @@ package solarsystem.model;
  
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
@@ -128,10 +127,6 @@ public class PathSelectionController extends SuperController implements Initiali
 		systemPane.addEventHandler(MouseDragEvent.MOUSE_DRAG_EXITED, moveSystem);
 		
 		
-		routePlanets = new ArrayList<String>();
-		routeOrbit = new ArrayList<double[]>();
-		
-		
 		EventHandler<MouseEvent> planetLander = new EventHandler<MouseEvent>() {
 			
 			MenuItem orbitItem = new MenuItem("Orbit");
@@ -222,15 +217,21 @@ public class PathSelectionController extends SuperController implements Initiali
 	}
 	
 	@FXML protected void startJourney(ActionEvent event) throws IOException { 
-    	
-    	Stage stage; 
-    	Parent root;
-    	stage=(Stage) startButton.getScene().getWindow();
-    	
-    	root = FXMLLoader.load(getClass().getResource("journeyanimation.fxml"));
-    	Scene scene = new Scene(root, 650, 650);
-    	
-        stage.setScene(scene);
-        stage.show();
+		
+		if (routePlanets.size() < 2) {
+			
+		}
+		
+		else {
+	    	Stage stage; 
+	    	Parent root;
+	    	stage=(Stage) startButton.getScene().getWindow();
+	    	
+	    	root = FXMLLoader.load(getClass().getResource("journeyanimation.fxml"));
+	    	Scene scene = new Scene(root, 650, 650);
+	    	
+	        stage.setScene(scene);
+	        stage.show();
+		}
     }
 }

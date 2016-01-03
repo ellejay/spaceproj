@@ -15,7 +15,7 @@ public class SuperController {
  	// Rotation speed
  	protected static double STEP_DURATION = 2; //milliseconds
  	protected static double[] orbitParams = new double[2];
- 	protected ArrayList<String> routePlanets;
- 	protected ArrayList<double[]> routeOrbit;
+ 	protected static ArrayList<String> routePlanets = new ArrayList<String>();
+ 	protected static ArrayList<double[]> routeOrbit = new ArrayList<double[]>();
 
 }

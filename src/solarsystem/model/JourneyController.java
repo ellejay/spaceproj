@@ -91,28 +91,69 @@ public class JourneyController extends SuperController implements Initializable 
 
 		BodyInSpace sun = SpaceObjects.getSun();
 		sun.moveGUIObject(midPoint, midPoint);
-
-		BodyInSpace spaceship = new BodyInSpace("Spaceship", 10.0, 600, 1.4, planets[2], SCREEN_SCALE);
+		
+		BodyInSpace spaceship = new BodyInSpace("Spaceship", 10.0, 600, 1.4, sun, SCREEN_SCALE);
+		
+		int routeIndex = 0;
 		
 		EventHandler<ActionEvent> spaceshipMove = new EventHandler<ActionEvent>() { 
 			@Override
 			public void handle(ActionEvent event) {
-
-					spaceship.incrementAngle();
-
-					// p(x) = x(0) + r * sin(a)
-					// p(y) = y(y) - r * cos(a)
+				
+					String phaseStart = routePlanets.get(routeIndex);
+					String phaseEnd = routePlanets.get(routeIndex + 1);
 					
-					double moveX = spaceship.getParent().getX() + (spaceship.getOrbit() * SCREEN_SCALE) * 
+					BodyInSpace startPlanet, endPlanet;
+					
+					if (phaseStart.equals("Mercury")) {
+						startPlanet = planets[0];
+					}
+					else if (phaseStart.equals("Venus")) {
+						startPlanet = planets[1];
+					}
+					else if (phaseStart.equals("Earth")) {
+						startPlanet = planets[2];
+					}
+					else if (phaseStart.equals("Mars")) {
+						startPlanet = planets[3];
+					}
+					else if (phaseStart.equals("Jupiter")) {
+						startPlanet = planets[4];
+					}
+					else {
+						startPlanet = planets[0];
+					}
+					
+					if (phaseEnd.equals("Mercury")) {
+						endPlanet = planets[0];
+					}
+					else if (phaseEnd.equals("Venus")) {
+						endPlanet = planets[1];
+					}
+					else if (phaseEnd.equals("Earth")) {
+						endPlanet = planets[2];
+					}
+					else if (phaseEnd.equals("Mars")) {
+						endPlanet = planets[3];
+					}
+					else if (phaseEnd.equals("Jupiter")) {
+						endPlanet = planets[4];
+					}
+					else {
+						endPlanet = planets[0];
+					}
+
+					
+					double moveX = startPlanet.getX() + (spaceship.getOrbit() * SCREEN_SCALE) * 
 							Math.sin(spaceship.getAngle());
 					
-					double moveY = spaceship.getParent().getY() - (spaceship.getOrbit() * SCREEN_SCALE) * 
+					double moveY = startPlanet.getY() - (spaceship.getOrbit() * SCREEN_SCALE) * 
 							Math.cos(spaceship.getAngle());
 					
-					spaceship.setPosition(spaceship.getX(), spaceship.getY() + 1);
+					spaceship.setPosition(moveX, moveY);
 					spaceship.adjustGUIOrbit(spaceship.getOrbit() * SCREEN_SCALE);
 					
-					moveBall(spaceship.getGUIObject(), spaceship.getX(), (spaceship.getY() + 1) % 500 );
+					moveBall(spaceship.getGUIObject(), moveX, moveY);
 
 			}
 		};
