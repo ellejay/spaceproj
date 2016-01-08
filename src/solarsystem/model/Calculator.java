@@ -1,5 +1,8 @@
 package solarsystem.model;
 
+import java.util.Collection;
+import java.util.Map;
+
 import solarsystem.model.SpaceObjects;
 import solarsystem.objects.BodyInSpace;
 import solarsystem.objects.Ellipse;
@@ -16,9 +19,9 @@ public class Calculator {
 		
 		//System.out.printf("%10s %10s %10s %6s %6s\n", "", "DISTANCE", "RADIUS", "G", "ESCAPE");
 
-		BodyInSpace[] p = SpaceObjects.getPlanets();
+		Map<String, BodyInSpace> p = SpaceObjects.getDictionary();
 		BodyInSpace earth = SpaceObjects.getEarth();
-		for (BodyInSpace planet: p) {
+		for (BodyInSpace planet: p.values()) {
 			
 			//System.out.println(planet.getName() + " " + planet.getRadius() + " " + planet.getOrbit() + " " + planet.getOrbitInM());
 			
@@ -33,8 +36,8 @@ public class Calculator {
 		}
 		
 		//wait time
-		double av1 = p[4].getAngularV();
-		double av2 = p[3].getAngularV();
+		double av1 = p.get("mars").getAngularV();
+		double av2 = p.get("earth").getAngularV();
 		double angle = 24.6;
 		double days = (av1 > av2) ? angle / (av1 - av2) : angle / (av2 - av1);
 		//System.out.println(days);

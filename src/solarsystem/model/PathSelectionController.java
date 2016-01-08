@@ -2,6 +2,7 @@ package solarsystem.model;
  
 import java.io.IOException;
 import java.net.URL;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
@@ -35,7 +36,7 @@ public class PathSelectionController extends SuperController implements Initiali
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		
-		BodyInSpace[] planets = SpaceObjects.getPlanets();
+		Map<String, BodyInSpace> planets = SpaceObjects.getDictionary();
 
         zoomSlide.setValue(SCREEN_SCALE);
 		
@@ -44,7 +45,7 @@ public class PathSelectionController extends SuperController implements Initiali
 						Number old_val, Number new_val) {
 					SCREEN_SCALE = (double) new_val;
 					
-					for (BodyInSpace current: planets) {
+					for (BodyInSpace current: planets.values()) {
 						current.adjustGUIOrbit(current.getOrbit() * SCREEN_SCALE);
 						
 						if ((double) new_val > 0.455) {
@@ -68,12 +69,12 @@ public class PathSelectionController extends SuperController implements Initiali
 
 		systemPane.getChildren().add(SpaceObjects.getSun().getGUIObject());
 		
-		for (BodyInSpace current: planets) {
+		for (BodyInSpace current: planets.values()) {
 			current.adjustGUIOrbit(current.getOrbit() * SCREEN_SCALE);
 			systemPane.getChildren().add(current.getGUIOrbit());
 		}
 		
-		for (BodyInSpace current: planets) {   
+		for (BodyInSpace current: planets.values()) {   
 			current.resetPlanet();
 			
 			current.moveGUIObject(
@@ -138,7 +139,7 @@ public class PathSelectionController extends SuperController implements Initiali
 				double[] landed = {0, 0};
 				boolean planetFound = false;
 				
-				for (BodyInSpace current: planets) {
+				for (BodyInSpace current: planets.values()) {
 					if (event.getTarget().equals(current.getGUIObject())){
 						String name = current.getName();
 						planetFound = true;
@@ -196,7 +197,6 @@ public class PathSelectionController extends SuperController implements Initiali
 								landItem.setDisable(true);
 							}
 							else if (prev.equals(name)) {
-								System.out.println("can land.");
 								landItem.setDisable(false);
 							}
 							else {

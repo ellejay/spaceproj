@@ -1,6 +1,8 @@
 package solarsystem.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
 
 import javafx.animation.Timeline;
 import solarsystem.objects.BodyInSpace;
@@ -10,7 +12,7 @@ public class SuperController {
     // Planet scale factor
  	protected static double SCREEN_SCALE = 0.7075;
  	protected static double midPoint = 295;
- 	protected BodyInSpace[] planets;
+ 	protected Map<String, BodyInSpace> planets;
  	protected Timeline timeline = null;
  	// Rotation speed
  	protected static double STEP_DURATION = 2; //milliseconds

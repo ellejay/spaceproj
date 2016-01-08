@@ -1,5 +1,9 @@
 package solarsystem.model;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 import solarsystem.objects.BodyInSpace;
 
 public class SpaceObjects {
@@ -18,10 +22,28 @@ public class SpaceObjects {
 	static BodyInSpace neptune = new BodyInSpace("Neptune", 49500, 1.028e26, 4493.0, 60200.0, 2.4, sun, SCREEN_SCALE);
 	static BodyInSpace pluto = new BodyInSpace("Pluto", 2200, 1.1e22, 5898.0, 90465.0, 2.1, sun, SCREEN_SCALE);
 	
-	private static BodyInSpace[] planets = {mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto};
+	private static Map<String, BodyInSpace> planetsList = new HashMap<String, BodyInSpace>();
 	
-	public static BodyInSpace[] getPlanets() {
-		return planets;
+	public static Map<String, BodyInSpace> getDictionary() {
+		if (planetsList.isEmpty()) {
+			planetsList.put("Mercury", mercury);
+			planetsList.put("Venus", venus);
+			planetsList.put("Earth", earth);
+			planetsList.put("Mars", mars);
+			planetsList.put("Jupiter", jupiter);
+			planetsList.put("Saturn", saturn);
+			planetsList.put("Uranus", uranus);
+			planetsList.put("Neptune", neptune);
+			planetsList.put("Pluto", pluto);
+		}
+		return planetsList;
+	}
+	
+	public static Collection<BodyInSpace> getPlanets() {
+		if (planetsList.isEmpty()) {
+			getDictionary();
+		}
+		return planetsList.values();
 	}
 	
 	public static BodyInSpace getSun() {

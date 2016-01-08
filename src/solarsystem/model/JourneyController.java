@@ -42,7 +42,7 @@ public class JourneyController extends SuperController implements Initializable 
 			public void changed(ObservableValue<? extends Number> ov,
 					Number old_val, Number new_val) {
 				SCREEN_SCALE = (double) new_val;
-				for (BodyInSpace current: planets) {        	
+				for (BodyInSpace current: planets.values()) {        	
 					current.adjustGUIOrbit(current.getOrbit() * SCREEN_SCALE);
 				}
 			}
@@ -53,9 +53,9 @@ public class JourneyController extends SuperController implements Initializable 
     
     public void setUp() {
     	
-		planets = SpaceObjects.getPlanets();
+		planets = SpaceObjects.getDictionary();
 		
-		for (BodyInSpace current: planets) {  
+		for (BodyInSpace current: planets.values()) {  
         	current.resetPlanet();
         }
 		
@@ -63,7 +63,7 @@ public class JourneyController extends SuperController implements Initializable 
 			@Override
 			public void handle(ActionEvent event) {
 
-				for (BodyInSpace current: planets) {
+				for (BodyInSpace current: planets.values()) {
 
 					current.incrementAngle();
 
@@ -105,43 +105,8 @@ public class JourneyController extends SuperController implements Initializable 
 					
 					BodyInSpace startPlanet, endPlanet;
 					
-					if (phaseStart.equals("Mercury")) {
-						startPlanet = planets[0];
-					}
-					else if (phaseStart.equals("Venus")) {
-						startPlanet = planets[1];
-					}
-					else if (phaseStart.equals("Earth")) {
-						startPlanet = planets[2];
-					}
-					else if (phaseStart.equals("Mars")) {
-						startPlanet = planets[3];
-					}
-					else if (phaseStart.equals("Jupiter")) {
-						startPlanet = planets[4];
-					}
-					else {
-						startPlanet = planets[0];
-					}
-					
-					if (phaseEnd.equals("Mercury")) {
-						endPlanet = planets[0];
-					}
-					else if (phaseEnd.equals("Venus")) {
-						endPlanet = planets[1];
-					}
-					else if (phaseEnd.equals("Earth")) {
-						endPlanet = planets[2];
-					}
-					else if (phaseEnd.equals("Mars")) {
-						endPlanet = planets[3];
-					}
-					else if (phaseEnd.equals("Jupiter")) {
-						endPlanet = planets[4];
-					}
-					else {
-						endPlanet = planets[0];
-					}
+					startPlanet = planets.get(phaseStart);
+					endPlanet = planets.get(phaseEnd);
 
 					
 					double moveX = startPlanet.getX() + (spaceship.getOrbit() * SCREEN_SCALE) * 
@@ -168,7 +133,7 @@ public class JourneyController extends SuperController implements Initializable 
 		
 		systemPane.getChildren().add(spaceship.getGUIObject());
 
-		for (BodyInSpace current: planets) {  
+		for (BodyInSpace current: planets.values()) {  
 			current.adjustGUIOrbit(current.getOrbit() * SCREEN_SCALE);
 			systemPane.getChildren().add(current.getGUIOrbit());
 			systemPane.getChildren().add(current.getGUIObject());
