@@ -185,13 +185,24 @@ public class PathSelectionController extends SuperController implements Initiali
 							String prev = routePlanets.get(lastItem);
 							double[] prevOrbit = routeOrbit.get(lastItem);
 							
-							if (prev != name || (prevOrbit[0] == 0.0 && prevOrbit[1] == 0.0)) {
+							// If landed and selecting new planet, disable all
+							if (prev != name && (prevOrbit[0] == 0.0 && prevOrbit[1] == 0.0)) {
 								landItem.setDisable(true);
-								orbitItem.setDisable(false);
+								orbitItem.setDisable(true);
 							}
-							else {
+							// If landed and selecting same planet, allow orbit
+							else if (prevOrbit[0] == 0.0 && prevOrbit[1] == 0.0) {
+								orbitItem.setDisable(false);
+								landItem.setDisable(true);
+							}
+							else if (prev.equals(name)) {
+								System.out.println("can land.");
 								landItem.setDisable(false);
 							}
+							else {
+								landItem.setDisable(true);
+							}
+						// When selecting start point
 						} catch (ArrayIndexOutOfBoundsException e) {
 							orbitItem.setDisable(true);
 						}

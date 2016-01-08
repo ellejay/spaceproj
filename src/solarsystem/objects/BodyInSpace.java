@@ -16,7 +16,7 @@ public class BodyInSpace {
 	private Circle gui_orbit;
 	private BodyInSpace center;
 	
-	public BodyInSpace(String name, double orbit, double period, 
+	public BodyInSpace(String name, double diameter, double mass, double orbit, double period, 
 			double angle, BodyInSpace center, double orbit_scale) {
 		this.name = name;
 		this.diameter = diameter;
@@ -36,30 +36,6 @@ public class BodyInSpace {
 	public void resetPlanet() {
 		this.gui_object = new Circle(0, 0, 3);
 		this.gui_object.getStyleClass().add(this.getStyle());
-	}
-	
-	public String getName() {
-		return this.name;
-	}
-	
-	public double getDiameter() {
-		return this.diameter;
-	}
-	
-	public double getMass() {
-		return this.mass;
-	}
-	
-	public Circle getGUIObject() {
-		return this.gui_object;
-	}
-	
-	public double getX() {
-		return pos_x;
-	}
-	
-	public double getY() {
-		return pos_y;
 	}
 	
 	public void setPosition(double x, double y) {
@@ -89,6 +65,34 @@ public class BodyInSpace {
 		this.pos_y = point_y;
 	}
 	
+	public String getName() {
+		return this.name;
+	}
+	
+	public double getDiameter() {
+		return this.diameter;
+	}
+	
+	public double getRadius() {
+		return this.diameter * 500;
+	}
+	
+	public double getMass() {
+		return this.mass;
+	}
+	
+	public Circle getGUIObject() {
+		return this.gui_object;
+	}
+	
+	public double getX() {
+		return pos_x;
+	}
+	
+	public double getY() {
+		return pos_y;
+	}
+	
 	public Circle getGUIOrbit() {
 		return this.gui_orbit;
 	}
@@ -101,8 +105,20 @@ public class BodyInSpace {
 		return this.orbit;
 	}
 	
+	public double getOrbitInM() {
+		return this.orbit * 1e6 * 1000;
+	}
+	
 	public double getPeriod() {
 		return this.period;
+	}
+	
+	public double getPeriodAsSeconds() {
+		return this.period * 24 * 60 * 60;
+	}
+	
+	public double getAngularV() {
+		return 360 / this.period;
 	}
 	
 	public double getAngle() {

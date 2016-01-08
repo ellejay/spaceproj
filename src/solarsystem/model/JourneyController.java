@@ -92,7 +92,7 @@ public class JourneyController extends SuperController implements Initializable 
 		BodyInSpace sun = SpaceObjects.getSun();
 		sun.moveGUIObject(midPoint, midPoint);
 		
-		BodyInSpace spaceship = new BodyInSpace("Spaceship", 10.0, 600, 1.4, sun, SCREEN_SCALE);
+		BodyInSpace spaceship = new BodyInSpace("Spaceship", 0, 0, 10.0, 600, 1.4, sun, SCREEN_SCALE);
 		
 		int routeIndex = 0;
 		
