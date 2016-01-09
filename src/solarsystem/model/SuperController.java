@@ -1,7 +1,6 @@
 package solarsystem.model;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Map;
 
 import javafx.animation.Timeline;

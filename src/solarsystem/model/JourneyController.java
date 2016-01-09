@@ -24,6 +24,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import solarsystem.objects.BodyInSpace;
+import solarsystem.objects.Spaceship;
 import solarsystem.model.SpaceObjects;
  
 public class JourneyController extends SuperController implements Initializable {
@@ -32,6 +33,7 @@ public class JourneyController extends SuperController implements Initializable 
     @FXML private Pane systemPane;
     @FXML private Slider zoomSlide;
     @FXML private Button switchScene;
+    private int routeIndex;
     
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -92,46 +94,45 @@ public class JourneyController extends SuperController implements Initializable 
 		BodyInSpace sun = SpaceObjects.getSun();
 		sun.moveGUIObject(midPoint, midPoint);
 		
-		BodyInSpace spaceship = new BodyInSpace("Spaceship", 0, 0, 10.0, 600, 1.4, sun, SCREEN_SCALE);
+		Spaceship enterprise = new Spaceship(0,0);
 		
-		int routeIndex = 0;
+		routeIndex = 0;
 		
 		EventHandler<ActionEvent> spaceshipMove = new EventHandler<ActionEvent>() { 
 			@Override
 			public void handle(ActionEvent event) {
 				
 					String phaseStart = routePlanets.get(routeIndex);
-					String phaseEnd = routePlanets.get(routeIndex + 1);
+					double[] planetOrbit = routeOrbit.get(routeIndex);
 					
-					BodyInSpace startPlanet, endPlanet;
+					BodyInSpace startPlanet;
 					
 					startPlanet = planets.get(phaseStart);
-					endPlanet = planets.get(phaseEnd);
-
 					
-					double moveX = startPlanet.getX() + (spaceship.getOrbit() * SCREEN_SCALE) * 
-							Math.sin(spaceship.getAngle());
+					enterprise.setRadius(planetOrbit[0], planetOrbit[1]);
+					enterprise.incrementAngle();
 					
-					double moveY = startPlanet.getY() - (spaceship.getOrbit() * SCREEN_SCALE) * 
-							Math.cos(spaceship.getAngle());
+					double moveX = startPlanet.getX() + (enterprise.getRadiusX() * SCREEN_SCALE) * 
+							Math.cos(enterprise.getAngle());
 					
-					spaceship.setPosition(moveX, moveY);
-					spaceship.adjustGUIOrbit(spaceship.getOrbit() * SCREEN_SCALE);
+					double moveY = startPlanet.getY() - (enterprise.getRadiusY() * SCREEN_SCALE) * 
+							Math.sin(enterprise.getAngle());
 					
-					moveBall(spaceship.getGUIObject(), moveX, moveY);
+					enterprise.setCenterPoint(startPlanet.getX(), startPlanet.getY());
+					enterprise.setRadius(enterprise.getRadiusX() * SCREEN_SCALE, enterprise.getRadiusY() * SCREEN_SCALE);
+					
+					moveBall(enterprise.getGUIShip(), moveX, moveY);
 
 			}
 		};
 
-		timeline = new Timeline(new KeyFrame(Duration.ZERO, planetMovement),
+		timeline = new Timeline( new KeyFrame(Duration.ZERO, planetMovement),
 				new KeyFrame(Duration.ZERO, spaceshipMove),
 				new KeyFrame(Duration.millis(STEP_DURATION)));
 
 		timeline.setCycleCount(Timeline.INDEFINITE);
 		
 		systemPane.getChildren().add(sun.getGUIObject());
-		
-		systemPane.getChildren().add(spaceship.getGUIObject());
 
 		for (BodyInSpace current: planets.values()) {  
 			current.adjustGUIOrbit(current.getOrbit() * SCREEN_SCALE);
@@ -139,7 +140,9 @@ public class JourneyController extends SuperController implements Initializable 
 			systemPane.getChildren().add(current.getGUIObject());
 		}
 		
-
+		systemPane.getChildren().add(enterprise.getGUIShip());
+		systemPane.getChildren().add(enterprise.getGUITrail());
+		
 		timeline.play();
 	
     }
@@ -152,6 +155,15 @@ public class JourneyController extends SuperController implements Initializable 
 		move.setToY(y);
 		move.playFromStart();
 	}
+    
+    @FXML protected void nextPhase(ActionEvent event) throws IOException { 
+    	if (routeIndex < routePlanets.size() - 1) {
+        	routeIndex++;
+    	}
+    	else {
+    		System.out.println("journey complete");
+    	}
+    }
     
     
     @FXML protected void stopTimeline(ActionEvent event) throws IOException { 

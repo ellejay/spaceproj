@@ -1,19 +1,19 @@
 package solarsystem.objects;
 
-public class Ellipse {
+public class MathEllipse {
 
 	public double m; //mass
 	public double a; // semimajor axis
 	public double e; // eccentricity
 
-	public Ellipse(double mass, double periapse, double apoapse) {
+	public MathEllipse(double mass, double periapse, double apoapse) {
 		m = mass;
 		a = 0.5 * (periapse + apoapse);
 		e = Math.abs(apoapse - periapse) / (2.0 * a);
 	}
 	
 	//Establish a circle ellipse with a given radius & mass
-	public Ellipse (double mass, double radius) 
+	public MathEllipse (double mass, double radius) 
 	{
 		m = mass;
 		a = radius;
@@ -42,7 +42,7 @@ public class Ellipse {
 	public double escape() {
 		double G = 0.6612e-10;
 		double vp = Math.sqrt((2.0 * G * m) / periapse()) - speed_p();
-		double va = Math.sqrt((2.0 * G * m) / apoapse()) - speed_a();
+		// double va = Math.sqrt((2.0 * G * m) / apoapse()) - speed_a();
 		// periapse -- min printf ("At periapse %6.0f, At apoapse %6.0f\n", vp, va);
 		return vp;
 	}

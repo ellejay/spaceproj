@@ -5,7 +5,7 @@ import java.util.Map;
 
 import solarsystem.model.SpaceObjects;
 import solarsystem.objects.BodyInSpace;
-import solarsystem.objects.Ellipse;
+import solarsystem.objects.MathEllipse;
 
 public class Calculator {
 	
@@ -49,13 +49,13 @@ public class Calculator {
 		double r1 = earth.getRadius() + 1.0e3 * 200;
 		double r2 = earth.getRadius() + 1.0e3 * 200;
 		System.out.println(r1 + " " + r2);
-		Ellipse x = new Ellipse(earth.getMass(), r1, r2);
+		MathEllipse x = new MathEllipse(earth.getMass(), r1, r2);
 		System.out.println(x.getEllipseData());
 		transfer_slow(earth, earth, x);
 
 	}
 	
-	public static void transfer_slow(BodyInSpace cur_p, BodyInSpace p, Ellipse target){
+	public static void transfer_slow(BodyInSpace cur_p, BodyInSpace p, MathEllipse target){
 		double d1, d2, ts; // increments for take off and landing
 		String tys;
 
@@ -65,7 +65,7 @@ public class Calculator {
 			{
 			if (true) // currently landed on planet
 				{
-				Ellipse e1 = new Ellipse(cur_p.getMass(), cur_p.getRadius());
+				MathEllipse e1 = new MathEllipse(cur_p.getMass(), cur_p.getRadius());
 				transfer(cur_p, e1, target);
 				d1 = dv1 + e1.speed_p();
 				d2 = dv2;
@@ -76,7 +76,7 @@ public class Calculator {
 			}
 	}
 	
-	public static void transfer(BodyInSpace p, Ellipse current, Ellipse target) {
+	public static void transfer(BodyInSpace p, MathEllipse current, MathEllipse target) {
 		double tot = 1.0e20; 
 		horiz_trans("pp", tot, p.getMass(), current.periapse(), current.speed_p(), target.periapse() , target.speed_p());
 		horiz_trans("aa", tot, p.getMass(), current.apoapse(), current.speed_a(), target.apoapse(), target.speed_a());
@@ -88,7 +88,7 @@ public class Calculator {
 
 	public static void horiz_trans (String ty, double tot, double mass, double r1, double v1, double r2, double v2)
 	{
-	Ellipse e = new Ellipse(mass, r1, r2);
+	MathEllipse e = new MathEllipse(mass, r1, r2);
 	double t1 = e.speed_p();
 	double t2 = e.speed_a();
 

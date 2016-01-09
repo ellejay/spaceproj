@@ -57,6 +57,13 @@ public class BodyInSpace {
 		this.gui_orbit.setCenterY(this.center.getY());
 	}
 	
+	public void adjustGUIOrbit(double radius, BodyInSpace center) {
+		this.center = center;
+		this.gui_orbit.setRadius(radius);
+		this.gui_orbit.setCenterX(this.center.getX());
+		this.gui_orbit.setCenterY(this.center.getY());
+	}
+	
 	public void moveGUIObject(double point_x, double point_y){
 		this.gui_object.setCenterX(point_x);
 		this.gui_object.setCenterY(point_y);
