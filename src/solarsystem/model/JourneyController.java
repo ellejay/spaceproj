@@ -173,6 +173,9 @@ public class JourneyController extends SuperController implements Initializable 
     	Parent root;
     	stage=(Stage) switchScene.getScene().getWindow();
     	
+    	routePlanets.clear();
+    	routeOrbit.clear();
+    	
     	root = FXMLLoader.load(getClass().getResource("pathselect.fxml"));
     	Scene scene = new Scene(root, 650, 650);
     	

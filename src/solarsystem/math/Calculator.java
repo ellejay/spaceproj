@@ -1,11 +1,9 @@
-package solarsystem.model;
+package solarsystem.math;
 
-import java.util.Collection;
 import java.util.Map;
 
 import solarsystem.model.SpaceObjects;
 import solarsystem.objects.BodyInSpace;
-import solarsystem.objects.MathEllipse;
 
 public class Calculator {
 	
@@ -23,7 +21,7 @@ public class Calculator {
 		BodyInSpace earth = SpaceObjects.getEarth();
 		for (BodyInSpace planet: p.values()) {
 			
-			//System.out.println(planet.getName() + " " + planet.getRadius() + " " + planet.getOrbit() + " " + planet.getOrbitInM());
+			System.out.println(planet.getName() + " " + planet.getRadius() + " " + planet.getOrbit() + " " + planet.getOrbitInM());
 			
 			double r = 1.0e-9 * planet.getOrbitInM();
 			double d = 1.0e-3 * planet.getRadius();
@@ -36,13 +34,15 @@ public class Calculator {
 		}
 		
 		//wait time
-		double av1 = p.get("mars").getAngularV();
-		double av2 = p.get("earth").getAngularV();
+		double av1 = p.get("Mars").getAngularV();
+		double av2 = p.get("Earth").getAngularV();
 		double angle = 24.6;
 		double days = (av1 > av2) ? angle / (av1 - av2) : angle / (av2 - av1);
 		//System.out.println(days);
 		
 		// TRANSFER WORK
+		
+		Calculator c = new Calculator();
 		
 		// convert from input (km above surface) to internal
 		// (m from centre)
@@ -51,11 +51,11 @@ public class Calculator {
 		System.out.println(r1 + " " + r2);
 		MathEllipse x = new MathEllipse(earth.getMass(), r1, r2);
 		System.out.println(x.getEllipseData());
-		transfer_slow(earth, earth, x);
+		c.transfer_slow(earth, earth, x);
 
 	}
 	
-	public static void transfer_slow(BodyInSpace cur_p, BodyInSpace p, MathEllipse target){
+	public void transfer_slow(BodyInSpace cur_p, BodyInSpace p, MathEllipse target){
 		double d1, d2, ts; // increments for take off and landing
 		String tys;
 
@@ -76,7 +76,7 @@ public class Calculator {
 			}
 	}
 	
-	public static void transfer(BodyInSpace p, MathEllipse current, MathEllipse target) {
+	public void transfer(BodyInSpace p, MathEllipse current, MathEllipse target) {
 		double tot = 1.0e20; 
 		horiz_trans("pp", tot, p.getMass(), current.periapse(), current.speed_p(), target.periapse() , target.speed_p());
 		horiz_trans("aa", tot, p.getMass(), current.apoapse(), current.speed_a(), target.apoapse(), target.speed_a());
@@ -86,7 +86,7 @@ public class Calculator {
 	}
 	
 
-	public static void horiz_trans (String ty, double tot, double mass, double r1, double v1, double r2, double v2)
+	public void horiz_trans (String ty, double tot, double mass, double r1, double v1, double r2, double v2)
 	{
 	MathEllipse e = new MathEllipse(mass, r1, r2);
 	double t1 = e.speed_p();

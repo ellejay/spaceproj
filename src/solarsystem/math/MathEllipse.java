@@ -1,4 +1,4 @@
-package solarsystem.objects;
+package solarsystem.math;
 
 public class MathEllipse {
 
