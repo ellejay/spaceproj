@@ -20,11 +20,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Ellipse;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import solarsystem.objects.BodyInSpace;
 import solarsystem.objects.Spaceship;
+import solarsystem.math.MathEllipse;
 import solarsystem.model.SpaceObjects;
  
 public class JourneyController extends SuperController implements Initializable {
@@ -98,6 +100,9 @@ public class JourneyController extends SuperController implements Initializable 
 		
 		routeIndex = 0;
 		
+		Ellipse route = new Ellipse();
+		route.getStyleClass().add("planet-orbit-path");
+		
 		EventHandler<ActionEvent> spaceshipMove = new EventHandler<ActionEvent>() { 
 			@Override
 			public void handle(ActionEvent event) {
@@ -108,6 +113,13 @@ public class JourneyController extends SuperController implements Initializable 
 					BodyInSpace startPlanet;
 					
 					startPlanet = planets.get(phaseStart);
+					
+					MathEllipse e1 = new MathEllipse(sun.getMass(), startPlanet.getRadius(), planets.get("Mars").getRadius());
+					
+					System.out.println(e1.semi_major() + " " + e1.semi_minor());
+					
+					route.setRadiusX(45);
+					route.setRadiusY(48);
 					
 					enterprise.setRadius(planetOrbit[0], planetOrbit[1]);
 					enterprise.incrementAngle();
@@ -142,6 +154,8 @@ public class JourneyController extends SuperController implements Initializable 
 		
 		systemPane.getChildren().add(enterprise.getGUIShip());
 		systemPane.getChildren().add(enterprise.getGUITrail());
+		
+		systemPane.getChildren().add(route);
 		
 		timeline.play();
 	
