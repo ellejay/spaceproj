@@ -26,11 +26,13 @@ public class MathEllipse {
 	public String getEllipseData() {
 		String s;
 		s =  periapse() + " " + apoapse() + " " + period() + " " +  escape();
+		s += " " + e + " " + semi_major() + " " + semi_minor();
 		return s;
 	}
 	
 	public double semi_minor() {
-		return (1 - e * e) * 0.5;
+		double res = a * Math.sqrt(1-(e * e));
+		return res;
 	}
 
 	public double semi_major() {

@@ -21,7 +21,7 @@ public class Calculator {
 		BodyInSpace earth = SpaceObjects.getEarth();
 		for (BodyInSpace planet: p.values()) {
 			
-			System.out.println(planet.getName() + " " + planet.getRadius() + " " + planet.getOrbit() + " " + planet.getOrbitInM());
+			//System.out.println(planet.getName() + " " + planet.getRadius() + " " + planet.getOrbit() + " " + planet.getOrbitInM());
 			
 			double r = 1.0e-9 * planet.getOrbitInM();
 			double d = 1.0e-3 * planet.getRadius();
@@ -48,10 +48,14 @@ public class Calculator {
 		// (m from centre)
 		double r1 = earth.getRadius() + 1.0e3 * 200;
 		double r2 = earth.getRadius() + 1.0e3 * 200;
-		System.out.println(r1 + " " + r2);
+		//System.out.println(r1 + " " + r2);
 		MathEllipse x = new MathEllipse(earth.getMass(), r1, r2);
-		System.out.println(x.getEllipseData());
+		//System.out.println(x.getEllipseData());
 		c.transfer_slow(earth, earth, x);
+		
+		
+		MathEllipse x1 = new MathEllipse(earth.getMass(), 520, 200);
+		System.out.println(x1.getEllipseData());
 
 	}
 	
