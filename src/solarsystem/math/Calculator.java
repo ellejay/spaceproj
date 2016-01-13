@@ -51,7 +51,7 @@ public class Calculator {
 		//System.out.println(r1 + " " + r2);
 		MathEllipse x = new MathEllipse(earth.getMass(), r1, r2);
 		//System.out.println(x.getEllipseData());
-		c.transfer_slow(earth, earth, x);
+		//c.transfer_slow(earth, earth, x);
 		
 		
 		MathEllipse x1 = new MathEllipse(earth.getMass(), 520, 200);

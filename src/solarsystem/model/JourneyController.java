@@ -110,16 +110,32 @@ public class JourneyController extends SuperController implements Initializable 
 					String phaseStart = routePlanets.get(routeIndex);
 					double[] planetOrbit = routeOrbit.get(routeIndex);
 					
-					BodyInSpace startPlanet;
+					BodyInSpace startPlanet, endPlanet;
+					String phaseEnd;
 					
 					startPlanet = planets.get(phaseStart);
 					
-					MathEllipse e1 = new MathEllipse(sun.getMass(), startPlanet.getRadius(), planets.get("Mars").getRadius());
+					try {
+						phaseEnd = routePlanets.get(routeIndex + 1);
+					}
+					catch (IndexOutOfBoundsException e) {
+						phaseEnd = "";
+					}
 					
-					System.out.println(e1.semi_major() + " " + e1.semi_minor());
+					if (phaseEnd != "") {
+						endPlanet = planets.get(phaseEnd);
+						MathEllipse e1 = new MathEllipse(sun.getMass(), startPlanet.getRadius(), endPlanet.getRadius());
+						
+						//System.out.println(e1.semi_major() + " " + e1.semi_minor());
+						
+						route.setRadiusX(e1.semi_major()/1e5);
+						route.setRadiusY(e1.semi_minor()/1e5);
+						route.setCenterX(midPoint);
+						route.setCenterY(e1.semi_major() + (startPlanet.getOrbit() - e1.apoapse()));
 					
-					route.setRadiusX(45);
-					route.setRadiusY(48);
+					}
+					
+					
 					
 					enterprise.setRadius(planetOrbit[0], planetOrbit[1]);
 					enterprise.incrementAngle();

@@ -5,9 +5,6 @@ public class MathEllipse {
 	public double m; //mass
 	public double a; // semimajor axis
 	public double e; // eccentricity
-	
-	// The ellipse in the drawing has an eccentricity = 0.8 so the width of the ellipse (twice the semi-minor axis) is
-	//	( 1- 0.8x0.8)1/2 = 0.6 of the length
 
 	public MathEllipse(double mass, double periapse, double apoapse) {
 		m = mass;
