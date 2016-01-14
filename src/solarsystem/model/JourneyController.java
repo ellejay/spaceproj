@@ -35,7 +35,7 @@ public class JourneyController extends SuperController implements Initializable 
     @FXML private Pane systemPane;
     @FXML private Slider zoomSlide;
     @FXML private Button switchScene;
-    private int routeIndex;
+    private int steps;
     
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -98,7 +98,7 @@ public class JourneyController extends SuperController implements Initializable 
 		
 		Spaceship enterprise = new Spaceship(0,0);
 		
-		routeIndex = 0;
+		steps = 0;
 		
 		Ellipse route = new Ellipse();
 		route.getStyleClass().add("planet-orbit-path");
@@ -107,8 +107,10 @@ public class JourneyController extends SuperController implements Initializable 
 			@Override
 			public void handle(ActionEvent event) {
 				
-					String phaseStart = routePlanets.get(routeIndex);
-					double[] planetOrbit = routeOrbit.get(routeIndex);
+					int planetIndex = steps / 2;
+				
+					String phaseStart = routePlanets.get(planetIndex);
+					double[] planetOrbit = routeOrbit.get(planetIndex);
 					
 					BodyInSpace startPlanet, endPlanet;
 					String phaseEnd;
@@ -116,23 +118,22 @@ public class JourneyController extends SuperController implements Initializable 
 					startPlanet = planets.get(phaseStart);
 					
 					try {
-						phaseEnd = routePlanets.get(routeIndex + 1);
+						phaseEnd = routePlanets.get(planetIndex + 1);
 					}
 					catch (IndexOutOfBoundsException e) {
 						phaseEnd = "";
 					}
 					
-					if (phaseEnd != "") {
+					if (steps % 2 == 1) {
 						endPlanet = planets.get(phaseEnd);
 						MathEllipse e1 = new MathEllipse(sun.getMass(), startPlanet.getRadius(), endPlanet.getRadius());
 						
 						//System.out.println(e1.semi_major() + " " + e1.semi_minor());
 						
-						route.setRadiusX(e1.semi_major()/1e5);
-						route.setRadiusY(e1.semi_minor()/1e5);
+						route.setRadiusX(e1.semi_major()/1e5 * SCREEN_SCALE);
+						route.setRadiusY(e1.semi_minor()/1e5 * SCREEN_SCALE);
 						route.setCenterX(midPoint);
-						route.setCenterY(e1.semi_major() + (startPlanet.getOrbit() - e1.apoapse()));
-					
+						route.setCenterY(((e1.semi_major()/1e5) + startPlanet.getOrbit() - planetOrbit[0]) * SCREEN_SCALE);
 					}
 					
 					
@@ -187,8 +188,8 @@ public class JourneyController extends SuperController implements Initializable 
 	}
     
     @FXML protected void nextPhase(ActionEvent event) throws IOException { 
-    	if (routeIndex < routePlanets.size() - 1) {
-        	routeIndex++;
+    	if (steps / 2 < routePlanets.size() - 1) {
+        	steps++;
     	}
     	else {
     		System.out.println("journey complete");
