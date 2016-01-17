@@ -227,6 +227,10 @@ public class JourneyController extends SuperController implements Initializable 
 					if (newStep) {
 						newStep = false;
 						System.out.println(enterprise.getRotation());
+						
+						if (movement == -1) {
+							enterprise.setAngle(4.72);
+						}
 					}
 
 					
@@ -249,9 +253,9 @@ public class JourneyController extends SuperController implements Initializable 
 			}
 		};
 		
-		//new KeyFrame(Duration.ZERO, planetMovement),
+		//
 
-		timeline = new Timeline( 
+		timeline = new Timeline( new KeyFrame(Duration.ZERO, planetMovement),
 				new KeyFrame(Duration.ZERO, spaceshipMove),
 				new KeyFrame(Duration.millis(STEP_DURATION)));
 
@@ -268,7 +272,7 @@ public class JourneyController extends SuperController implements Initializable 
 		systemPane.getChildren().add(enterprise.getGUIShip());
 		systemPane.getChildren().add(enterprise.getGUITrail());
 
-		systemPane.getChildren().add(route);
+		//systemPane.getChildren().add(route);
 
 		timeline.play();
 
