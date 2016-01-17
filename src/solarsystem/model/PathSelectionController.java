@@ -159,7 +159,8 @@ public class PathSelectionController extends SuperController implements Initiali
 									dialog.showAndWait();
 									
 									routePlanets.add(name);
-									routeOrbit.add(orbitParams);
+									double pass[] = { orbitParams[0], orbitParams[1] };
+									routeOrbit.add(pass);
 									
 									routeList.setText(routeList.getText() + " " + name + " Orbit " + orbitParams[0] + " " + 
 												      orbitParams[1] + " :");
@@ -180,6 +181,7 @@ public class PathSelectionController extends SuperController implements Initiali
 								routeList.setText(routeList.getText() + " " + name + " Surface :");
 							}
 						});
+						
 						
 						try{
 							int lastItem = routePlanets.size() - 1;
@@ -234,6 +236,7 @@ public class PathSelectionController extends SuperController implements Initiali
 		}
 		
 		else {
+			
 	    	Stage stage; 
 	    	Parent root;
 	    	stage=(Stage) startButton.getScene().getWindow();

@@ -27,6 +27,12 @@
   
   </right>
   
+  <bottom>
+  <Pane>
+  <Label fx:id="routeData" styleClass="route_label"/>
+  </Pane>
+  </bottom>
+  
   <stylesheets>
     <URL value="@../resources/css/window.css" />
     <URL value="@../resources/css/spacebodies.css"/>

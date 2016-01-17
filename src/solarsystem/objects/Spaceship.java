@@ -12,6 +12,8 @@ public class Spaceship {
 	private double radius_y;
 	private double center_x;
 	private double center_y;
+	private BodyInSpace parent;
+	private int rotation;
 	
 	public Spaceship(double radius_x, double radius_y) {
 		
@@ -24,6 +26,8 @@ public class Spaceship {
 		this.radius_y = radius_y;
 		angle = 0;
 		
+		this.rotation = 1;
+		
 	}
 	
 	public Ellipse getGUITrail(){
@@ -33,13 +37,28 @@ public class Spaceship {
 	public Circle getGUIShip() {
 		return this.gui_object;
 	}
+	
+	public void setAngle(double angle) {
+		this.angle = angle;
+	}
+	
+	public void setRotation(int rotate) {
+		this.rotation = rotate;
+	}
 
+	public int getRotation() {
+		return this.rotation;
+	}
+	
 	public void incrementAngle() {
-		this.angle += Math.toRadians( (2 * Math.PI) / (10));
+		this.angle += this.rotation * Math.toRadians( (2 * Math.PI) / (10));
 		
 		if (this.angle >= (2 * Math.PI)) {
 			this.angle -= 2 * Math.PI;
         }
+		else if (this.angle < 0) {
+			this.angle += 2 * Math.PI;
+		}
 	}
 	
 	public void setRadius(double radius_x, double radius_y) {
@@ -62,7 +81,25 @@ public class Spaceship {
 	}
 	
 	public void setCenterPoint(double x, double y) {
+		this.center_x = x;
+		this.center_y = y;
 		this.gui_trail.setCenterX(x);
 		this.gui_trail.setCenterY(y);
+	}
+	
+	public double getCenterX() {
+		return this.center_x;
+	}
+	
+	public double getCenterY() {
+		return this.center_y;
+	}
+	
+	public void setParent(BodyInSpace body) {
+		this.parent = body;
+	}
+	
+	public BodyInSpace getParent() {
+		return this.parent;
 	}
 }

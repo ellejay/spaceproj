@@ -17,7 +17,7 @@ public class BodyInSpace {
 	public Circle gui_object; // GUI object to represent body
 	public double pos_x; // current position of GUI body
 	public double pos_y; // current position of GUI body
-	private double orbit; // radius of orbit from body's parent in 10e6 km
+	private double orbit; // radius of orbit from body's parent in km
 	private double period; // time taken for one full rotation around body orbit in days
 	private double angle; // current angle of body around circle, measured from vertical in radians
 	private Circle gui_orbit; // GUI object for the orbit path
@@ -56,7 +56,7 @@ public class BodyInSpace {
 		 * object is displayed on screen.
 		 * 
 		 */
-		this.gui_orbit = new Circle(295, 295, orbit * orbit_scale);
+		this.gui_orbit = new Circle(295, 295, orbit/1e6 * orbit_scale);
 		this.gui_orbit.getStyleClass().add("planet-orbit-path");
 	}
 
@@ -211,7 +211,7 @@ public class BodyInSpace {
 	 * @return
 	 */
 	public double getOrbit() {
-		return this.orbit;
+		return this.orbit / 1e6;
 	}
 	
 	/**
@@ -219,7 +219,7 @@ public class BodyInSpace {
 	 * @return
 	 */
 	public double getOrbitInM() {
-		return this.orbit * 1e6 * 1000;
+		return this.orbit * 1000;
 	}
 	
 	/**
