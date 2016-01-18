@@ -147,14 +147,10 @@ public class JourneyController extends SuperController implements Initializable 
 					endPlanet = planets.get(phaseEnd);
 					MathEllipse e1 = new MathEllipse(startPlanet.getMass(), startPlanet.getRadius());
 
-					//System.out.println(e1.semi_major() + " " + e1.semi_minor());
-
-					//route.setRadiusX(e1.semi_major()/1e5 * SCREEN_SCALE);
-					//route.setRadiusY(e1.semi_minor()/1e5 * SCREEN_SCALE);
-					route.setRadiusX(Math.abs(endOrbit[0] - startOrbit[0]) / 2 * SCREEN_SCALE);
+					route.setRadiusX(Math.abs(endOrbit[1] - startOrbit[1]) / 2 * SCREEN_SCALE);
 					route.setRadiusY(Math.abs(endOrbit[1] - startOrbit[1]) / 2 * SCREEN_SCALE);
 					
-					double transferRadius = (endOrbit[0] / 2 - startOrbit[0] / 2);
+					double transferRadius = (endOrbit[1] / 2 - startOrbit[1] / 2);
 					
 					route.setCenterX(startPlanet.getX());
 					route.setCenterY(startPlanet.getY() + (startOrbit[1] + transferRadius) * SCREEN_SCALE);
@@ -253,9 +249,9 @@ public class JourneyController extends SuperController implements Initializable 
 			}
 		};
 		
-		//
+		//new KeyFrame(Duration.ZERO, planetMovement),
 
-		timeline = new Timeline( new KeyFrame(Duration.ZERO, planetMovement),
+		timeline = new Timeline( 
 				new KeyFrame(Duration.ZERO, spaceshipMove),
 				new KeyFrame(Duration.millis(STEP_DURATION)));
 
@@ -272,7 +268,7 @@ public class JourneyController extends SuperController implements Initializable 
 		systemPane.getChildren().add(enterprise.getGUIShip());
 		systemPane.getChildren().add(enterprise.getGUITrail());
 
-		//systemPane.getChildren().add(route);
+		systemPane.getChildren().add(route);
 
 		timeline.play();
 
