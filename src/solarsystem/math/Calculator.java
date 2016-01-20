@@ -7,8 +7,14 @@ import solarsystem.objects.BodyInSpace;
 
 public class Calculator {
 
-	public static double dv1, dv2, t;
-	public static String type;
+	public double dv1, dv2, t;
+	public String type;
+	public BodyInSpace current_p, new_p;
+	public MathEllipse current_e, new_e;
+	
+	public Calculator(){
+		
+	}
 
 	public static void main(String[] args) {
 
@@ -51,11 +57,11 @@ public class Calculator {
 		//System.out.println(r1 + " " + r2);
 		MathEllipse x = new MathEllipse(earth.getMass(), r1, r2);
 		//System.out.println(x.getEllipseData());
-		//c.transfer_slow(earth, earth, x);
+		c.transfer_slow(earth, earth, x);
 
 
-		MathEllipse x1 = new MathEllipse(earth.getMass(), 520, 200);
-		System.out.println(x1.getEllipseData());
+		//MathEllipse x1 = new MathEllipse(earth.getMass(), 520, 200);
+		//System.out.println(x1.getEllipseData());
 
 	}
 
@@ -82,9 +88,9 @@ public class Calculator {
 
 	public void transfer(BodyInSpace p, MathEllipse current, MathEllipse target) {
 		double tot = 1.0e20; 
-		horiz_trans("pp", tot, p.getMass(), current.periapse(), current.speed_p(), target.periapse() , target.speed_p());
-		horiz_trans("aa", tot, p.getMass(), current.apoapse(), current.speed_a(), target.apoapse(), target.speed_a());
-		horiz_trans("pa", tot, p.getMass(), current.periapse(), current.speed_p(), target.apoapse(), target.speed_a());
+		//horiz_trans("pp", tot, p.getMass(), current.periapse(), current.speed_p(), target.periapse() , target.speed_p());
+		//horiz_trans("aa", tot, p.getMass(), current.apoapse(), current.speed_a(), target.apoapse(), target.speed_a());
+		//horiz_trans("pa", tot, p.getMass(), current.periapse(), current.speed_p(), target.apoapse(), target.speed_a());
 		horiz_trans("ap", tot, p.getMass(), current.apoapse(), current.speed_a(), target.periapse(), target.speed_p());
 
 	}
