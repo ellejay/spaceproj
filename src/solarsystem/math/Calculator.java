@@ -11,9 +11,11 @@ public class Calculator {
 	public String type;
 	public BodyInSpace current_p, new_p;
 	public MathEllipse current_e, new_e;
+	private double G = 0.6612e-10;
 	
-	public Calculator(){
-		
+	public Calculator(BodyInSpace initialPlanet, MathEllipse initialOrbit){
+		this.current_p = initialPlanet;
+		this.current_e = initialOrbit;
 	}
 
 	public static void main(String[] args) {
@@ -48,7 +50,10 @@ public class Calculator {
 
 		// TRANSFER WORK
 
-		Calculator c = new Calculator();
+		MathEllipse start = new MathEllipse(earth.getMass(), earth.getRadius(), earth.getRadius());
+		System.out.println("start " + start.getEllipseData());
+		
+		Calculator c = new Calculator(p.get("Earth"), start);
 
 		// convert from input (km above surface) to internal
 		// (m from centre)
@@ -57,7 +62,7 @@ public class Calculator {
 		//System.out.println(r1 + " " + r2);
 		MathEllipse x = new MathEllipse(earth.getMass(), r1, r2);
 		//System.out.println(x.getEllipseData());
-		c.transfer_slow(earth, earth, x);
+		//c.transfer_slow(earth, x);
 
 
 		//MathEllipse x1 = new MathEllipse(earth.getMass(), 520, 200);
@@ -65,25 +70,132 @@ public class Calculator {
 
 	}
 
-	public void transfer_slow(BodyInSpace cur_p, BodyInSpace p, MathEllipse target){
+	public void transfer_slow(BodyInSpace p, MathEllipse target){
 		double d1, d2, ts; // increments for take off and landing
 		String tys;
 
-		/* same primary */
+		// Orbital Transfer
 
-		if (cur_p.equals(p))
+		if (current_p.equals(p))
 		{
-			if (true) // currently landed on planet
+			if (current_e.equals(0)) // currently landed on planet
 			{
-				MathEllipse e1 = new MathEllipse(cur_p.getMass(), cur_p.getRadius());
-				transfer(cur_p, e1, target);
+				MathEllipse e1 = new MathEllipse(current_p.getMass(), current_p.getRadius());
+				transfer(current_p, e1, target);
 				d1 = dv1 + e1.speed_p();
+				d2 = dv2;
+				ts = t;
+				tys = type;
+			}
+			if (target.equals(0)) // landing on planet surface
+			{
+				MathEllipse e1 = new MathEllipse(p.getMass(), p.getRadius());
+				transfer(current_p, current_e, e1);
+				d1 = dv1;
+				d2 = dv2 + e1.speed_p();
+				ts = t;
+				tys=type;
+			}
+			else {
+				transfer(current_p, current_e, target);
+				d1 = dv1;
 				d2 = dv2;
 				ts = t;
 				tys = type;
 			}
 			System.out.printf("%6.0f %6.0f %6.0f (%s) \n", d1, d2, ts, tys);
 		}
+		
+		// Sibling Transfer
+		
+		else if (current_p.getParent().equals(p.getParent())) {
+			transferToSibling(current_p, p, current_e, target);
+		}
+		
+		// Transfer From Child
+		else if (current_p.getParent().equals(p)) {
+			transferToChild(p, current_p, target, current_e);
+		}
+		
+		// Transfer To Child
+		else if (current_p.equals(p.getParent())) {
+			transferToChild(current_p, p, current_e, target);
+		}
+		
+		else {
+			System.out.println("You cannot make this transfer");
+		}
+		
+		current_p = p;
+		current_e = target;
+	}
+	
+	
+	public void transferToSibling(BodyInSpace startPlanet, BodyInSpace endPlanet, MathEllipse startOrbit, MathEllipse endOrbit) {
+		double d1, d2, ts, w1, w2, T, ph1, ph2;
+		
+		if (!startPlanet.getParent().equals(endPlanet.getParent())) {
+			return;
+		}
+		
+		BodyInSpace parent = startPlanet.getParent();
+		MathEllipse stage1 = new MathEllipse(parent.getMass(), startPlanet.getOrbitInM());
+		MathEllipse stage2 = new MathEllipse(parent.getMass(), endPlanet.getOrbitInM());
+		transfer(parent, stage1, stage2);
+		
+		Hyper h1 = new Hyper(startPlanet.getMass(), startOrbit.periapse(), dv1);
+		Hyper h2 = new Hyper(endPlanet.getMass(), endOrbit.periapse(), dv2);
+		d1 = h1.speed_p() - startOrbit.speed_p();
+		d2 = h2.speed_p() - endOrbit.speed_p();
+		ts = t;
+		
+		w1 = startPlanet.getAngularV();
+		w2 = endPlanet.getAngularV();
+		T = ts;
+		
+		
+		if (w1 > w2) // inner to outer
+		{
+			ph1 = 180.0 + w2 * T;
+			while (ph1 > 360.0)
+				ph1 -= 360.0;
+			ph2 = 180.0 + w1 * T;
+			while (ph2 > 360.0)
+				ph2 -= 360.0;
+		}
+		else // outer to inner
+		{
+			ph1 = 180.0 - w2 * T;
+			while (ph1 < 0.0)
+				ph1 += 360.0;
+			ph2 = 180.0 - w1 * T;
+			while (ph2 < 0.0)
+				ph2 += 360.0;
+		}
+		
+		System.out.println(d1 + " " + d2 + " " + ts);
+		System.out.printf("%s-%s phase angle before %1.0f after %1.0f\n", startPlanet.getName(), endPlanet.getName(), ph1, ph2);
+	
+	}
+	
+	public void transferToChild(BodyInSpace parent, BodyInSpace child, MathEllipse parentOrbit, MathEllipse childOrbit) {
+		
+		double d1, d2, ts;
+		
+		if (!parent.equals(child.getParent())) {
+			return;
+		}
+		
+		MathEllipse transfer = new MathEllipse (parent.getMass(), child.getOrbitInM());
+		transfer(parent, parentOrbit, transfer);
+		
+		d1 = dv1;
+		Hyper h2 = new Hyper(child.getMass(), childOrbit.periapse(), dv2);
+		d2 = h2.speed_p() - childOrbit.speed_p();
+		ts = t;
+		
+		System.out.println(d1 + " " + d2 + " " + ts);
+		
 	}
 
 	public void transfer(BodyInSpace p, MathEllipse current, MathEllipse target) {

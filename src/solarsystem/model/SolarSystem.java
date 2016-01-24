@@ -14,7 +14,7 @@ public class SolarSystem extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("system.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("../resources/xml/system.fxml"));
         
         stage.setTitle("FXML Space");
         stage.setScene(new Scene(root, 650, 650));

@@ -35,7 +35,7 @@
     </HBox>
         
     <stylesheets>
-      <URL value="@../resources/css/window.css" />
+      <URL value="@../css/window.css" />
     </stylesheets>
 
 </GridPane>

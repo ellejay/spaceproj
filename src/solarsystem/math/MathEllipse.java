@@ -28,7 +28,7 @@ public class MathEllipse {
 	}
 	
 	public double semi_minor() {
-		double res = a * Math.sqrt(1-(e * e));
+		double res = a * Math.sqrt(1 - (e * e));
 		return res;
 	}
 

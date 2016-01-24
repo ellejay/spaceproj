@@ -152,7 +152,7 @@ public class PathSelectionController extends SuperController implements Initiali
 
 								Parent root;
 								try {
-									root = FXMLLoader.load(getClass().getResource("orbitdialog.fxml"));
+									root = FXMLLoader.load(getClass().getResource("../resources/xml/orbitdialog.fxml"));
 									Stage dialog = new Stage();
 									dialog.setTitle("FXML Space");
 									dialog.setScene(new Scene(root, 200, 150));
@@ -241,7 +241,7 @@ public class PathSelectionController extends SuperController implements Initiali
 	    	Parent root;
 	    	stage=(Stage) startButton.getScene().getWindow();
 	    	
-	    	root = FXMLLoader.load(getClass().getResource("journeyanimation.fxml"));
+	    	root = FXMLLoader.load(getClass().getResource("../resources/xml/journeyanimation.fxml"));
 	    	Scene scene = new Scene(root, 650, 650);
 	    	
 	        stage.setScene(scene);

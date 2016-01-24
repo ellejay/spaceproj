@@ -107,7 +107,7 @@ public class JourneyController extends SuperController implements Initializable 
 
 		Ellipse route = new Ellipse();
 		route.getStyleClass().add("planet-orbit-path");
-		Calculator calc = new Calculator();
+		//Calculator calc = new Calculator();
 
 		EventHandler<ActionEvent> spaceshipMove = new EventHandler<ActionEvent>() { 
 			@Override
@@ -131,12 +131,12 @@ public class JourneyController extends SuperController implements Initializable 
 
 					endPlanet = planets.get(phaseEnd);
 
-					/*if (endOrbit[0] < startOrbit[0]) {
+					if (startPlanet.getOrbit() > endPlanet.getOrbit()) {
 						movement = -1;
 					}
 					else {
 						movement = 1;
-					}*/
+					}
 				}
 				catch (IndexOutOfBoundsException e) {
 					phaseEnd = "";
@@ -145,6 +145,9 @@ public class JourneyController extends SuperController implements Initializable 
 				double moveX, moveY = 0;
 
 				int direction = 1;
+				double periapse; 
+				double apoapsis = startOrbit[0];
+				BodyInSpace nearestPlanet = startPlanet;
 
 				if (steps % 2 == 1) {
 
@@ -153,35 +156,39 @@ public class JourneyController extends SuperController implements Initializable 
 					if (phaseStart.equals(phaseEnd)) {
 						enterprise.setParent(startPlanet);
 
-						//MathEllipse e1 = new MathEllipse(startPlanet.getMass(), startPlanet.getRadius());
+						//MathEllipse e1 = new MathEllipse(startPlanet.getMass(), (endOrbit[1] + startOrbit[0]) / 2);
+						
 
-						route.setRadiusX(Math.abs(endOrbit[1] + startOrbit[0]) / 2 * SCREEN_SCALE);
-						route.setRadiusY(Math.abs(endOrbit[1] + startOrbit[0]) / 2 * SCREEN_SCALE);
+						route.setRadiusX((endOrbit[1] + startOrbit[0]) / 2 * SCREEN_SCALE);
+						route.setRadiusY((endOrbit[1] + startOrbit[0]) / 2 * SCREEN_SCALE);
 
 						transferRadius = (endOrbit[1] + startOrbit[0])/ 2;
-						
-						//System.out.println(endOrbit[1] + " " + startOrbit[0] + " " + transferRadius);
 
 						route.setCenterX(enterprise.getParent().getX() - ((transferRadius - startOrbit[0]) * SCREEN_SCALE));
 						route.setCenterY(enterprise.getParent().getY());
-						
-						//+ (startOrbit[1] + transferRadius) * SCREEN_SCALE
-						
-						//((transferRadius + startOrbit[1]) * SCREEN_SCALE)
 
 					}
 					else {
 						enterprise.setParent(startPlanet.getParent());
 
-						//System.out.println(startPlanet.getAngle() - endPlanet.getAngle());
+						double distance = Math.abs(endPlanet.getOrbit() - startPlanet.getOrbit());
+						
+						if (movement == 1) {
+							apoapsis = startOrbit[0];
+							periapse = endOrbit[1];
+							nearestPlanet = startPlanet;
+						}
+						else {
+							periapse = startOrbit[1];
+							apoapsis = endOrbit[0];
+							nearestPlanet = endPlanet;
+						}
 
-						double distance = (endPlanet.getOrbit() - startPlanet.getOrbit());
-
-						route.setRadiusX(Math.abs(startOrbit[0] + endOrbit[1] + distance) / 2 * SCREEN_SCALE);
-						route.setRadiusY(Math.abs(startOrbit[0] + endOrbit[1] + distance) / 2 * SCREEN_SCALE);
+						route.setRadiusX((apoapsis + periapse + distance) / 2 * SCREEN_SCALE);
+						route.setRadiusY((apoapsis + periapse + distance) / 2 * SCREEN_SCALE);
 						
 
-						route.setCenterX(enterprise.getParent().getX() - route.getRadiusX() - (startPlanet.getOrbit() + startOrbit[0]) * SCREEN_SCALE);
+						route.setCenterX(enterprise.getParent().getX() - route.getRadiusX() - (nearestPlanet.getOrbit() - apoapsis) * SCREEN_SCALE);
 						route.setCenterY(enterprise.getParent().getY());
 
 					}
@@ -195,23 +202,12 @@ public class JourneyController extends SuperController implements Initializable 
 
 					if (newStep) {
 
-						/*if (movement == -1) {
+						if (movement == -1) {
 							enterprise.setAngle(3.14);
-							direction = -1;
 						}
-						else {*/
+						else {
 							enterprise.setAngle(0);
-
-							/*if ((steps / 2) % 2 == 1) {
-								enterprise.setRotation(direction * -1);
-							}
-							else {
-								enterprise.setRotation(direction * 1);
-							}
-
 						}
-
-						System.out.println(enterprise.getRotation());*/
 
 						newStep = false;
 						rotateCount = 0;
@@ -222,10 +218,9 @@ public class JourneyController extends SuperController implements Initializable 
 
 					if (phaseStart.equals(phaseEnd)) {
 						enterprise.setCenterPoint(enterprise.getParent().getX() - ((transferRadius - startOrbit[0]) * SCREEN_SCALE), enterprise.getParent().getY());
-						//+ (startOrbit[1] + transferRadius) * SCREEN_SCALE
 					}
 					else {
-						enterprise.setCenterPoint(enterprise.getParent().getX() - route.getRadiusY() - (startPlanet.getOrbit() + startOrbit[0]) *  SCREEN_SCALE, enterprise.getParent().getY());
+						enterprise.setCenterPoint(enterprise.getParent().getX() - route.getRadiusY() - (nearestPlanet.getOrbit() - apoapsis) *  SCREEN_SCALE, enterprise.getParent().getY());
 					}
 
 					rotateCount++;
@@ -235,18 +230,7 @@ public class JourneyController extends SuperController implements Initializable 
 					}
 				}
 
-				else {				
-
-					/*if (movement == -1) {
-
-						if ((steps / 2) % 2 == 1) {
-							enterprise.setRotation(direction * 1);
-						}
-						else {
-							enterprise.setRotation(direction * -1);
-						}
-
-					}*/
+				else {
 
 					if (newStep) {
 						newStep = false;
@@ -263,8 +247,6 @@ public class JourneyController extends SuperController implements Initializable 
 						MathEllipse orbit = new MathEllipse(startPlanet.getMass(), startOrbit[0], startOrbit[1]);
 
 						offset = (startOrbit[0] - startOrbit[1]) / 2;
-						
-						//System.out.println(orbit.semi_major() + " " + orbit.semi_minor());
 
 						enterprise.setRadius(orbit.semi_major(), orbit.semi_minor());
 
@@ -293,9 +275,9 @@ public class JourneyController extends SuperController implements Initializable 
 			}
 		};
 
-		// new KeyFrame(Duration.ZERO, planetMovement),
+		//
 
-		timeline = new Timeline( 
+		timeline = new Timeline( new KeyFrame(Duration.ZERO, planetMovement),
 				new KeyFrame(Duration.ZERO, spaceshipMove),
 				new KeyFrame(Duration.millis(STEP_DURATION)));
 
@@ -349,7 +331,7 @@ public class JourneyController extends SuperController implements Initializable 
 		routePlanets.clear();
 		routeOrbit.clear();
 
-		root = FXMLLoader.load(getClass().getResource("pathselect.fxml"));
+		root = FXMLLoader.load(getClass().getResource("../resources/xml/pathselect.fxml"));
 		Scene scene = new Scene(root, 650, 650);
 
 		stage.setScene(scene);

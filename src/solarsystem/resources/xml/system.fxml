@@ -45,8 +45,8 @@
   </right>
   
   <stylesheets>
-    <URL value="@../resources/css/window.css" />
-    <URL value="@../resources/css/spacebodies.css"/>
+    <URL value="@../css/window.css" />
+    <URL value="@../css/spacebodies.css"/>
   </stylesheets>
   
 </BorderPane>

@@ -140,7 +140,7 @@ public class SolarSystemController extends SuperController implements Initializa
     	Parent root;
     	stage=(Stage) switchScene.getScene().getWindow();
     	
-    	root = FXMLLoader.load(getClass().getResource("pathselect.fxml"));
+    	root = FXMLLoader.load(getClass().getResource("../resources/xml/pathselect.fxml"));
     	Scene scene = new Scene(root, 650, 650);
     	
         stage.setScene(scene);
