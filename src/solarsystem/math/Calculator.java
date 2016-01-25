@@ -50,8 +50,7 @@ public class Calculator {
 
 		// TRANSFER WORK
 
-		MathEllipse start = new MathEllipse(earth.getMass(), earth.getRadius(), earth.getRadius());
-		System.out.println("start " + start.getEllipseData());
+		MathEllipse start = null;
 		
 		Calculator c = new Calculator(p.get("Earth"), start);
 
@@ -62,8 +61,13 @@ public class Calculator {
 		//System.out.println(r1 + " " + r2);
 		MathEllipse x = new MathEllipse(earth.getMass(), r1, r2);
 		//System.out.println(x.getEllipseData());
-		//c.transfer_slow(earth, x);
+		c.transfer_slow(earth, x);
 
+		BodyInSpace mars = p.get("Mercury");
+		double s1 = mars.getRadius() + 1.0e3 * 250;
+		double s2 = mars.getRadius() + 1.0e3 * 250;
+		MathEllipse y = new MathEllipse(mars.getMass(), s1, s2);
+		c.transfer_slow(mars, y);
 
 		//MathEllipse x1 = new MathEllipse(earth.getMass(), 520, 200);
 		//System.out.println(x1.getEllipseData());
@@ -78,8 +82,9 @@ public class Calculator {
 
 		if (current_p.equals(p))
 		{
-			if (current_e.equals(0)) // currently landed on planet
+			if (current_e == null) // currently landed on planet
 			{
+				System.out.println("landed");
 				MathEllipse e1 = new MathEllipse(current_p.getMass(), current_p.getRadius());
 				transfer(current_p, e1, target);
 				d1 = dv1 + e1.speed_p();
@@ -87,8 +92,9 @@ public class Calculator {
 				ts = t;
 				tys = type;
 			}
-			if (target.equals(0)) // landing on planet surface
+			else if (target == null) // landing on planet surface
 			{
+				System.out.println("landing on destination");
 				MathEllipse e1 = new MathEllipse(p.getMass(), p.getRadius());
 				transfer(current_p, current_e, e1);
 				d1 = dv1;
@@ -173,7 +179,7 @@ public class Calculator {
 				ph2 += 360.0;
 		}
 		
-		System.out.println(d1 + " " + d2 + " " + ts);
+		System.out.println(d1 + " " + d2 + " " + (ts / 60 / 60 / 24));
 		System.out.printf("%s-%s phase angle before %1.0f after %1.0f\n", startPlanet.getName(), endPlanet.getName(), ph1, ph2);
 	
 	}
@@ -203,6 +209,9 @@ public class Calculator {
 		//horiz_trans("pp", tot, p.getMass(), current.periapse(), current.speed_p(), target.periapse() , target.speed_p());
 		//horiz_trans("aa", tot, p.getMass(), current.apoapse(), current.speed_a(), target.apoapse(), target.speed_a());
 		//horiz_trans("pa", tot, p.getMass(), current.periapse(), current.speed_p(), target.apoapse(), target.speed_a());
+		
+		//System.out.println(current.apoapse() + " " + current.speed_a());
+		
 		horiz_trans("ap", tot, p.getMass(), current.apoapse(), current.speed_a(), target.periapse(), target.speed_p());
 
 	}
