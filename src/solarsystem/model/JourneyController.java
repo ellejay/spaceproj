@@ -107,7 +107,7 @@ public class JourneyController extends SuperController implements Initializable 
 
 		Ellipse route = new Ellipse();
 		route.getStyleClass().add("planet-orbit-path");
-		//Calculator calc = new Calculator();
+		Calculator calc = new Calculator(planets.get(routePlanets.get(0)));
 
 		EventHandler<ActionEvent> spaceshipMove = new EventHandler<ActionEvent>() { 
 			@Override
@@ -157,7 +157,6 @@ public class JourneyController extends SuperController implements Initializable 
 						enterprise.setParent(startPlanet);
 
 						//MathEllipse e1 = new MathEllipse(startPlanet.getMass(), (endOrbit[1] + startOrbit[0]) / 2);
-						
 
 						route.setRadiusX((endOrbit[1] + startOrbit[0]) / 2 * SCREEN_SCALE);
 						route.setRadiusY((endOrbit[1] + startOrbit[0]) / 2 * SCREEN_SCALE);
@@ -193,12 +192,7 @@ public class JourneyController extends SuperController implements Initializable 
 
 					}
 
-
-
-					routeData.setText(route.getRadiusX() + " " + route.getRadiusY() + " " + route.getCenterY() + " " + route.getCenterX());
-
 					enterprise.setRadius(route.getRadiusX() / SCREEN_SCALE, route.getRadiusY() / SCREEN_SCALE);
-
 
 					if (newStep) {
 
@@ -211,6 +205,13 @@ public class JourneyController extends SuperController implements Initializable 
 
 						newStep = false;
 						rotateCount = 0;
+						
+						double r1 = endPlanet.getRadius() + 1.0e3 * endOrbit[0];
+						double r2 = endPlanet.getRadius() + 1.0e3 * endOrbit[1];
+						
+						MathEllipse transfer = new MathEllipse(endPlanet.getMass(), r2, r1);
+						calc.transfer_slow(endPlanet, transfer);
+						routeData.setText(calc.getTransferData());
 					}
 					else {
 						enterprise.incrementAngle();
@@ -228,6 +229,7 @@ public class JourneyController extends SuperController implements Initializable 
 						timeline.pause();
 						//steps++;
 					}
+					
 				}
 
 				else {

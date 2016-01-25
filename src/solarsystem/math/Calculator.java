@@ -17,6 +17,11 @@ public class Calculator {
 		this.current_p = initialPlanet;
 		this.current_e = initialOrbit;
 	}
+	
+	public Calculator(BodyInSpace initialPlanet){
+		this.current_p = initialPlanet;
+		this.current_e = null;
+	}
 
 	public static void main(String[] args) {
 
@@ -73,10 +78,17 @@ public class Calculator {
 		//System.out.println(x1.getEllipseData());
 
 	}
+	
+	public String getTransferData() {
+		
+		String x = String.format("%6.0fm/s %6.0fm/s %6.0f seconds\n", dv1, dv2, t);
+		return x;
+		
+	}
 
 	public void transfer_slow(BodyInSpace p, MathEllipse target){
-		double d1, d2, ts; // increments for take off and landing
-		String tys;
+		//double d1, d2, ts; // increments for take off and landing
+		//String tys;
 
 		// Orbital Transfer
 
@@ -87,29 +99,19 @@ public class Calculator {
 				System.out.println("landed");
 				MathEllipse e1 = new MathEllipse(current_p.getMass(), current_p.getRadius());
 				transfer(current_p, e1, target);
-				d1 = dv1 + e1.speed_p();
-				d2 = dv2;
-				ts = t;
-				tys = type;
+				dv1 += e1.speed_p();
 			}
 			else if (target == null) // landing on planet surface
 			{
 				System.out.println("landing on destination");
 				MathEllipse e1 = new MathEllipse(p.getMass(), p.getRadius());
 				transfer(current_p, current_e, e1);
-				d1 = dv1;
-				d2 = dv2 + e1.speed_p();
-				ts = t;
-				tys=type;
+				dv2 += e1.speed_p();
 			}
 			else {
 				transfer(current_p, current_e, target);
-				d1 = dv1;
-				d2 = dv2;
-				ts = t;
-				tys = type;
 			}
-			System.out.printf("%6.0f %6.0f %6.0f (%s) \n", d1, d2, ts, tys);
+			System.out.printf("%6.0f %6.0f %6.0f (%s) \n", dv1, dv2, t, type);
 		}
 		
 		// Sibling Transfer
@@ -138,7 +140,7 @@ public class Calculator {
 	
 	
 	public void transferToSibling(BodyInSpace startPlanet, BodyInSpace endPlanet, MathEllipse startOrbit, MathEllipse endOrbit) {
-		double d1, d2, ts, w1, w2, T, ph1, ph2;
+		double w1, w2, T, ph1, ph2;
 		
 		if (!startPlanet.getParent().equals(endPlanet.getParent())) {
 			return;
@@ -151,13 +153,13 @@ public class Calculator {
 		
 		Hyper h1 = new Hyper(startPlanet.getMass(), startOrbit.periapse(), dv1);
 		Hyper h2 = new Hyper(endPlanet.getMass(), endOrbit.periapse(), dv2);
-		d1 = h1.speed_p() - startOrbit.speed_p();
-		d2 = h2.speed_p() - endOrbit.speed_p();
-		ts = t;
+		dv1 = h1.speed_p() - startOrbit.speed_p();
+		dv2 = h2.speed_p() - endOrbit.speed_p();
+		
 		
 		w1 = startPlanet.getAngularV();
 		w2 = endPlanet.getAngularV();
-		T = ts;
+		T = t;
 		
 		
 		if (w1 > w2) // inner to outer
@@ -179,14 +181,12 @@ public class Calculator {
 				ph2 += 360.0;
 		}
 		
-		System.out.println(d1 + " " + d2 + " " + (ts / 60 / 60 / 24));
+		System.out.println(dv1 + " " + dv2 + " " + t);
 		System.out.printf("%s-%s phase angle before %1.0f after %1.0f\n", startPlanet.getName(), endPlanet.getName(), ph1, ph2);
 	
 	}
 	
 	public void transferToChild(BodyInSpace parent, BodyInSpace child, MathEllipse parentOrbit, MathEllipse childOrbit) {
-		
-		double d1, d2, ts;
 		
 		if (!parent.equals(child.getParent())) {
 			return;
@@ -195,12 +195,10 @@ public class Calculator {
 		MathEllipse transfer = new MathEllipse (parent.getMass(), child.getOrbitInM());
 		transfer(parent, parentOrbit, transfer);
 		
-		d1 = dv1;
 		Hyper h2 = new Hyper(child.getMass(), childOrbit.periapse(), dv2);
-		d2 = h2.speed_p() - childOrbit.speed_p();
-		ts = t;
+		dv2 = h2.speed_p() - childOrbit.speed_p();
 		
-		System.out.println(d1 + " " + d2 + " " + ts);
+		System.out.println(dv1 + " " + dv2 + " " + t);
 		
 	}
 
