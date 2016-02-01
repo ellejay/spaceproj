@@ -14,6 +14,7 @@ public class Spaceship {
 	private double center_y;
 	private BodyInSpace parent;
 	private int rotation;
+	private double period;
 	
 	public Spaceship(double radius_x, double radius_y) {
 		
@@ -27,6 +28,7 @@ public class Spaceship {
 		angle = 0;
 		
 		this.rotation = 1;
+		this.period = 600;
 		
 	}
 	
@@ -50,8 +52,13 @@ public class Spaceship {
 		return this.rotation;
 	}
 	
+	public void setPeriod(double period) {
+		if (period > 100) { this.period = period; }
+		else { this.period = 100; }
+	}
+	
 	public void incrementAngle() {
-		this.angle += this.rotation * Math.toRadians( (2 * Math.PI) / (10));
+		this.angle += this.rotation * Math.toRadians( (2 * Math.PI) / (this.period / 10));
 		
 		if (this.angle >= (2 * Math.PI)) {
 			this.angle -= 2 * Math.PI;

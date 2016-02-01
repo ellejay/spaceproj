@@ -1,13 +1,14 @@
 package solarsystem.math;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import solarsystem.model.SpaceObjects;
 import solarsystem.objects.BodyInSpace;
 
 public class Calculator {
 
-	public double dv1, dv2, t;
+	public double dv1, dv2, t, ph1, ph2;
 	public String type;
 	public BodyInSpace current_p, new_p;
 	public MathEllipse current_e, new_e;
@@ -79,9 +80,18 @@ public class Calculator {
 
 	}
 	
+	public double getTime() {
+		return t;
+	}
+	
 	public String getTransferData() {
 		
-		String x = String.format("%6.0fm/s %6.0fm/s %6.0f seconds\n", dv1, dv2, t);
+		double days = Math.floor(t / 86400);
+		double hours = Math.floor((t % 86400) / 3600);
+		double minutes = Math.floor(((t % 86400) % 3600) / 60);
+		double seconds = Math.floor(((t % 86400) % 3600) % 60);
+		
+		String x = String.format("%6.0fm/s %6.0fm/s %6.0f days %6.0f hours %6.0f mins %6.0f s\n", dv1, dv2, days, hours, minutes, seconds);
 		return x;
 		
 	}
@@ -140,7 +150,7 @@ public class Calculator {
 	
 	
 	public void transferToSibling(BodyInSpace startPlanet, BodyInSpace endPlanet, MathEllipse startOrbit, MathEllipse endOrbit) {
-		double w1, w2, T, ph1, ph2;
+		double w1, w2, T;
 		
 		if (!startPlanet.getParent().equals(endPlanet.getParent())) {
 			return;
@@ -184,6 +194,10 @@ public class Calculator {
 		System.out.println(dv1 + " " + dv2 + " " + t);
 		System.out.printf("%s-%s phase angle before %1.0f after %1.0f\n", startPlanet.getName(), endPlanet.getName(), ph1, ph2);
 	
+	}
+	
+	public double getStartPhaseAngle() {
+		return ph1;
 	}
 	
 	public void transferToChild(BodyInSpace parent, BodyInSpace child, MathEllipse parentOrbit, MathEllipse childOrbit) {
