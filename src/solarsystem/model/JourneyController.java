@@ -43,7 +43,7 @@ public class JourneyController extends SuperController implements Initializable 
 	private int rotateCount = 0;
 	private boolean transferWindow = false;
 	private double journeyMoveX = 0, journeyMoveY = 0;
-	private double movementAngle;
+	private double movementAngle, endAngle, transAngle;
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -164,6 +164,11 @@ public class JourneyController extends SuperController implements Initializable 
 
 						route.setCenterX(enterprise.getParent().getX() - ((transferRadius - startOrbit[0]) * SCREEN_SCALE));
 						route.setCenterY(enterprise.getParent().getY());
+						
+						if (newStep) {
+							movementAngle = Math.PI / 2;
+							endAngle = Math.toRadians(270);
+						}
 
 					}
 					else {
@@ -190,16 +195,13 @@ public class JourneyController extends SuperController implements Initializable 
 						route.setCenterX(enterprise.getParent().getX());
 						route.setCenterY(enterprise.getParent().getY() - radiusJourney);
 						
-						if (newStep) {
-							if (movementAngle < 0) {
-								movementAngle += 2 * Math.PI;
-							}
-							
+						if (newStep) {						
 							journeyMoveX = enterprise.getParent().getX() + ((radiusJourney) * 
 									Math.sin(startPlanet.getAngle()));	
 							
 							journeyMoveY = enterprise.getParent().getY() - ((radiusJourney) * 
 									Math.cos(startPlanet.getAngle()));
+							
 						}
 
 						route.setCenterX(journeyMoveX);
@@ -225,7 +227,9 @@ public class JourneyController extends SuperController implements Initializable 
 						routeData.setText(calc.getTransferData());
 						double days = Math.floor(calc.getTime() / 86400);
 						
-						enterprise.setPeriod(days*2);
+						double transitionSpeed = 360 / ((endPlanet.getAngularV() * Math.PI) / transAngle);
+						
+						enterprise.setPeriod(transitionSpeed);
 						
 											
 					}
@@ -242,9 +246,11 @@ public class JourneyController extends SuperController implements Initializable 
 					}
 
 					rotateCount++;
-					if (enterprise.getAngle() == 3.14) {
-						timeline.pause();
-						//steps++;
+					//enterprise.getAngle() == 3.14
+					if (Math.abs(Math.toDegrees(enterprise.getAngle() - endAngle)) < 1) {					
+						//timeline.pause();
+						steps++;
+						newStep = true;
 					}
 					
 				}
@@ -276,10 +282,16 @@ public class JourneyController extends SuperController implements Initializable 
 						if (phase < 0) { phase += 360.0; }
 						//System.out.println(phase + " | " + calc.getStartPhaseAngle());
 						if (Math.abs(phase - calc.getStartPhaseAngle()) < 1) {
-							movementAngle = startPlanet.getAngle() + Math.PI / 2;
-							//movementAngle = ;
-							System.out.println(startPlanet.getAngle());
-							timeline.pause();
+							movementAngle = startPlanet.getAngle() - Math.PI;
+							if (movementAngle < 0) {
+								movementAngle += 2 * Math.PI;
+							}
+							endAngle = startPlanet.getAngle();	
+							transAngle = startPlanet.getAngle() - endPlanet.getAngle();
+							System.out.println(Math.toDegrees(startPlanet.getAngle()) + " | " + Math.toDegrees(endPlanet.getAngle()));
+							//timeline.pause();
+							steps++;
+							newStep = true;
 						}
 					}
 
@@ -292,6 +304,7 @@ public class JourneyController extends SuperController implements Initializable 
 						offset = (startOrbit[0] - startOrbit[1]) / 2;
 
 						enterprise.setRadius(orbit.semi_major(), orbit.semi_minor());
+						//enterprise.getGUITrail().setRotate(45);
 
 					}
 
@@ -301,15 +314,16 @@ public class JourneyController extends SuperController implements Initializable 
 					}
 
 					enterprise.incrementAngle();
+					
 					enterprise.setCenterPoint(startPlanet.getX() + (offset * SCREEN_SCALE), startPlanet.getY());
 
 				}
 
 				moveX = enterprise.getCenterX() + (enterprise.getRadiusX() * SCREEN_SCALE) * 
-						Math.cos(enterprise.getAngle());
+						Math.sin(enterprise.getAngle());
 
 				moveY = enterprise.getCenterY() - (enterprise.getRadiusY() * SCREEN_SCALE) * 
-						Math.sin(enterprise.getAngle());
+						Math.cos(enterprise.getAngle());
 
 				enterprise.setRadius(enterprise.getRadiusX() * SCREEN_SCALE, enterprise.getRadiusY() * SCREEN_SCALE);
 
@@ -318,7 +332,6 @@ public class JourneyController extends SuperController implements Initializable 
 			}
 		};
 
-		//
 
 		timeline = new Timeline( new KeyFrame(Duration.ZERO, planetMovement),
 				new KeyFrame(Duration.ZERO, spaceshipMove),

@@ -86,7 +86,8 @@ public class BodyInSpace {
 	 * speeds of planet objects are relative in the GUI animation.
 	 */
 	public void incrementAngle() {
-		this.angle += Math.toRadians( (2 * Math.PI) / (this.period / 10));
+		//
+		this.angle += Math.toRadians( (2 * Math.PI) / (this.period / 10) );
 		
 		if (this.angle >= (2 * Math.PI)) {
 			this.angle -= 2 * Math.PI;
