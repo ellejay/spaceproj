@@ -18,6 +18,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
+import javafx.scene.input.MouseDragEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
@@ -50,8 +52,6 @@ public class SolarSystemController extends SuperController implements Initializa
     
     
     public void setUp() {
-    	
-		planets = SpaceObjects.getDictionary();
 		
 		EventHandler<ActionEvent> planetMovement = new EventHandler<ActionEvent>() { 
 			@Override
@@ -97,6 +97,44 @@ public class SolarSystemController extends SuperController implements Initializa
 			systemPane.getChildren().add(current.getGUIOrbit());
 			systemPane.getChildren().add(current.getGUIObject());
 		}
+		
+		EventHandler<MouseEvent> moveSystem = new EventHandler<MouseEvent>() {
+			
+			double startX;
+			double startY;
+
+			@Override
+			public void handle(MouseEvent event) {
+				
+				if (event.getEventType() == MouseDragEvent.MOUSE_DRAG_ENTERED) {
+					startX = event.getX();
+					startY = event.getY();
+				}
+				else {
+					systemPane.setTranslateX(systemPane.getTranslateX() + (event.getX() - startX));
+					systemPane.setTranslateY(systemPane.getTranslateY() + (event.getY() - startY));
+				}
+				
+				event.consume();
+				
+			}
+			
+		};
+		
+		EventHandler<MouseEvent> startDrag = new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent event) {
+				systemPane.startFullDrag();
+				
+			}
+			
+		};
+		
+		systemPane.addEventHandler(MouseDragEvent.DRAG_DETECTED, startDrag);
+		systemPane.addEventHandler(MouseDragEvent.MOUSE_DRAG_ENTERED, moveSystem);	
+		systemPane.addEventHandler(MouseDragEvent.MOUSE_DRAG_OVER, moveSystem);
+		systemPane.addEventHandler(MouseDragEvent.MOUSE_DRAG_EXITED, moveSystem);
 		
 
 		timeline.play();

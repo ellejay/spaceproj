@@ -37,7 +37,7 @@
   <right>
   
   <StackPane>
-  <Slider fx:id="zoomSlide" orientation="VERTICAL" min="0.065" max="1.35" value="0.7075" maxHeight="400"/>
+  <Slider fx:id="zoomSlide" orientation="VERTICAL" min="0.045" max="1.35" value="0.7075" maxHeight="400"/>
  
   <Button fx:id="switchScene" onAction="#stopTimeline" text="Map Journey" translateY="305"/>
   </StackPane>

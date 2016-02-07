@@ -35,8 +35,6 @@ public class PathSelectionController extends SuperController implements Initiali
     
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		
-		Map<String, BodyInSpace> planets = SpaceObjects.getDictionary();
 
         zoomSlide.setValue(SCREEN_SCALE);
 		
@@ -136,12 +134,12 @@ public class PathSelectionController extends SuperController implements Initiali
 
 			@Override
 			public void handle(MouseEvent event) {	
-				double[] landed = {0, 0};
+				final double[] landed = {0, 0};
 				boolean planetFound = false;
 				
 				for (BodyInSpace current: planets.values()) {
 					if (event.getTarget().equals(current.getGUIObject())){
-						String name = current.getName();
+						final String name = current.getName();
 						planetFound = true;
 						
 						contextFileMenu.show(systemPane, event.getScreenX(), event.getScreenY());

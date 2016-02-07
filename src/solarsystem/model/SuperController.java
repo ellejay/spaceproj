@@ -11,7 +11,7 @@ public class SuperController {
     // Planet scale factor
  	protected static double SCREEN_SCALE = 0.7075;
  	protected static double midPoint = 295;
- 	protected Map<String, BodyInSpace> planets;
+ 	final protected Map<String, BodyInSpace> planets = SpaceObjects.getDictionary();
  	protected Timeline timeline = null;
  	// Rotation speed
  	protected static double STEP_DURATION = 2; //milliseconds

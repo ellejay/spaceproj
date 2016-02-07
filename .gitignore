@@ -12,6 +12,10 @@ Thumbs.db
 
 bin/
 
+.idea/
+
+spaceproj.iml
+
 .project
 .classpath
 

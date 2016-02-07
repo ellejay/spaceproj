@@ -65,8 +65,6 @@ public class JourneyController extends SuperController implements Initializable 
 
 	public void setUp() {
 
-		planets = SpaceObjects.getDictionary();
-
 		for (BodyInSpace current: planets.values()) {  
 			current.resetPlanet();
 		}
@@ -104,13 +102,13 @@ public class JourneyController extends SuperController implements Initializable 
 		BodyInSpace sun = SpaceObjects.getSun();
 		sun.moveGUIObject(midPoint, midPoint);
 
-		Spaceship enterprise = new Spaceship(0,0);
+		final Spaceship enterprise = new Spaceship(0,0);
 
 		steps = 0;
 
-		Ellipse route = new Ellipse();
+		final Ellipse route = new Ellipse();
 		route.getStyleClass().add("planet-orbit-path");
-		Calculator calc = new Calculator(planets.get(routePlanets.get(0)));
+		final Calculator calc = new Calculator(planets.get(routePlanets.get(0)));
 
 		EventHandler<ActionEvent> spaceshipMove = new EventHandler<ActionEvent>() { 
 			@Override
