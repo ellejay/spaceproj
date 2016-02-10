@@ -14,3 +14,7 @@
 .route_label {
 	-fx-text-fill: white;
 }
+
+.controlPane {
+    -fx-background-color: #fff;
+}

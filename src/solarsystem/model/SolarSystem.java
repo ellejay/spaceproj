@@ -17,7 +17,7 @@ public class SolarSystem extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("../resources/xml/system.fxml"));
         
         stage.setTitle("FXML Space");
-        stage.setScene(new Scene(root, 650, 650));
+        stage.setScene(new Scene(root, 750, 600));
         stage.show();
     }
 }
