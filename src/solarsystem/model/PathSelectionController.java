@@ -24,7 +24,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import solarsystem.objects.BodyInSpace;
-import solarsystem.model.SpaceObjects;
+import solarsystem.objects.SpaceObjects;
  
 public class PathSelectionController extends SuperController implements Initializable {
 	

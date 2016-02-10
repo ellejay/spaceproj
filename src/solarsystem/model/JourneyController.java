@@ -26,10 +26,10 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import solarsystem.objects.BodyInSpace;
+import solarsystem.objects.SpaceObjects;
 import solarsystem.objects.Spaceship;
 import solarsystem.math.Calculator;
 import solarsystem.math.MathEllipse;
-import solarsystem.model.SpaceObjects;
 
 public class JourneyController extends SuperController implements Initializable {
 

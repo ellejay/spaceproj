@@ -14,6 +14,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -23,10 +24,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import solarsystem.objects.BodyInSpace;
-import solarsystem.model.SpaceObjects;
+import solarsystem.objects.SpaceObjects;
  
 public class SolarSystemController extends SuperController implements Initializable {
 		
@@ -179,7 +181,7 @@ public class SolarSystemController extends SuperController implements Initializa
     	stage=(Stage) switchScene.getScene().getWindow();
     	
     	root = FXMLLoader.load(getClass().getResource("../resources/xml/pathselect.fxml"));
-    	Scene scene = new Scene(root, 650, 650);
+    	Scene scene = new Scene(root, 750, 600);
     	
         stage.setScene(scene);
         stage.show();

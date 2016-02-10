@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javafx.animation.Timeline;
 import solarsystem.objects.BodyInSpace;
+import solarsystem.objects.SpaceObjects;
 
 public class SuperController {
 	

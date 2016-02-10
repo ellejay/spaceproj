@@ -3,8 +3,8 @@ package solarsystem.math;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import solarsystem.model.SpaceObjects;
 import solarsystem.objects.BodyInSpace;
+import solarsystem.objects.SpaceObjects;
 
 public class Calculator {
 
