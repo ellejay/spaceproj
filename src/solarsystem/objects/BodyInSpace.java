@@ -26,14 +26,14 @@ public class BodyInSpace {
 	/**
 	 * Constructor method to create planet given all required data.
 	 * 
-	 * @param name
-	 * @param diameter
-	 * @param mass
-	 * @param orbit
-	 * @param period
-	 * @param angle
-	 * @param center
-	 * @param orbit_scale
+	 * @param name Name of the body created
+	 * @param diameter Diameter of the body in km
+	 * @param mass Mass of the body in kg
+	 * @param orbit Radius of the orbital distance from the Body's parent in km
+	 * @param period Number of days body takes to complete one full orbit
+	 * @param angle Current angle of the body along its orbital path
+	 * @param center Parent object of the body
+	 * @param orbit_scale Current scale displayed on the GUI
 	 */
 	public BodyInSpace(String name, double diameter, double mass, double orbit, double period, 
 			double angle, BodyInSpace center, double orbit_scale) {
@@ -72,8 +72,8 @@ public class BodyInSpace {
 	
 	/**
 	 * Set current position of body.
-	 * @param x
-	 * @param y
+	 * @param x co-ordinate of the body
+	 * @param y co-ordinate of the body
 	 */
 	public void setPosition(double x, double y) {
 		pos_x = x;
@@ -97,24 +97,9 @@ public class BodyInSpace {
 	/**
 	 * Reposition the GUI orbit object with the given radius, and
 	 * re-centre it given the position of the parent body.
-	 * @param radius
+	 * @param radius orbital distance from parent body in km
 	 */
 	public void adjustGUIOrbit(double radius) {
-		this.gui_orbit.setRadius(radius);
-		this.gui_orbit.setCenterX(this.center.getX());
-		this.gui_orbit.setCenterY(this.center.getY());
-	}
-	
-	/**
-	 * Reposition the GUI orbit object with the given radius, and
-	 * establish a new parent body for the current body. Orbit will 
-	 * then centre around this body.
-	 * 
-	 * @param radius
-	 * @param center
-	 */
-	public void adjustGUIOrbit(double radius, BodyInSpace center) {
-		this.center = center;
 		this.gui_orbit.setRadius(radius);
 		this.gui_orbit.setCenterX(this.center.getX());
 		this.gui_orbit.setCenterY(this.center.getY());
@@ -124,8 +109,8 @@ public class BodyInSpace {
 	 * Readjusts planet for a new center point, by relocating GUI 
 	 * object and updating the position x & y attributes of the object.
 	 * 
-	 * @param point_x
-	 * @param point_y
+	 * @param point_x new x co-ordinate of planet
+	 * @param point_y new y co-ordinate of planet
 	 */
 	public void moveGUIObject(double point_x, double point_y){
 		this.gui_object.setCenterX(point_x);
@@ -137,7 +122,7 @@ public class BodyInSpace {
 	
 	/**
 	 * Get name of body
-	 * @return
+	 * @return name of body
 	 */
 	public String getName() {
 		return this.name;
@@ -145,7 +130,7 @@ public class BodyInSpace {
 	
 	/**
 	 * Get diameter of body
-	 * @return
+	 * @return diameter of body
 	 */
 	public double getDiameter() {
 		return this.diameter;
@@ -153,7 +138,7 @@ public class BodyInSpace {
 	
 	/**
 	 * Get radius of body
-	 * @return
+	 * @return radius of body in km
 	 */
 	public double getRadius() {
 		return this.diameter * 500;
@@ -161,7 +146,7 @@ public class BodyInSpace {
 	
 	/**
 	 * Get mass of body
-	 * @return
+	 * @return mass of body in kg
 	 */
 	public double getMass() {
 		return this.mass;
@@ -169,7 +154,7 @@ public class BodyInSpace {
 	
 	/**
 	 * Get GUI object which represents the body
-	 * @return
+	 * @return GUI object to represent planet
 	 */
 	public Circle getGUIObject() {
 		return this.gui_object;
@@ -177,7 +162,7 @@ public class BodyInSpace {
 	
 	/** 
 	 * Get x co-ordinate of body's current position
-	 * @return
+	 * @return x co-ordinate
 	 */
 	public double getX() {
 		return pos_x;
@@ -185,7 +170,7 @@ public class BodyInSpace {
 	
 	/** 
 	 * Get y co-ordinate of body's current position
-	 * @return
+	 * @return y co-ordinate
 	 */
 	public double getY() {
 		return pos_y;
@@ -193,7 +178,7 @@ public class BodyInSpace {
 	
 	/**
 	 * Get GUI object which represents orbital path of body
-	 * @return
+	 * @return gui object to display orbital path
 	 */
 	public Circle getGUIOrbit() {
 		return this.gui_orbit;
@@ -201,7 +186,7 @@ public class BodyInSpace {
 	
 	/**
 	 * Get the name of the css style to be applied to this body.
-	 * @return
+	 * @return name of the css class
 	 */
 	public String getStyle() {
 		return "body-" + this.name;
@@ -209,7 +194,7 @@ public class BodyInSpace {
 	
 	/**
 	 * Get orbital radius of body from its parent
-	 * @return
+	 * @return orbital distance from parent in 1e6km
 	 */
 	public double getOrbit() {
 		return this.orbit / 1e6;
@@ -217,7 +202,7 @@ public class BodyInSpace {
 	
 	/**
 	 * Get orbital radius of the body from its parent in metres
-	 * @return
+	 * @return orbital distance from parent in m
 	 */
 	public double getOrbitInM() {
 		return this.orbit * 1000;
@@ -225,7 +210,7 @@ public class BodyInSpace {
 	
 	/**
 	 * Get orbital period of the body in days
-	 * @return
+	 * @return days taken to complete orbit
 	 */
 	public double getPeriod() {
 		return this.period;
@@ -233,7 +218,7 @@ public class BodyInSpace {
 	
 	/**
 	 * Get orbital period of the body in seconds
-	 * @return
+	 * @return seconds take to complete orbit
 	 */
 	public double getPeriodAsSeconds() {
 		return this.period * 24 * 60 * 60;
@@ -241,7 +226,7 @@ public class BodyInSpace {
 	
 	/**
 	 * Get the angular velocity of the body
-	 * @return
+	 * @return angular velocity of planet
 	 */
 	public double getAngularV() {
 		return 360 / this.period;
@@ -249,7 +234,7 @@ public class BodyInSpace {
 	
 	/**
 	 * Get current position angle of the body
-	 * @return
+	 * @return current angle
 	 */
 	public double getAngle() {
 		return this.angle;
@@ -257,7 +242,7 @@ public class BodyInSpace {
 	
 	/** 
 	 * Get parent body of the current body
-	 * @return
+	 * @return parent body
 	 */
 	public BodyInSpace getParent() {
 		return this.center;

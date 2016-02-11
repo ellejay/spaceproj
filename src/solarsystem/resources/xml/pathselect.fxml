@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane fx:controller="solarsystem.model.PathSelectionController" 
+<BorderPane fx:controller="solarsystem.model.PathSelectionController"
     xmlns:fx="http://javafx.com/fxml" styleClass="root">
   
   <center>
@@ -21,7 +21,7 @@
       </padding>
 
       <Text fx:id="routeList" styleClass="route_label" text="" wrappingWidth="120"
-        GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.valignment="TOP"/>
 
       <Slider fx:id="zoomSlide" orientation="VERTICAL" min="0.045" max="1.25" value="0.045" prefHeight="500"
         GridPane.columnIndex="1" GridPane.rowIndex="0"/>
@@ -34,8 +34,8 @@
 
       </GridPane>
   
-  </right>   
-  
+  </right>
+
   <stylesheets>
     <URL value="@../css/window.css" />
     <URL value="@../css/spacebodies.css"/>

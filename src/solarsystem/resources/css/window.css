@@ -21,9 +21,20 @@
 }
 
 .sourcePane {
-    -fx-background-color: red;
+    -fx-background-image: url("../img/stars.jpg");
+    -fx-background-size: contain;
+    -fx-border-color: white;
+    -fx-border-width: 1px;
 }
 
 .destPane {
-    -fx-background-color: blue;
+    -fx-background-image: url("../img/stars.jpg");
+    -fx-background-size: contain;
+    -fx-border-color: white;
+    -fx-border-width: 0px 1px 1px 1px;
+}
+
+.journeyDialog {
+    -fx-border-color: white;
+    -fx-border-width: 1px;
 }

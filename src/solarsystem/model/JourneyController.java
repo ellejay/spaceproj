@@ -7,8 +7,6 @@ import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -17,9 +15,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
@@ -35,9 +32,11 @@ public class JourneyController extends SuperController implements Initializable 
 
 	@FXML private Text actiontarget;
 	@FXML private Pane systemPane;
-	@FXML private Slider zoomSlide;
+	@FXML private Pane sourcePane;
+	@FXML private Pane destPane;
 	@FXML private Button switchScene;
 	@FXML private Text routeData;
+    @FXML private Pane help;
 	private int steps;
 	private boolean newStep = true;
 	private int rotateCount = 0;
@@ -48,18 +47,6 @@ public class JourneyController extends SuperController implements Initializable 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		setUp();
-
-		zoomSlide.setValue(SCREEN_SCALE);
-		zoomSlide.valueProperty().addListener(new ChangeListener<Number>() {
-			public void changed(ObservableValue<? extends Number> ov,
-					Number old_val, Number new_val) {
-				SCREEN_SCALE = (double) new_val;
-				for (BodyInSpace current: planets.values()) {        	
-					current.adjustGUIOrbit(current.getOrbit() * SCREEN_SCALE);
-				}
-			}
-		});
-
 	}
 
 
@@ -110,6 +97,8 @@ public class JourneyController extends SuperController implements Initializable 
 		route.getStyleClass().add("planet-orbit-path");
 		final Calculator calc = new Calculator(planets.get(routePlanets.get(0)));
 
+		resetScale(285/planets.get(routePlanets.get(0)).getOrbit());
+
 		EventHandler<ActionEvent> spaceshipMove = new EventHandler<ActionEvent>() { 
 			@Override
 			public void handle(ActionEvent event) {
@@ -133,9 +122,11 @@ public class JourneyController extends SuperController implements Initializable 
 					
 					if (startPlanet.getOrbit() > endPlanet.getOrbit()) {
 						movement = -1;
+						resetScale(285 / startPlanet.getOrbit());
 					}
 					else {
 						movement = 1;
+						resetScale(285 / endPlanet.getOrbit());
 					}
 				}
 				catch (IndexOutOfBoundsException e) {
@@ -352,6 +343,17 @@ public class JourneyController extends SuperController implements Initializable 
 
 		timeline.play();
 
+		double hey = sourcePane.getPrefWidth() / 2;
+		System.out.println(hey);
+		Circle x =  new Circle(hey, hey, 15);
+		x.getStyleClass().add("body-Mars");
+
+
+		sourcePane.getChildren().add(x);
+		Circle y =  new Circle(hey, hey, 15);
+		y.getStyleClass().add("body-Earth");
+		destPane.getChildren().add(y);
+
 	}
 
 
@@ -363,6 +365,21 @@ public class JourneyController extends SuperController implements Initializable 
 		move.playFromStart();
 	}
 
+	private void resetScale(double new_val) {
+        double val;
+        if (new_val > 0.36) {
+            val = 0.36;
+        }
+        else {
+            val = new_val;
+        }
+
+		SCREEN_SCALE = val;
+		for (BodyInSpace current: planets.values()) {
+			current.adjustGUIOrbit(current.getOrbit() * SCREEN_SCALE);
+		}
+	}
+
 	@FXML protected void nextPhase(ActionEvent event) throws IOException { 
 		if (steps / 2 < routePlanets.size() - 1) {
 			steps++;
@@ -370,6 +387,7 @@ public class JourneyController extends SuperController implements Initializable 
 			timeline.play();
 		}
 		else {
+            help.toFront();
 			System.out.println("journey complete");
 		}
 	}

@@ -1,46 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.net.*?>
-<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane fx:controller="solarsystem.model.JourneyController" 
-    xmlns:fx="http://javafx.com/fxml" styleClass="root">
-  <center>
-  	<Pane fx:id="systemPane" prefWidth="600" prefHeight="600"/>
-  </center>
-  
-  <right>
-  
-  <GridPane styleClass="controlPane" prefWidth="200">
+<?import javafx.geometry.Insets?>
+<StackPane fx:controller="solarsystem.model.JourneyController"
+           xmlns:fx="http://javafx.com/fxml">
 
-      <Pane fx:id="sourcePane" styleClass="sourcePane" prefWidth="200" prefHeight="200"
-        GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+    <Pane fx:id="help" styleClass="journeyDialog">
+        <padding>
+            <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+        </padding>
+        <Button onAction="#stopTimeline" text="This is a test object"/>
+    </Pane>
 
-      <Pane fx:id="destPane" styleClass="destPane" prefWidth="200" prefHeight="200"
-        GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+    <BorderPane styleClass="root">
+        <center>
+            <Pane fx:id="systemPane" prefWidth="600" prefHeight="600"/>
+        </center>
 
-      <Slider fx:id="zoomSlide" orientation="VERTICAL" min="0.045" max="1.25" value="0.045" maxHeight="400"
-          GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+        <right>
 
-      <Button onAction="#nextPhase" text="Next Phase"
-          GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <GridPane prefWidth="200">
 
-      <Button fx:id="switchScene" onAction="#stopTimeline" text="New Journey"
-          GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                <Pane fx:id="sourcePane" styleClass="sourcePane" prefWidth="200" prefHeight="200"
+                      GridPane.columnIndex="0" GridPane.rowIndex="0"/>
 
-      <Text fx:id="routeData" styleClass="route_label" wrappingWidth="80"
-         GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                <Pane fx:id="destPane" styleClass="destPane" prefWidth="200" prefHeight="200"
+                      GridPane.columnIndex="0" GridPane.rowIndex="1"/>
 
-  </GridPane>
-  
-  </right>
-  
-  <stylesheets>
-    <URL value="@../css/window.css" />
-    <URL value="@../css/spacebodies.css"/>
-  </stylesheets>
-  
-</BorderPane>
+
+                <VBox GridPane.columnIndex="0" GridPane.rowIndex="2" styleClass="controlPane" prefHeight="200">
+                    <Button onAction="#nextPhase" text="Next Phase"/>
+
+                    <Button fx:id="switchScene" onAction="#stopTimeline" text="New Journey"/>
+
+                    <Text fx:id="routeData" styleClass="route_label" wrappingWidth="80"/>
+                </VBox>
+
+            </GridPane>
+
+        </right>
+
+    </BorderPane>
+
+    <stylesheets>
+        <URL value="@../css/window.css"/>
+        <URL value="@../css/spacebodies.css"/>
+    </stylesheets>
+
+</StackPane>

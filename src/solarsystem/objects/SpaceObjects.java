@@ -20,7 +20,7 @@ public class SpaceObjects {
 	static BodyInSpace neptune = new BodyInSpace("Neptune", 49500, 1.028e26, 4493.0e6, 60200.0, 2.4, sun, SCREEN_SCALE);
 	static BodyInSpace pluto = new BodyInSpace("Pluto", 2200, 1.1e22, 5898.0e6, 90465.0, 2.1, sun, SCREEN_SCALE);
 	
-	private static Map<String, BodyInSpace> planetsList = new HashMap<String, BodyInSpace>();
+	private static Map<String, BodyInSpace> planetsList = new HashMap<>();
 	
 	public static Map<String, BodyInSpace> getDictionary() {
 		if (planetsList.isEmpty()) {

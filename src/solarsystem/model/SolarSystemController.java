@@ -54,6 +54,8 @@ public class SolarSystemController extends SuperController implements Initializa
     
     
     public void setUp() {
+
+
 		
 		EventHandler<ActionEvent> planetMovement = new EventHandler<ActionEvent>() { 
 			@Override
