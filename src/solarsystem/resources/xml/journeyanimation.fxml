@@ -8,30 +8,35 @@
 
 <BorderPane fx:controller="solarsystem.model.JourneyController" 
     xmlns:fx="http://javafx.com/fxml" styleClass="root">
-  <padding><Insets top="25" right="25" bottom="10" left="25" /></padding>
-  
   <center>
-  	<Pane fx:id="systemPane" prefWidth="500" prefHeight="500"/>
+  	<Pane fx:id="systemPane" prefWidth="600" prefHeight="600"/>
   </center>
   
   <right>
   
-  <StackPane>
-  <Slider fx:id="zoomSlide" orientation="VERTICAL" min="0.065" max="1.35" value="0.7075" maxHeight="400"/>
-  
-  <Button onAction="#nextPhase" text="Next Phase" translateY="250"/>
- 
-  <Button fx:id="switchScene" onAction="#stopTimeline" text="New Journey" translateY="295"/>
-  
-  </StackPane>
+  <GridPane styleClass="controlPane" prefWidth="200">
+
+      <Pane fx:id="sourcePane" styleClass="sourcePane" prefWidth="200" prefHeight="200"
+        GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+
+      <Pane fx:id="destPane" styleClass="destPane" prefWidth="200" prefHeight="200"
+        GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+
+      <Slider fx:id="zoomSlide" orientation="VERTICAL" min="0.045" max="1.25" value="0.045" maxHeight="400"
+          GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+
+      <Button onAction="#nextPhase" text="Next Phase"
+          GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+
+      <Button fx:id="switchScene" onAction="#stopTimeline" text="New Journey"
+          GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+
+      <Text fx:id="routeData" styleClass="route_label" wrappingWidth="80"
+         GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+
+  </GridPane>
   
   </right>
-  
-  <bottom>
-  <Pane>
-  <Label fx:id="routeData" styleClass="route_label"/>
-  </Pane>
-  </bottom>
   
   <stylesheets>
     <URL value="@../css/window.css" />

@@ -1,5 +1,6 @@
 .root {
      -fx-background-image: url("../img/stars.jpg");
+     -fx-background-size: contain;
 }
 
 .button {
@@ -17,4 +18,12 @@
 
 .controlPane {
     -fx-background-color: #fff;
+}
+
+.sourcePane {
+    -fx-background-color: red;
+}
+
+.destPane {
+    -fx-background-color: blue;
 }

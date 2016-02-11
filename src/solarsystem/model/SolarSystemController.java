@@ -89,6 +89,7 @@ public class SolarSystemController extends SuperController implements Initializa
 				new KeyFrame(Duration.millis(STEP_DURATION)));
 
 		timeline.setCycleCount(Timeline.INDEFINITE);
+        //timeline.setRate(STEP_DURATION);
 		
 		BodyInSpace sun = SpaceObjects.getSun();
 		sun.moveGUIObject(midPoint, midPoint);
@@ -152,25 +153,27 @@ public class SolarSystemController extends SuperController implements Initializa
 		move.playFromStart();
 	}
     
-    @FXML protected void buttonSpeedSlow(ActionEvent event) {    	
-    	updateSpeed(1);
-    }
-    
     @FXML protected void buttonSpeedMed(ActionEvent event) {    	
-    	updateSpeed(2);
+    	updateSpeed(-0.5);
     }
     
     @FXML protected void buttonSpeedFast(ActionEvent event) {    	
-    	updateSpeed(3);
-    }
-    
-    @FXML protected void buttonSpeedLightning(ActionEvent event) {    	
-    	updateSpeed(4);
+    	updateSpeed(0.5);
     }
     
     private void updateSpeed(double speed) {
-    	timeline.setRate(speed);
-    	STEP_DURATION = speed;
+
+        System.out.println(timeline.getRate());
+
+		timeline.setRate(timeline.getRate() + speed);
+
+		if (timeline.getRate() < 0.5) {
+			timeline.setRate(0.5);
+		}
+
+        System.out.println(timeline.getRate());
+
+        System.out.println("-------");
     }
     
     @FXML protected void stopTimeline(ActionEvent event) throws IOException { 
@@ -181,7 +184,7 @@ public class SolarSystemController extends SuperController implements Initializa
     	stage=(Stage) switchScene.getScene().getWindow();
     	
     	root = FXMLLoader.load(getClass().getResource("../resources/xml/pathselect.fxml"));
-    	Scene scene = new Scene(root, 750, 600);
+    	Scene scene = new Scene(root);
     	
         stage.setScene(scene);
         stage.show();

@@ -18,11 +18,13 @@ public class SolarSystem extends Application {
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("../resources/xml/system.fxml"));
         
-        stage.setTitle("FXML Space");
-        stage.setScene(new Scene(root, 750, 600));
+        stage.setTitle("Space Explorer");
+        stage.setScene(new Scene(root));
         
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
         stage.setMaxHeight(primaryScreenBounds.getHeight());
+
+        stage.setResizable(false);
         
         stage.show();
     }

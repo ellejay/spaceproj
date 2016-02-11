@@ -37,7 +37,7 @@ public class JourneyController extends SuperController implements Initializable 
 	@FXML private Pane systemPane;
 	@FXML private Slider zoomSlide;
 	@FXML private Button switchScene;
-	@FXML private Label routeData;
+	@FXML private Text routeData;
 	private int steps;
 	private boolean newStep = true;
 	private int rotateCount = 0;
@@ -386,7 +386,7 @@ public class JourneyController extends SuperController implements Initializable 
 		routeOrbit.clear();
 
 		root = FXMLLoader.load(getClass().getResource("../resources/xml/pathselect.fxml"));
-		Scene scene = new Scene(root, 650, 650);
+		Scene scene = new Scene(root);
 
 		stage.setScene(scene);
 		stage.show();

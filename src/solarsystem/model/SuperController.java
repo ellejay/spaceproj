@@ -10,8 +10,8 @@ import solarsystem.objects.SpaceObjects;
 public class SuperController {
 	
     // Planet scale factor
- 	protected static double SCREEN_SCALE = 0.7075;
- 	protected static double midPoint = 295;
+ 	protected static double SCREEN_SCALE = 0.045;
+ 	protected static double midPoint = 300;
  	final protected Map<String, BodyInSpace> planets = SpaceObjects.getDictionary();
  	protected Timeline timeline = null;
  	// Rotation speed

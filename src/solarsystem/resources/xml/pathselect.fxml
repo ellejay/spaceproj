@@ -10,28 +10,29 @@
     xmlns:fx="http://javafx.com/fxml" styleClass="root">
   
   <center>
-  	<Pane fx:id="systemPane" prefWidth="500" prefHeight="500"/>
+  	<Pane fx:id="systemPane" prefWidth="600" prefHeight="600"/>
   </center>
   
   <right>
   
-  <GridPane styleClass="controlPane" vgap="10">
-  <padding>
-       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-  </padding>
-  <Label fx:id="routeList" styleClass="route_label" text="Start Journey:"
-  	GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-  
-  <Slider fx:id="zoomSlide" orientation="VERTICAL" min="0.065" max="1.35" value="0.7075" prefHeight="400"
-  	GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-  
-  <Button onAction="#centerPlanets" text="Centre"
-  	GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-  
-  <Button fx:id="startButton" onAction="#startJourney" text="Start Journey"
-  	GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-  
-  </GridPane>
+      <GridPane styleClass="controlPane" vgap="10" prefWidth="150">
+      <padding>
+           <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+      </padding>
+
+      <Text fx:id="routeList" styleClass="route_label" text="" wrappingWidth="120"
+        GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+
+      <Slider fx:id="zoomSlide" orientation="VERTICAL" min="0.045" max="1.25" value="0.045" prefHeight="500"
+        GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+      <Button onAction="#centerPlanets" text="Centre"
+        GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+
+      <Button fx:id="startButton" onAction="#startJourney" text="Start Journey"
+        GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+
+      </GridPane>
   
   </right>   
   

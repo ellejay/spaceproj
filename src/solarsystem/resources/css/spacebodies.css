@@ -16,37 +16,37 @@
 }
 
 .body-Mercury {
-    -fx-fill: #A8778C;
+    -fx-fill: #DBD4A0;
 }
  
 .body-Venus {
-    -fx-fill: #AC8697;
+    -fx-fill: #CC9B5C;
 }
  
 .body-Earth {
-    -fx-fill: #AF94A3;
+    -fx-fill: #5EAFD1;
 }
  
 .body-Mars {
-    -fx-fill: #B3A3AE;
+    -fx-fill: #B86D4D;
 }
 
 .body-Jupiter {
-    -fx-fill: #B6B2BA;
+    -fx-fill: #D4A474;
 }
 
 .body-Saturn {
-    -fx-fill: #BAC1C5;
-}
-
-.body-Neptune {
-    -fx-fill: #BDCFD1;
+    -fx-fill: #E0D384;
 }
 
 .body-Uranus {
-    -fx-fill: #C1DEDC;
+    -fx-fill: #8FC8CF;
+}
+
+.body-Neptune {
+    -fx-fill: #6D6CA1;
 }
 
 .body-Pluto {
-    -fx-fill: #C1DEDC;
+    -fx-fill: #AD998E;
 }

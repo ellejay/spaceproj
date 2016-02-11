@@ -14,14 +14,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import solarsystem.objects.BodyInSpace;
 import solarsystem.objects.SpaceObjects;
@@ -30,7 +27,7 @@ public class PathSelectionController extends SuperController implements Initiali
 	
     @FXML private Pane systemPane;
     @FXML private Slider zoomSlide;
-    @FXML private Label routeList;
+    @FXML private Text routeList;
     @FXML private Button startButton;
     
 	@Override
@@ -160,8 +157,8 @@ public class PathSelectionController extends SuperController implements Initiali
 									double pass[] = { orbitParams[0], orbitParams[1] };
 									routeOrbit.add(pass);
 									
-									routeList.setText(routeList.getText() + " " + name + " Orbit " + orbitParams[0] + " " + 
-												      orbitParams[1] + " :");
+									routeList.setText(routeList.getText() + " " + name + " Orbit\r\n\t" + orbitParams[0] + " " +
+												      orbitParams[1] + "\r\n");
 									
 								} catch (IOException e) {
 									// TODO Auto-generated catch block
@@ -176,7 +173,7 @@ public class PathSelectionController extends SuperController implements Initiali
 							public void handle(ActionEvent event) {
 								routePlanets.add(name);
 								routeOrbit.add(landed);
-								routeList.setText(routeList.getText() + " " + name + " Surface :");
+								routeList.setText(routeList.getText() + " " + name + " Surface\r\n");
 							}
 						});
 						
@@ -240,7 +237,7 @@ public class PathSelectionController extends SuperController implements Initiali
 	    	stage=(Stage) startButton.getScene().getWindow();
 	    	
 	    	root = FXMLLoader.load(getClass().getResource("../resources/xml/journeyanimation.fxml"));
-	    	Scene scene = new Scene(root, 650, 650);
+	    	Scene scene = new Scene(root);
 	    	
 	        stage.setScene(scene);
 	        stage.show();

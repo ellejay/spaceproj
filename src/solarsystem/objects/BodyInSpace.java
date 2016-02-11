@@ -48,7 +48,7 @@ public class BodyInSpace {
 
 		/* Create default body object, add at origin point of 
 		* canvas (top left) for calculation purposes, and add css style to object. */
-		this.gui_object = new Circle(0, 0, 3);
+		this.gui_object = new Circle(0, 0, 4);
 		this.gui_object.getStyleClass().add(this.getStyle());
 		
 		/* Establish GUI object for the orbit of the planet, centred at the
