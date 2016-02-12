@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -15,6 +16,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
@@ -31,6 +33,7 @@ import solarsystem.math.MathEllipse;
 public class JourneyController extends SuperController implements Initializable {
 
 	@FXML private Text actiontarget;
+	@FXML private Label routeStage;
 	@FXML private Pane systemPane;
 	@FXML private Pane sourcePane;
 	@FXML private Pane destPane;
@@ -202,6 +205,8 @@ public class JourneyController extends SuperController implements Initializable 
 
 					if (newStep) {
 
+						routeStage.setText(startPlanet.getName() + " > " + endPlanet.getName());
+
 						if (movement == -1) {
 							// PI
 							enterprise.setAngle(movementAngle);
@@ -248,6 +253,8 @@ public class JourneyController extends SuperController implements Initializable 
 
 					if (newStep) {
 						newStep = false;
+
+						routeStage.setText(startPlanet.getName() + " Orbit");
 
 						if (movement == -1) {
 							enterprise.setAngle(3.14);
@@ -345,12 +352,12 @@ public class JourneyController extends SuperController implements Initializable 
 
 		double hey = sourcePane.getPrefWidth() / 2;
 		System.out.println(hey);
-		Circle x =  new Circle(hey, hey, 15);
+		Circle x =  new Circle(hey, hey, 10);
 		x.getStyleClass().add("body-Mars");
 
 
 		sourcePane.getChildren().add(x);
-		Circle y =  new Circle(hey, hey, 15);
+		Circle y =  new Circle(hey, hey, 10);
 		y.getStyleClass().add("body-Earth");
 		destPane.getChildren().add(y);
 
@@ -398,7 +405,7 @@ public class JourneyController extends SuperController implements Initializable 
 
 		Stage stage; 
 		Parent root;
-		stage=(Stage) switchScene.getScene().getWindow();
+		stage=(Stage) routeStage.getScene().getWindow();
 
 		routePlanets.clear();
 		routeOrbit.clear();
@@ -408,6 +415,29 @@ public class JourneyController extends SuperController implements Initializable 
 
 		stage.setScene(scene);
 		stage.show();
+	}
+
+	@FXML protected void viewAnimation() throws IOException {
+
+		timeline.pause();
+
+		Stage stage;
+		Parent root;
+		stage=(Stage) routeStage.getScene().getWindow();
+
+		routePlanets.clear();
+		routeOrbit.clear();
+
+		root = FXMLLoader.load(getClass().getResource("../resources/xml/system.fxml"));
+		Scene scene = new Scene(root);
+
+		stage.setScene(scene);
+		stage.show();
+
+	}
+
+	@FXML protected void quitProgram() throws IOException {
+		Platform.exit();
 	}
 
 }

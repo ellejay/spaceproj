@@ -22,7 +22,7 @@
       <Slider fx:id="zoomSlide" orientation="VERTICAL" min="0.045" max="1.25" value="0.045" prefHeight="500"/>
 
       <HBox spacing="10" alignment="CENTER">
-          <Button onAction="#buttonSpeedMed" text="x0.5"/> <Button onAction="#buttonSpeedFast" text="x1"/>
+          <Button onAction="#slowMovement" text="◀"/> <Button onAction="#speedUpMovement" text="▶"/>
       </HBox>
 
       <Button fx:id="switchScene" onAction="#stopTimeline" text="Map Journey"/>

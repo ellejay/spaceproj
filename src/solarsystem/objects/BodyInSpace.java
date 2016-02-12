@@ -66,7 +66,7 @@ public class BodyInSpace {
 	 * moving to new scene due to displacement of existing objects.
 	 */
 	public void resetPlanet() {
-		this.gui_object = new Circle(0, 0, 3);
+		this.gui_object = new Circle(0, 0, 4);
 		this.gui_object.getStyleClass().add(this.getStyle());
 	}
 	

@@ -10,11 +10,23 @@
            xmlns:fx="http://javafx.com/fxml">
 
     <Pane fx:id="help" styleClass="journeyDialog" maxWidth="550" maxHeight="450">
-        <padding>
-            <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
-        </padding>
-        <Label text="Journey Complete!" styleClass="completeMsg"/>
-        <Button onAction="#stopTimeline" text="This is a test object"/>
+        <VBox alignment="CENTER" prefWidth="550">
+            <padding>
+                <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+            </padding>
+            <Label text="Journey Complete!" styleClass="completeMsg"/>
+
+            <Label text="Journey info will go here" textFill="white"/>
+
+            <HBox spacing="10" alignment="CENTER">
+                <Button onAction="#stopTimeline" text="Plot New Journey"/>
+
+                <Button onAction="#viewAnimation" text="View Solar System"/>
+
+                <Button onAction="#quitProgram" text="Exit Program"/>
+
+            </HBox>
+        </VBox>
     </Pane>
 
     <BorderPane styleClass="root">
@@ -34,11 +46,11 @@
 
 
                 <VBox GridPane.columnIndex="0" GridPane.rowIndex="2" styleClass="controlPane" prefHeight="200">
-                    <Button onAction="#nextPhase" text="Next Phase"/>
-
-                    <Button fx:id="switchScene" onAction="#stopTimeline" text="New Journey"/>
+                    <Label text="" fx:id="routeStage"/>
 
                     <Text fx:id="routeData" styleClass="route_label" wrappingWidth="80"/>
+
+                    <Button onAction="#nextPhase" text="Next Phase"/>
                 </VBox>
 
             </GridPane>

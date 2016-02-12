@@ -155,22 +155,20 @@ public class SolarSystemController extends SuperController implements Initializa
 		move.playFromStart();
 	}
     
-    @FXML protected void buttonSpeedMed(ActionEvent event) {    	
-    	updateSpeed(-0.5);
+    @FXML protected void slowMovement() {
+    	updateSpeed(-0.25);
     }
     
-    @FXML protected void buttonSpeedFast(ActionEvent event) {    	
-    	updateSpeed(0.5);
+    @FXML protected void speedUpMovement() {
+    	updateSpeed(0.25);
     }
     
     private void updateSpeed(double speed) {
 
         System.out.println(timeline.getRate());
 
-		timeline.setRate(timeline.getRate() + speed);
-
-		if (timeline.getRate() < 0.5) {
-			timeline.setRate(0.5);
+		if (!(timeline.getRate() + speed < 0.25)) {
+			timeline.setRate(timeline.getRate() + speed);
 		}
 
         System.out.println(timeline.getRate());

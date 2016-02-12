@@ -20,10 +20,11 @@
            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
       </padding>
 
-      <Text fx:id="routeList" styleClass="route_label" text="" wrappingWidth="120"
+      <TextArea fx:id="routeList" styleClass="routeList" text=""
+            prefWidth="120" maxHeight="500" wrapText="true" editable="false"
         GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.valignment="TOP"/>
 
-      <Slider fx:id="zoomSlide" orientation="VERTICAL" min="0.045" max="1.25" value="0.045" prefHeight="500"
+      <Slider fx:id="zoomSlide" orientation="VERTICAL" min="0.045" max="1.25" value="0.045" prefHeight="510"
         GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
       <Button onAction="#centerPlanets" text="Centre"

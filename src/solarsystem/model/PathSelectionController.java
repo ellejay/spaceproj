@@ -27,7 +27,7 @@ public class PathSelectionController extends SuperController implements Initiali
 	
     @FXML private Pane systemPane;
     @FXML private Slider zoomSlide;
-    @FXML private Text routeList;
+    @FXML private TextArea routeList;
     @FXML private Button startButton;
     
 	@Override

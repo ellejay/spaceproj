@@ -4,24 +4,52 @@
 }
 
 .button {
+    -fx-background-color:
+        #000000,
+        linear-gradient(#7ebcea, #2f4b8f),
+        linear-gradient(#426ab7, #263e75),
+        linear-gradient(#395cab, #223768);
+    -fx-background-insets: 0,1,2,3;
+    -fx-background-radius: 3,2,2,2;
+    -fx-padding: 6 15 6 15;
     -fx-text-fill: white;
-    -fx-background-color: #434343;
+    -fx-font-size: 12px;
+}
+
+.button Text {
+    -fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.8) , 0, 0.0 , 0 , 1);
 }
 
 .button:hover {
-    -fx-background-color: linear-gradient(#2A5058, #61a2b1);
+    -fx-background-color: #000000, linear-gradient(#5e5e5e, #383838);
 }
 
 .route_label {
-	-fx-text-fill: black;
+	-fx-fill: white;
+}
+
+.routeList {
+    -fx-highlight-fill: #fff;
+    -fx-text-fill: #fff;
+    -fx-highlight-text-fill: #222;
+    -fx-background-color: #222;
+}
+
+.routeList .content {
+    -fx-background-color: #222;
 }
 
 .completeMsg {
 	-fx-text-fill: white;
+	-fx-font: 34px sans-serif;
 }
 
 .controlPane {
-    -fx-background-color: #fff;
+    -fx-background-color: #222;
+}
+
+.controlPane Text {
+    -fx-text-fill: white;
 }
 
 .sourcePane {
