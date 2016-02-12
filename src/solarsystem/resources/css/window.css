@@ -16,6 +16,10 @@
 	-fx-text-fill: black;
 }
 
+.completeMsg {
+	-fx-text-fill: white;
+}
+
 .controlPane {
     -fx-background-color: #fff;
 }
@@ -35,6 +39,8 @@
 }
 
 .journeyDialog {
+	-fx-background-image: url("../img/stars.jpg");
+    -fx-background-size: contain;
     -fx-border-color: white;
     -fx-border-width: 1px;
 }

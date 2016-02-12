@@ -9,10 +9,11 @@
 <StackPane fx:controller="solarsystem.model.JourneyController"
            xmlns:fx="http://javafx.com/fxml">
 
-    <Pane fx:id="help" styleClass="journeyDialog">
+    <Pane fx:id="help" styleClass="journeyDialog" maxWidth="550" maxHeight="450">
         <padding>
             <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
         </padding>
+        <Label text="Journey Complete!" styleClass="completeMsg"/>
         <Button onAction="#stopTimeline" text="This is a test object"/>
     </Pane>
 
