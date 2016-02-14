@@ -45,8 +45,12 @@
                       GridPane.columnIndex="0" GridPane.rowIndex="1"/>
 
 
-                <VBox GridPane.columnIndex="0" GridPane.rowIndex="2" styleClass="controlPane" prefHeight="200">
-                    <Label text="" fx:id="routeStage"/>
+                <VBox GridPane.columnIndex="0" GridPane.rowIndex="2" styleClass="controlPane" prefHeight="200"
+                      alignment="TOP_CENTER">
+                    <padding>
+                        <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
+                    </padding>
+                    <Label text="" fx:id="routeStage" styleClass="route_stage"/>
 
                     <Text fx:id="routeData" styleClass="route_label" wrappingWidth="80"/>
 

@@ -18,6 +18,8 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import solarsystem.objects.BodyInSpace;
@@ -47,7 +49,7 @@ public class PathSelectionController extends SuperController implements Initiali
 							current.getGUIObject().setRadius(8);
 						}
 						else {
-							current.getGUIObject().setRadius(3);
+							current.getGUIObject().setRadius(4);
 						}
 						
 						current.moveGUIObject(
@@ -159,6 +161,7 @@ public class PathSelectionController extends SuperController implements Initiali
 									
 									routeList.setText(routeList.getText() + " " + name + " Orbit\r\n\t" + orbitParams[0] + " " +
 												      orbitParams[1] + "\r\n");
+									markForRoute(name);
 									
 								} catch (IOException e) {
 									// TODO Auto-generated catch block
@@ -174,6 +177,7 @@ public class PathSelectionController extends SuperController implements Initiali
 								routePlanets.add(name);
 								routeOrbit.add(landed);
 								routeList.setText(routeList.getText() + " " + name + " Surface\r\n");
+								markForRoute(name);
 							}
 						});
 						
@@ -217,6 +221,12 @@ public class PathSelectionController extends SuperController implements Initiali
 
 		systemPane.addEventHandler(MouseEvent.MOUSE_CLICKED, planetLander);
 		
+	}
+
+	private void markForRoute(String planet) {
+		Circle planetObj = planets.get(planet).getGUIObject();
+		planetObj.setStrokeWidth(2);
+		planetObj.setStroke(Paint.valueOf("red"));
 	}
 	
 	@FXML protected void centerPlanets(ActionEvent event){

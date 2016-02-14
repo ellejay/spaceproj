@@ -165,15 +165,10 @@ public class SolarSystemController extends SuperController implements Initializa
     
     private void updateSpeed(double speed) {
 
-        System.out.println(timeline.getRate());
-
 		if (!(timeline.getRate() + speed < 0.25)) {
 			timeline.setRate(timeline.getRate() + speed);
 		}
 
-        System.out.println(timeline.getRate());
-
-        System.out.println("-------");
     }
     
     @FXML protected void stopTimeline(ActionEvent event) throws IOException { 
