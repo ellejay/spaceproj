@@ -197,8 +197,13 @@ public class JourneyController extends SuperController implements Initializable 
 						routeStage.setText(startPlanet.getName() + " > " + endPlanet.getName());
 
 						if (movement == -1) {
-							// PI
-							enterprise.setAngle(movementAngle);
+							// ??????????
+							double angle = movementAngle + Math.PI;
+							if (angle > 2 * Math.PI) {
+								angle = angle -  (2 * Math.PI);
+							}
+							
+							enterprise.setAngle(angle);
 						}
 						else {
 							// 0
@@ -275,6 +280,14 @@ public class JourneyController extends SuperController implements Initializable 
 								movementAngle += 2 * Math.PI;
 							}
 							endAngle = startPlanet.getAngle();
+							
+							//?????????
+							if (movement == -1) {
+								double temp = movementAngle;
+								movementAngle = endAngle;
+								endAngle = temp;
+							}
+							
 							transAngle = startPlanet.getAngle() - endPlanet.getAngle();
 							System.out.println(Math.toDegrees(startPlanet.getAngle()) + " | " + Math.toDegrees(endPlanet.getAngle()));
 							//timeline.pause();

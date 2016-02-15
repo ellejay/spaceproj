@@ -108,18 +108,33 @@ public class Calculator {
 			{
 				System.out.println("landed");
 				MathEllipse e1 = new MathEllipse(current_p.getMass(), current_p.getRadius());
-				transfer(current_p, e1, target);
+				transfer(current_p, e1, target, true);
 				dv1 += e1.speed_p();
 			}
 			else if (target == null) // landing on planet surface
 			{
 				System.out.println("landing on destination");
 				MathEllipse e1 = new MathEllipse(p.getMass(), p.getRadius());
-				transfer(current_p, current_e, e1);
+				transfer(current_p, current_e, e1, false);
 				dv2 += e1.speed_p();
 			}
 			else {
-				transfer(current_p, current_e, target);
+				// TEST TRUE, FIX FOR ACTUAL A & P
+				boolean outward_journey;
+				if (current_e.apoapse() == target.apoapse()) {
+					outward_journey = true;
+				}
+				else if (current_e.periapse() == target.periapse()) {
+					outward_journey = false;
+				}
+				else if (current_e.periapse() < target.periapse()) {
+					outward_journey = false;
+				}
+				else {
+					outward_journey = true;
+				}
+				
+				transfer(current_p, current_e, target, outward_journey);
 			}
 			System.out.printf("%6.0f %6.0f %6.0f (%s) \n", dv1, dv2, t, type);
 		}
@@ -132,12 +147,12 @@ public class Calculator {
 		
 		// Transfer From Child
 		else if (current_p.getParent().equals(p)) {
-			transferToChild(p, current_p, target, current_e);
+			transferToChild(p, current_p, target, current_e, false);
 		}
 		
 		// Transfer To Child
 		else if (current_p.equals(p.getParent())) {
-			transferToChild(current_p, p, current_e, target);
+			transferToChild(current_p, p, current_e, target, true);
 		}
 		
 		else {
@@ -159,7 +174,16 @@ public class Calculator {
 		BodyInSpace parent = startPlanet.getParent();
 		MathEllipse stage1 = new MathEllipse(parent.getMass(), startPlanet.getOrbitInM());
 		MathEllipse stage2 = new MathEllipse(parent.getMass(), endPlanet.getOrbitInM());
-		transfer(parent, stage1, stage2);
+		
+		boolean outward_journey;
+		if (startPlanet.getOrbitInM() < endPlanet.getOrbitInM()) {
+			outward_journey = true;
+		}
+		else {
+			outward_journey = false;
+		}
+		
+		transfer(parent, stage1, stage2, outward_journey);
 		
 		Hyper h1 = new Hyper(startPlanet.getMass(), startOrbit.periapse(), dv1);
 		Hyper h2 = new Hyper(endPlanet.getMass(), endOrbit.periapse(), dv2);
@@ -191,7 +215,15 @@ public class Calculator {
 				ph2 += 360.0;
 		}
 		
-		System.out.println(dv1 + " " + dv2 + " " + t);
+		String test = "";
+		if (outward_journey) {
+			test = "ap";
+		}
+		else {
+			test = "pa";
+		}
+				
+		System.out.println(dv1 + " " + dv2 + " " + t + " (" + test + ")");
 		System.out.printf("%s-%s phase angle before %1.0f after %1.0f\n", startPlanet.getName(), endPlanet.getName(), ph1, ph2);
 	
 	}
@@ -200,14 +232,15 @@ public class Calculator {
 		return ph1;
 	}
 	
-	public void transferToChild(BodyInSpace parent, BodyInSpace child, MathEllipse parentOrbit, MathEllipse childOrbit) {
+	public void transferToChild(BodyInSpace parent, BodyInSpace child, MathEllipse parentOrbit, MathEllipse childOrbit,
+			boolean outward_journey) {
 		
 		if (!parent.equals(child.getParent())) {
 			return;
 		}
 		
 		MathEllipse transfer = new MathEllipse (parent.getMass(), child.getOrbitInM());
-		transfer(parent, parentOrbit, transfer);
+		transfer(parent, parentOrbit, transfer, outward_journey);
 		
 		Hyper h2 = new Hyper(child.getMass(), childOrbit.periapse(), dv2);
 		dv2 = h2.speed_p() - childOrbit.speed_p();
@@ -216,7 +249,7 @@ public class Calculator {
 		
 	}
 
-	public void transfer(BodyInSpace p, MathEllipse current, MathEllipse target) {
+	public void transfer(BodyInSpace p, MathEllipse current, MathEllipse target, boolean outward_journey) {
 		double tot = 1.0e20; 
 		//horiz_trans("pp", tot, p.getMass(), current.periapse(), current.speed_p(), target.periapse() , target.speed_p());
 		//horiz_trans("aa", tot, p.getMass(), current.apoapse(), current.speed_a(), target.apoapse(), target.speed_a());
@@ -224,8 +257,12 @@ public class Calculator {
 		
 		//System.out.println(current.apoapse() + " " + current.speed_a());
 		
-		horiz_trans("ap", tot, p.getMass(), current.apoapse(), current.speed_a(), target.periapse(), target.speed_p());
-
+		if (outward_journey) {
+			horiz_trans("ap", tot, p.getMass(), current.apoapse(), current.speed_a(), target.periapse(), target.speed_p());
+		}
+		else {
+			horiz_trans("pa", tot, p.getMass(), current.periapse(), current.speed_p(), target.apoapse(), target.speed_a());
+		}
 	}
 
 
