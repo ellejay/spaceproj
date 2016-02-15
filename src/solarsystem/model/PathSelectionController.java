@@ -31,6 +31,7 @@ public class PathSelectionController extends SuperController implements Initiali
     @FXML private Slider zoomSlide;
     @FXML private TextArea routeList;
     @FXML private Button startButton;
+	@FXML private Pane help;
     
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -123,10 +124,11 @@ public class PathSelectionController extends SuperController implements Initiali
 		systemPane.addEventHandler(MouseDragEvent.MOUSE_DRAG_ENTERED, moveSystem);	
 		systemPane.addEventHandler(MouseDragEvent.MOUSE_DRAG_OVER, moveSystem);
 		systemPane.addEventHandler(MouseDragEvent.MOUSE_DRAG_EXITED, moveSystem);
-		
-		
+
+
+
 		EventHandler<MouseEvent> planetLander = new EventHandler<MouseEvent>() {
-			
+
 			MenuItem orbitItem = new MenuItem("Orbit");
 			MenuItem landItem = new MenuItem("Land");
 			ContextMenu contextFileMenu = new ContextMenu(orbitItem, landItem);
@@ -135,6 +137,10 @@ public class PathSelectionController extends SuperController implements Initiali
 			public void handle(MouseEvent event) {	
 				final double[] landed = {0, 0};
 				boolean planetFound = false;
+
+				toFront();
+				//help.setTranslateX(event.getScreenX());
+				//help.setTranslateY(event.getScreenY());
 				
 				for (BodyInSpace current: planets.values()) {
 					if (event.getTarget().equals(current.getGUIObject())){
@@ -211,6 +217,7 @@ public class PathSelectionController extends SuperController implements Initiali
 				}
 				if (!planetFound) {
 			        contextFileMenu.hide();
+					help.toBack();
 				}
 				
 				event.consume();
@@ -228,7 +235,11 @@ public class PathSelectionController extends SuperController implements Initiali
 		planetObj.setStrokeWidth(2);
 		planetObj.setStroke(Paint.valueOf("red"));
 	}
-	
+
+	private void toFront() {
+		help.toFront();
+	}
+
 	@FXML protected void centerPlanets(ActionEvent event){
 		systemPane.setTranslateX(0);
 		systemPane.setTranslateY(0);
