@@ -17,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
@@ -32,6 +33,10 @@ public class PathSelectionController extends SuperController implements Initiali
     @FXML private TextArea routeList;
     @FXML private Button startButton;
 	@FXML private Pane help;
+	@FXML private HBox orbit;
+	@FXML private Label planetName;
+	@FXML private Button landControl;
+	@FXML private Button orbitControl;
     
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -139,94 +144,61 @@ public class PathSelectionController extends SuperController implements Initiali
 				boolean planetFound = false;
 
 				toFront();
-				//help.setTranslateX(event.getScreenX());
-				//help.setTranslateY(event.getScreenY());
+				help.setTranslateX(event.getScreenX() - (help.getWidth() * 0.75));
+				help.setTranslateY(event.getScreenY() - (help.getWidth() * 0.4));
 				
 				for (BodyInSpace current: planets.values()) {
 					if (event.getTarget().equals(current.getGUIObject())){
 						final String name = current.getName();
 						planetFound = true;
 						
-						contextFileMenu.show(systemPane, event.getScreenX(), event.getScreenY());
+						planetName.setText(name);
 						
-						orbitItem.setOnAction(new EventHandler<ActionEvent>() {
-							@Override
-							public void handle(ActionEvent event) {
-
-								Parent root;
-								try {
-									root = FXMLLoader.load(getClass().getResource("../resources/xml/orbitdialog.fxml"));
-									Stage dialog = new Stage();
-									dialog.setTitle("FXML Space");
-									dialog.setScene(new Scene(root, 200, 150));
-									dialog.showAndWait();
-									
-									routePlanets.add(name);
-									double pass[] = { orbitParams[0], orbitParams[1] };
-									routeOrbit.add(pass);
-									
-									routeList.setText(routeList.getText() + " " + name + " Orbit\r\n\t" + orbitParams[0] + " " +
-												      orbitParams[1] + "\r\n");
-									markForRoute(name);
-									
-								} catch (IOException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-
-							}
-						});
-						
-						landItem.setOnAction(new EventHandler<ActionEvent>() {
-							@Override
-							public void handle(ActionEvent event) {
-								routePlanets.add(name);
-								routeOrbit.add(landed);
-								routeList.setText(routeList.getText() + " " + name + " Surface\r\n");
-								markForRoute(name);
-							}
-						});
-						
-						
-						try{
-							int lastItem = routePlanets.size() - 1;
-							String prev = routePlanets.get(lastItem);
-							double[] prevOrbit = routeOrbit.get(lastItem);
-							
-							// If landed and selecting new planet, disable all
-							if (prev != name && (prevOrbit[0] == 0.0 && prevOrbit[1] == 0.0)) {
-								landItem.setDisable(true);
-								orbitItem.setDisable(true);
-							}
-							// If landed and selecting same planet, allow orbit
-							else if (prevOrbit[0] == 0.0 && prevOrbit[1] == 0.0) {
-								orbitItem.setDisable(false);
-								landItem.setDisable(true);
-							}
-							else if (prev.equals(name)) {
-								landItem.setDisable(false);
-							}
-							else {
-								landItem.setDisable(true);
-							}
-						// When selecting start point
-						} catch (ArrayIndexOutOfBoundsException e) {
-							orbitItem.setDisable(true);
-						}
+						disableButtons(name);		
 					}
 				}
+				
 				if (!planetFound) {
 			        contextFileMenu.hide();
 					help.toBack();
+					orbit.getChildren().clear();
 				}
 				
 				event.consume();
 			}
 			
 		};
-		
-
 		systemPane.addEventHandler(MouseEvent.MOUSE_CLICKED, planetLander);
+		
+	}
+	
+	private void disableButtons(String name) {
+				try {
+					int lastItem = routePlanets.size() - 1;
+					String prev = routePlanets.get(lastItem);
+					double[] prevOrbit = routeOrbit.get(lastItem);
+					
+					// If landed and selecting new planet, disable all
+					if (prev != name && (prevOrbit[0] == 0.0 && prevOrbit[1] == 0.0)) {
+						landControl.setDisable(true);
+						orbitControl.setDisable(true);
+					}
+					// If landed and selecting same planet, allow orbit
+					else if (prevOrbit[0] == 0.0 && prevOrbit[1] == 0.0) {
+						orbitControl.setDisable(false);
+						landControl.setDisable(true);
+					}
+					else if (prev.equals(name)) {
+						landControl.setDisable(false);
+					}
+					else {
+						landControl.setDisable(true);
+					}
+				// When selecting start point
+				} catch (ArrayIndexOutOfBoundsException e) {
+					orbitControl.setDisable(true);
+				}
+			
 		
 	}
 
@@ -264,4 +236,56 @@ public class PathSelectionController extends SuperController implements Initiali
 	        stage.show();
 		}
     }
+	
+	@FXML protected void displayOrbit() {
+		if (orbit.getChildren().isEmpty()) {
+			TextField text = new TextField();
+			TextField text2 = new TextField();
+			Button submit = new Button("Y");
+			submit.setOnAction(new EventHandler<ActionEvent>() {
+			    @Override public void handle(ActionEvent e) {
+			        orbit.getChildren().clear();
+			        
+			        String planet = planetName.getText();
+			        
+			        routePlanets.add(planet);
+			        double first = Double.parseDouble(text.getText());
+			        double second = Double.parseDouble(text2.getText());
+			        double pass[] = new double[2];
+			        if (first > second) {
+			        	pass[0] = first;
+			        	pass[1] = second;
+			        } else {
+			        	pass[0] = second;
+			        	pass[1] = first;
+			        }
+					routeOrbit.add(pass);
+					
+					routeList.setText(routeList.getText() + " " + planet + " Orbit\r\n\t" + pass[0] + " " +
+								      pass[1] + "\r\n");
+					markForRoute(planet);
+					disableButtons(planet);
+			    }
+			});
+			orbit.getChildren().add(text);
+			orbit.getChildren().add(text2);
+			orbit.getChildren().add(submit);
+		}
+	}
+	
+	@FXML protected void landOnPlanet() {
+		if (!orbit.getChildren().isEmpty()) {
+			orbit.getChildren().clear();
+		}
+		String planet = planetName.getText();
+		
+		double[] landed = {0, 0};
+		routePlanets.add(planet);
+		routeOrbit.add(landed);
+		
+		routeList.setText(routeList.getText() + " " + planet + " Surface\r\n");
+		markForRoute(planet);
+		disableButtons(planet);
+	}
+	
 }
