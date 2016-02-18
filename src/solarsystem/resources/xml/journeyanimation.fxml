@@ -52,7 +52,7 @@
                     </padding>
                     <Label text="" fx:id="routeStage" styleClass="route_stage"/>
 
-                    <Text fx:id="routeData" styleClass="route_label" wrappingWidth="80"/>
+                    <Text fx:id="routeData" styleClass="route_label" wrappingWidth="190" textAlignment="CENTER"/>
 
                     <Button onAction="#nextPhase" text="Next Phase"/>
                 </VBox>

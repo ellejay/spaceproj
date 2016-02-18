@@ -38,16 +38,20 @@
 
                 <TextArea fx:id="routeList" styleClass="routeList" text=""
                           prefWidth="120" maxHeight="500" wrapText="true" editable="false"
-                          GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.valignment="TOP"/>
+                          GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.valignment="TOP"
+                          GridPane.columnSpan="2"/>
 
                 <Slider fx:id="zoomSlide" orientation="VERTICAL" min="0.045" max="1.25" value="0.045" prefHeight="510"
-                        GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                        GridPane.columnIndex="2" GridPane.rowIndex="0"/>
 
-                <Button onAction="#centerPlanets" text="Centre"
+                <Button onAction="#centerPlanets" text="C"
                         GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                        
+                <Button onAction="#removeLast" text="U"
+                        GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
                 <Button fx:id="startButton" onAction="#startJourney" text="Start Journey"
-                        GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="2"/>
 
             </GridPane>
 

@@ -69,11 +69,11 @@ public class Calculator {
 		//System.out.println(x.getEllipseData());
 		c.transfer_slow(earth, x);
 
-		BodyInSpace mars = p.get("Mercury");
-		double s1 = mars.getRadius() + 1.0e3 * 250;
-		double s2 = mars.getRadius() + 1.0e3 * 250;
+		BodyInSpace mars = p.get("Earth");
+		double s1 = mars.getRadius() + 1.0e3 * 0;
+		double s2 = mars.getRadius() + 1.0e3 * 0;
 		MathEllipse y = new MathEllipse(mars.getMass(), s1, s2);
-		c.transfer_slow(mars, y);
+		c.transfer_slow(mars, null);
 
 		//MathEllipse x1 = new MathEllipse(earth.getMass(), 520, 200);
 		//System.out.println(x1.getEllipseData());
@@ -91,7 +91,7 @@ public class Calculator {
 		double minutes = Math.floor(((t % 86400) % 3600) / 60);
 		double seconds = Math.floor(((t % 86400) % 3600) % 60);
 		
-		String x = String.format("%6.0fm/s %6.0fm/s %6.0f days %6.0f hours %6.0f mins %6.0f s\n", dv1, dv2, days, hours, minutes, seconds);
+		String x = String.format("%6.0fm/s %6.0fm/s\r\n%6.0f days %6.0f hours\r\n%6.0f mins %6.0f s\n", dv1, dv2, days, hours, minutes, seconds);
 		return x;
 		
 	}

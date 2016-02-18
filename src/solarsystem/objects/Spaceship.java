@@ -22,7 +22,7 @@ public class Spaceship {
 		this.gui_object.getStyleClass().add("spacecraft");
 		
 		this.gui_trail = new Ellipse(radius_x, radius_y);
-		this.gui_trail.getStyleClass().add("planet-orbit-path");
+		this.gui_trail.getStyleClass().add("spacecraft-path");
 		this.radius_x = radius_x;
 		this.radius_y = radius_y;
 		angle = 0;

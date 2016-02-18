@@ -143,7 +143,7 @@ public class PathSelectionController extends SuperController implements Initiali
 				final double[] landed = {0, 0};
 				boolean planetFound = false;
 
-				toFront();
+				help.toFront();
 				help.setTranslateX(event.getScreenX() - (help.getWidth() * 0.75));
 				help.setTranslateY(event.getScreenY() - (help.getWidth() * 0.4));
 				
@@ -205,11 +205,12 @@ public class PathSelectionController extends SuperController implements Initiali
 	private void markForRoute(String planet) {
 		Circle planetObj = planets.get(planet).getGUIObject();
 		planetObj.setStrokeWidth(2);
-		planetObj.setStroke(Paint.valueOf("red"));
+		planetObj.setStroke(Paint.valueOf("white"));
 	}
-
-	private void toFront() {
-		help.toFront();
+	
+	private void unmarkForRoute(String planet) {
+		Circle planetObj = planets.get(planet).getGUIObject();
+		planetObj.setStrokeWidth(0);
 	}
 
 	@FXML protected void centerPlanets(ActionEvent event){
@@ -286,6 +287,36 @@ public class PathSelectionController extends SuperController implements Initiali
 		routeList.setText(routeList.getText() + " " + planet + " Surface\r\n");
 		markForRoute(planet);
 		disableButtons(planet);
+	}
+	
+	@FXML protected void removeLast() {
+		int lastItem = routePlanets.size() - 1;
+		if (!(lastItem == 0))  {
+			
+			unmarkForRoute(routePlanets.get(lastItem));
+			
+			routePlanets.remove(lastItem);
+			routeOrbit.remove(lastItem);
+			
+			double[] landed = {0,0};
+			StringBuilder newRouteList = new StringBuilder();
+			for (int i = 0; i < routePlanets.size(); i++) {
+				newRouteList.append(routePlanets.get(i) + " ");
+				
+				if (routeOrbit.get(i)[0] == 0 && routeOrbit.get(i)[1] == 0) {
+					newRouteList.append("Surface\r\n");
+				}
+				else {
+					newRouteList.append("Orbit\r\n\t");
+					newRouteList.append(routeOrbit.get(i)[0] + " " + routeOrbit.get(i)[1]);
+				}
+				
+				markForRoute(routePlanets.get(i));
+			}
+			routeList.setText(newRouteList.toString());
+			
+			disableButtons(routePlanets.get(lastItem - 1));
+		}
 	}
 	
 }

@@ -246,13 +246,17 @@ public class JourneyController extends SuperController implements Initializable 
 						}
 
 						if (!(phaseEnd == "")) {
-							double r1 = endPlanet.getRadius() + 1.0e3 * endOrbit[0];
-							double r2 = endPlanet.getRadius() + 1.0e3 * endOrbit[1];
+							MathEllipse transfer = null;
+							if (!(endOrbit[0] == 0 && endOrbit[1] == 0)) {
+								double r1 = endPlanet.getRadius() + 1.0e3 * endOrbit[0];
+								double r2 = endPlanet.getRadius() + 1.0e3 * endOrbit[1];
 
+								transfer = new MathEllipse(endPlanet.getMass(), r2, r1);
+							}
+							
 							if (startPlanet.getName() != endPlanet.getName()) { transferWindow = true; }
 							else { transferWindow = false; }
-
-							MathEllipse transfer = new MathEllipse(endPlanet.getMass(), r2, r1);
+							
 							calc.transfer_slow(endPlanet, transfer);
 
 						}
