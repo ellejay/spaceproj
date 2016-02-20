@@ -93,6 +93,10 @@ public class BodyInSpace {
 			this.angle -= 2 * Math.PI;
         }
 	}
+
+	public double angleIncrease(){
+		return Math.toRadians( (2 * Math.PI) / (this.period / 10) );
+	}
 	
 	/**
 	 * Reposition the GUI orbit object with the given radius, and

@@ -40,12 +40,16 @@ public class JourneyController extends SuperController implements Initializable 
 	@FXML private Button switchScene;
 	@FXML private Text routeData;
     @FXML private Pane help;
+    @FXML private Label journeyInfo;
 	private int steps;
 	private boolean newStep = true;
 	private int rotateCount = 0;
 	private boolean transferWindow = false;
 	private double journeyMoveX = 0, journeyMoveY = 0;
 	private double movementAngle, endAngle, transAngle;
+    private StringBuilder finalJourney = new StringBuilder();
+    private double journeyTime;
+    private double startSearch, endSearch, orbitsSearch;
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -100,7 +104,7 @@ public class JourneyController extends SuperController implements Initializable 
 		route.getStyleClass().add("planet-orbit-path");
 		final Calculator calc = new Calculator(planets.get(routePlanets.get(0)));
 
-		resetScale(285/planets.get(routePlanets.get(0)).getOrbit());
+		resetScale(285 / planets.get(routePlanets.get(0)).getOrbit());
 
 		EventHandler<ActionEvent> spaceshipMove = new EventHandler<ActionEvent>() {
 			@Override
@@ -201,14 +205,37 @@ public class JourneyController extends SuperController implements Initializable 
 						newStep = false;
 						rotateCount = 0;
 						routeData.setText(calc.getTransferData());
-						double days = Math.floor(calc.getTime() / 86400);
 
-						double transitionSpeed = 360 / ((endPlanet.getAngularV() * Math.PI) / transAngle);
+
+                        finalJourney.append(startPlanet.getName() + " ");
+                        if (startOrbit[0] == 0 && startOrbit[1] == 0) {
+                            finalJourney.append("Surface");
+                        } else {
+                            finalJourney.append(String.format("%.0f/%.0f", startOrbit[0], startOrbit[1]));
+                        }
+
+                        finalJourney.append(" > " + endPlanet.getName() + " ");
+
+                        if (endOrbit[0] == 0 && endOrbit[1] == 0) {
+                            finalJourney.append("Surface");
+                        } else {
+                            finalJourney.append(String.format("%.0f/%.0f", endOrbit[0], endOrbit[1]));
+                        }
+
+                        finalJourney.append("\n\t" + calc.getTransferData());
+
+                        journeyTime += calc.getTime();
+
+                        double speed;
+                        if (endPlanet.getAngularV() < startPlanet.getAngularV()) {
+                            speed = endPlanet.getAngularV();
+                        } else { speed = startPlanet.getAngularV(); }
+
+						double transitionSpeed = 360 / ((speed * Math.PI) / (transAngle));
 
 						System.out.println("SPEED: " + transitionSpeed + " ANGLE: " + transAngle);
 
 						enterprise.setPeriod(transitionSpeed);
-
 
 					}
 					else {
@@ -256,8 +283,10 @@ public class JourneyController extends SuperController implements Initializable 
 								transfer = new MathEllipse(endPlanet.getMass(), r2, r1);
 							}
 							
-							if (startPlanet.getName() != endPlanet.getName()) { transferWindow = true; }
-							else { transferWindow = false; }
+							if (startPlanet.getName() != endPlanet.getName()) {
+                                transferWindow = true;
+                                orbitsSearch = 0;
+                            } else { transferWindow = false; }
 							
 							calc.transfer_slow(endPlanet, transfer);
 
@@ -265,10 +294,25 @@ public class JourneyController extends SuperController implements Initializable 
 					}
 
 					if (transferWindow && !(phaseEnd == "")) {
+
+                        orbitsSearch++;
+
 						double phase = Math.toDegrees(startPlanet.getAngle() - endPlanet.getAngle());
 						if (phase < 0) { phase += 360.0; }
 						//System.out.println(phase + " | " + calc.getStartPhaseAngle());
 						if (Math.abs(phase - calc.getStartPhaseAngle()) < 1) {
+
+                            double angleTravelled = Math.toDegrees(orbitsSearch * startPlanet.angleIncrease());
+                            System.out.println("ORBITS: " + angleTravelled);
+
+                            double timeTaken = startPlanet.getPeriodAsSeconds() *
+                                    (angleTravelled / 360);
+
+                            finalJourney.append(startPlanet.getName() + "\n\t");
+                            finalJourney.append(timeToString(timeTaken));
+
+                            journeyTime += timeTaken;
+
 							movementAngle = startPlanet.getAngle() - Math.PI;
 							if (movementAngle < 0) {
 								movementAngle += 2 * Math.PI;
@@ -482,6 +526,9 @@ public class JourneyController extends SuperController implements Initializable 
 		}
 		else {
             help.toFront();
+            finalJourney.append("Total Journey Time\n\t");
+            finalJourney.append(timeToString(journeyTime));
+            journeyInfo.setText(finalJourney.toString());
 			System.out.println("journey complete");
 		}
 	}
@@ -526,5 +573,31 @@ public class JourneyController extends SuperController implements Initializable 
 	@FXML protected void quitProgram() throws IOException {
 		Platform.exit();
 	}
+
+	@FXML protected void slowMovement() {
+		updateSpeed(-0.25);
+	}
+
+	@FXML protected void speedUpMovement() {
+		updateSpeed(0.25);
+	}
+
+	private void updateSpeed(double speed) {
+
+		if (!(timeline.getRate() + speed < 0.25)) {
+			timeline.setRate(timeline.getRate() + speed);
+		}
+
+	}
+
+    private String timeToString(double t) {
+        double days = Math.floor(t / 86400);
+        double hours = Math.floor((t % 86400) / 3600);
+        double minutes = Math.floor(((t % 86400) % 3600) / 60);
+        double seconds = Math.floor(((t % 86400) % 3600) % 60);
+
+        String x = String.format("%6.0f days %6.0f hours %6.0f mins %6.0f s\n", days, hours, minutes, seconds);
+        return x;
+    }
 
 }

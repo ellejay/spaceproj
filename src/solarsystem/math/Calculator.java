@@ -91,7 +91,7 @@ public class Calculator {
 		double minutes = Math.floor(((t % 86400) % 3600) / 60);
 		double seconds = Math.floor(((t % 86400) % 3600) % 60);
 		
-		String x = String.format("%6.0fm/s %6.0fm/s\r\n%6.0f days %6.0f hours\r\n%6.0f mins %6.0f s\n", dv1, dv2, days, hours, minutes, seconds);
+		String x = String.format("%6.0fm/s %6.0fm/s %6.0f days %6.0f hours %6.0f mins %6.0f s\n", dv1, dv2, days, hours, minutes, seconds);
 		return x;
 		
 	}
