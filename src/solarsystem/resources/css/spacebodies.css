@@ -8,7 +8,8 @@
 }
 
 .spacecraft-path {
-	-fx-stroke: blue;
+    -fx-fill: transparent;
+	-fx-stroke: orange;
 }
 
 .spacecraft {

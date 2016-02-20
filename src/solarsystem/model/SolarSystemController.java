@@ -40,8 +40,10 @@ public class SolarSystemController extends SuperController implements Initializa
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setUp();
-        
-        zoomSlide.valueProperty().addListener(new ChangeListener<Number>() {
+
+		zoomSlide.setValue(SCREEN_SCALE);
+
+		zoomSlide.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov,
 					Number old_val, Number new_val) {
 				SCREEN_SCALE = (double) new_val;

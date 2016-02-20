@@ -144,8 +144,8 @@ public class PathSelectionController extends SuperController implements Initiali
 				boolean planetFound = false;
 
 				help.toFront();
-				help.setTranslateX(event.getScreenX() - (help.getWidth() * 0.75));
-				help.setTranslateY(event.getScreenY() - (help.getWidth() * 0.4));
+				//help.setTranslateX(event.getScreenX() - (help.getWidth() * 0.75));
+				//help.setTranslateY(event.getScreenY() - (help.getWidth() * 0.4));
 				
 				for (BodyInSpace current: planets.values()) {
 					if (event.getTarget().equals(current.getGUIObject())){

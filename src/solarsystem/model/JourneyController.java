@@ -205,6 +205,8 @@ public class JourneyController extends SuperController implements Initializable 
 
 						double transitionSpeed = 360 / ((endPlanet.getAngularV() * Math.PI) / transAngle);
 
+						System.out.println("SPEED: " + transitionSpeed + " ANGLE: " + transAngle);
+
 						enterprise.setPeriod(transitionSpeed);
 
 
@@ -280,6 +282,11 @@ public class JourneyController extends SuperController implements Initializable 
 							}
 							
 							transAngle = startPlanet.getAngle() - endPlanet.getAngle();
+
+                            if (transAngle < 0) {
+                                transAngle += 2 * Math.PI;
+                            }
+
 							System.out.println(Math.toDegrees(startPlanet.getAngle()) + " | " + Math.toDegrees(endPlanet.getAngle()));
 							//timeline.pause();
 							steps++;
