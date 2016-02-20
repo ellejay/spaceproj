@@ -144,8 +144,14 @@ public class PathSelectionController extends SuperController implements Initiali
 				boolean planetFound = false;
 
 				help.toFront();
-				//help.setTranslateX(event.getScreenX() - (help.getWidth() * 0.75));
-				//help.setTranslateY(event.getScreenY() - (help.getWidth() * 0.4));
+
+				help.setTranslateX(event.getSceneX());
+
+                double yShift = event.getSceneY();
+                if (event.getSceneY() > 500) {
+                    yShift = 500;
+                }
+				help.setTranslateY(yShift);
 				
 				for (BodyInSpace current: planets.values()) {
 					if (event.getTarget().equals(current.getGUIObject())){
@@ -196,6 +202,7 @@ public class PathSelectionController extends SuperController implements Initiali
 					}
 				// When selecting start point
 				} catch (ArrayIndexOutOfBoundsException e) {
+                    landControl.setDisable(false);
 					orbitControl.setDisable(true);
 				}
 			
@@ -291,7 +298,10 @@ public class PathSelectionController extends SuperController implements Initiali
 	
 	@FXML protected void removeLast() {
 		int lastItem = routePlanets.size() - 1;
-		if (!(lastItem == 0))  {
+
+        System.out.println(lastItem);
+
+		if (!(lastItem < 0))  {
 			
 			unmarkForRoute(routePlanets.get(lastItem));
 			
@@ -314,8 +324,12 @@ public class PathSelectionController extends SuperController implements Initiali
 				markForRoute(routePlanets.get(i));
 			}
 			routeList.setText(newRouteList.toString());
-			
-			disableButtons(routePlanets.get(lastItem - 1));
+
+            if (lastItem != 0) {
+                disableButtons(routePlanets.get(lastItem - 1));
+            } else {
+                disableButtons("start");
+            }
 		}
 	}
 	
