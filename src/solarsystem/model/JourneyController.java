@@ -50,6 +50,7 @@ public class JourneyController extends SuperController implements Initializable 
     private StringBuilder finalJourney = new StringBuilder();
     private double journeyTime;
     private double startSearch, endSearch, orbitsSearch;
+    private double focusScale;
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -377,15 +378,26 @@ public class JourneyController extends SuperController implements Initializable 
 
         final double focusWidth = sourcePane.getPrefWidth() / 2;
         System.out.println(focusWidth);
-        Circle startPlanet =  new Circle(focusWidth, focusWidth, 10);
-        startPlanet.getStyleClass().add("body-Mars");
+        final Circle planetFocus =  new Circle(focusWidth, focusWidth, 10);
+        planetFocus.getStyleClass().add("body-Mars");
         Circle endPlanet =  new Circle(focusWidth, focusWidth, 10);
         endPlanet.getStyleClass().add("body-Earth");
 
         final Spaceship falcon = new Spaceship(0, 0);
-        falcon.setCenterPoint(startPlanet.getCenterX(), startPlanet.getCenterY());
+        falcon.setCenterPoint(planetFocus.getCenterX(), planetFocus.getCenterY());
         falcon.setRadius(0, 0);
 
+        double maxOrbit = Double.MIN_VALUE;
+        for (double[] orbit: routeOrbit) {
+        	for (double val: orbit) {
+        		if (val > maxOrbit) {
+        			maxOrbit = val;
+        		}
+        	}
+        }
+        
+        focusScale = (focusWidth - 4) / maxOrbit;         
+        
         EventHandler<ActionEvent> startFocus = new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -399,6 +411,8 @@ public class JourneyController extends SuperController implements Initializable 
                 double[] endOrbit = null;
 
                 startPlanet = planets.get(phaseStart);
+                
+                planetFocus.getStyleClass().add("body-" + phaseStart);
 
                 try {
                     phaseEnd = routePlanets.get(planetIndex + 1);
@@ -428,9 +442,9 @@ public class JourneyController extends SuperController implements Initializable 
 							endAngle = Math.toRadians(270);
 						}
 
-                        falcon.setCenterPoint(focusWidth - ((transferRadius - startOrbit[0])),
+                        falcon.setCenterPoint(focusWidth - ((transferRadius - startOrbit[0]) * focusScale),
                                 focusWidth);
-                        falcon.setRadius(transferRadius, transferRadius);
+                        falcon.setRadius(transferRadius * focusScale, transferRadius * focusScale);
 
 				}
                 else {
@@ -439,9 +453,9 @@ public class JourneyController extends SuperController implements Initializable 
 
 						double offset = (startOrbit[0] - startOrbit[1]) / 2;
 
-						falcon.setRadius(orbit.semi_major(), orbit.semi_minor());
+						falcon.setRadius(orbit.semi_major() * focusScale, orbit.semi_minor() * focusScale);
 
-                        falcon.setCenterPoint(focusWidth + (offset), focusWidth);
+                        falcon.setCenterPoint(focusWidth + (offset * focusScale), focusWidth);
 
 					}
                 }
@@ -487,7 +501,7 @@ public class JourneyController extends SuperController implements Initializable 
 
 		//systemPane.getChildren().add(route);
 
-		sourcePane.getChildren().add(startPlanet);
+		sourcePane.getChildren().add(planetFocus);
 		destPane.getChildren().add(endPlanet);
 
         timeline.play();
