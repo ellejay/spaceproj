@@ -1,5 +1,7 @@
 package solarsystem.model;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -22,6 +24,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import solarsystem.objects.BodyInSpace;
@@ -458,6 +461,10 @@ public class JourneyController extends SuperController implements Initializable 
                         falcon.setCenterPoint(focusWidth + (offset * focusScale), focusWidth);
 
 					}
+                    else {
+                        falcon.setRadius(0,0);
+                        falcon.setCenterPoint(planetFocus.getCenterX(), planetFocus.getCenterY());
+                    }
                 }
 
 
@@ -586,6 +593,28 @@ public class JourneyController extends SuperController implements Initializable 
 
 	@FXML protected void quitProgram() throws IOException {
 		Platform.exit();
+	}
+
+	@FXML protected void saveJourney() throws IOException {
+		FileChooser fileChooser = new FileChooser();
+
+		//Set extension filter
+		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+		fileChooser.getExtensionFilters().add(extFilter);
+
+		//Show save file dialog
+		Stage stage=(Stage) routeStage.getScene().getWindow();
+		File file = fileChooser.showSaveDialog(stage);
+
+		if(file != null){
+			try {
+				FileWriter fileWriter = new FileWriter(file);
+				fileWriter.write(finalJourney.toString());
+				fileWriter.close();
+			} catch (IOException ex) {
+				System.err.println("Could not save journey information");
+			}
+		}
 	}
 
 	@FXML protected void slowMovement() {

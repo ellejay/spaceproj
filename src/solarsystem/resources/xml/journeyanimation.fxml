@@ -9,8 +9,8 @@
 <StackPane fx:controller="solarsystem.model.JourneyController"
            xmlns:fx="http://javafx.com/fxml">
 
-    <Pane fx:id="help" styleClass="journeyDialog" maxWidth="550" maxHeight="450">
-        <VBox alignment="CENTER" prefWidth="550">
+    <Pane fx:id="help" styleClass="journeyDialog" maxWidth="575" maxHeight="450">
+        <VBox alignment="CENTER" prefWidth="575">
             <padding>
                 <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
             </padding>
@@ -19,6 +19,8 @@
             <Label fx:id="journeyInfo" text="" textFill="white"/>
 
             <HBox spacing="10" alignment="CENTER">
+                <Button onAction="#saveJourney" text="Save Journey Data"/>
+
                 <Button onAction="#stopTimeline" text="Plot New Journey"/>
 
                 <Button onAction="#viewAnimation" text="View Solar System"/>
