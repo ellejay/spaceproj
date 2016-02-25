@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 import javafx.animation.KeyFrame;
@@ -59,7 +60,7 @@ public class JourneyController extends SuperController implements Initializable 
     private boolean transferWindow = false;
     private double journeyMoveX = 0, journeyMoveY = 0;
     private double movementAngle, endAngle, transAngle;
-    private StringBuilder finalJourney = new StringBuilder();
+    private final StringBuilder finalJourney = new StringBuilder();
     private double journeyTime;
     private double startSearch, endSearch, orbitsSearch;
     private double focusScale;
@@ -74,7 +75,7 @@ public class JourneyController extends SuperController implements Initializable 
     }
 
 
-    public void setUp() {
+    private void setUp() {
 
         for (BodyInSpace current : planets.values()) {
             current.resetPlanet();
@@ -113,7 +114,7 @@ public class JourneyController extends SuperController implements Initializable 
         BodyInSpace sun = SpaceObjects.getSun();
         sun.moveGUIObject(midPoint, midPoint);
 
-        final Spaceship enterprise = new Spaceship(0, 0);
+        final Spaceship enterprise = new Spaceship();
 
         steps = 0;
 
@@ -282,7 +283,7 @@ public class JourneyController extends SuperController implements Initializable 
                             enterprise.setAngle(3.14);
                         }
 
-                        if (!(phaseEnd == "")) {
+                        if (!(phaseEnd.isEmpty())) {
                             MathEllipse transfer = null;
                             if (!(endOrbit[0] == 0 && endOrbit[1] == 0)) {
                                 double r1 = endPlanet.getRadius() + 1.0e3 * endOrbit[0];
@@ -291,7 +292,7 @@ public class JourneyController extends SuperController implements Initializable 
                                 transfer = new MathEllipse(endPlanet.getMass(), r2, r1);
                             }
 
-                            if (startPlanet.getName() != endPlanet.getName()) {
+                            if (!startPlanet.getName().equals(endPlanet.getName())) {
                                 transferWindow = true;
                                 orbitsSearch = 0;
                             } else {
@@ -303,7 +304,7 @@ public class JourneyController extends SuperController implements Initializable 
                         }
                     }
 
-                    if (transferWindow && !(phaseEnd == "")) {
+                    if (transferWindow && !(phaseEnd.isEmpty())) {
 
                         orbitsSearch++;
 
@@ -393,7 +394,7 @@ public class JourneyController extends SuperController implements Initializable 
         Circle endPlanet = new Circle(focusWidth, focusWidth, 10);
         endPlanet.getStyleClass().add("body-Earth");
 
-        final Spaceship falcon = new Spaceship(0, 0);
+        final Spaceship falcon = new Spaceship();
         falcon.setCenterPoint(planetFocus.getCenterX(), planetFocus.getCenterY());
         falcon.setRadius(0, 0);
 
@@ -589,10 +590,7 @@ public class JourneyController extends SuperController implements Initializable 
 
         sourcePane.getChildren().add((entryLine));
 
-        //systemPane.getChildren().add(route);
-
         sourcePane.getChildren().add(planetFocus);
-
 
         timeline.play();
 
@@ -622,7 +620,7 @@ public class JourneyController extends SuperController implements Initializable 
     }
 
     @FXML
-    protected void nextPhase() {
+    private void nextPhase() {
         if (steps / 2 < routePlanets.size() - 1) {
             steps++;
             newStep = true;
@@ -638,7 +636,7 @@ public class JourneyController extends SuperController implements Initializable 
 
 
     @FXML
-    protected void stopTimeline(ActionEvent event) throws IOException {
+    protected void stopTimeline() throws IOException {
         timeline.pause();
 
         Stage stage;
@@ -727,8 +725,7 @@ public class JourneyController extends SuperController implements Initializable 
         double minutes = Math.floor(((t % 86400) % 3600) / 60);
         double seconds = Math.floor(((t % 86400) % 3600) % 60);
 
-        String x = String.format("%6.0f days %6.0f hours %6.0f mins %6.0f s\n", days, hours, minutes, seconds);
-        return x;
+        return String.format("%6.0f days %6.0f hours %6.0f mins %6.0f s\n", days, hours, minutes, seconds);
     }
 
 }

@@ -2,7 +2,7 @@ package solarsystem.model;
  
 import java.io.IOException;
 import java.net.URL;
-import java.util.Map;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
@@ -21,7 +21,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import solarsystem.objects.BodyInSpace;
 import solarsystem.objects.SpaceObjects;
@@ -134,13 +133,13 @@ public class PathSelectionController extends SuperController implements Initiali
 
 		EventHandler<MouseEvent> planetLander = new EventHandler<MouseEvent>() {
 
-			MenuItem orbitItem = new MenuItem("Orbit");
-			MenuItem landItem = new MenuItem("Land");
-			ContextMenu contextFileMenu = new ContextMenu(orbitItem, landItem);
+			final MenuItem orbitItem = new MenuItem("Orbit");
+			final MenuItem landItem = new MenuItem("Land");
+			final ContextMenu contextFileMenu = new ContextMenu(orbitItem, landItem);
 
 			@Override
 			public void handle(MouseEvent event) {	
-				final double[] landed = {0, 0};
+				//final double[] landed = {0, 0};
 				boolean planetFound = false;
 
 				help.toFront();
@@ -185,7 +184,7 @@ public class PathSelectionController extends SuperController implements Initiali
 					double[] prevOrbit = routeOrbit.get(lastItem);
 					
 					// If landed and selecting new planet, disable all
-					if (prev != name && (prevOrbit[0] == 0.0 && prevOrbit[1] == 0.0)) {
+					if (!prev.equals(name) && (prevOrbit[0] == 0.0 && prevOrbit[1] == 0.0)) {
 						landControl.setDisable(true);
 						orbitControl.setDisable(true);
 					}
@@ -308,7 +307,7 @@ public class PathSelectionController extends SuperController implements Initiali
 			routePlanets.remove(lastItem);
 			routeOrbit.remove(lastItem);
 			
-			double[] landed = {0,0};
+			//double[] landed = {0,0};
 			StringBuilder newRouteList = new StringBuilder();
 			for (int i = 0; i < routePlanets.size(); i++) {
 				newRouteList.append(routePlanets.get(i) + " ");

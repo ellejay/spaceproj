@@ -5,8 +5,8 @@ import javafx.scene.shape.Ellipse;
 
 public class Spaceship {
 	
-	private Circle gui_object;
-	private Ellipse gui_trail;
+	private final Circle gui_object;
+	private final Ellipse gui_trail;
 	private double angle;
 	private double radius_x;
 	private double radius_y;
@@ -16,20 +16,20 @@ public class Spaceship {
 	private int rotation;
 	private double period;
 	
-	public Spaceship(double radius_x, double radius_y) {
-		
+	public Spaceship() {
+
+		this.radius_x = 0;
+		this.radius_y = 0;
+		angle = 0;
+
+		this.rotation = 1;
+		this.period = 600;
+
 		this.gui_object = new Circle(0, 0, 3);
 		this.gui_object.getStyleClass().add("spacecraft");
 		
-		this.gui_trail = new Ellipse(radius_x, radius_y);
+		this.gui_trail = new Ellipse(0, 0);
 		this.gui_trail.getStyleClass().add("spacecraft-path");
-		this.radius_x = radius_x;
-		this.radius_y = radius_y;
-		angle = 0;
-		
-		this.rotation = 1;
-		this.period = 600;
-		
 	}
 	
 	public Ellipse getGUITrail(){

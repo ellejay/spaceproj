@@ -7,17 +7,17 @@ import javafx.animation.Timeline;
 import solarsystem.objects.BodyInSpace;
 import solarsystem.objects.SpaceObjects;
 
-public class SuperController {
+class SuperController {
 	
     // Planet scale factor
- 	protected static double SCREEN_SCALE = 0.045;
- 	protected static double midPoint = 300;
- 	final protected Map<String, BodyInSpace> planets = SpaceObjects.getDictionary();
- 	protected Timeline timeline = null;
+ 	static double SCREEN_SCALE = 0.045;
+ 	static final double midPoint = 300;
+ 	final Map<String, BodyInSpace> planets = SpaceObjects.getDictionary();
+ 	Timeline timeline = null;
  	// Rotation speed
- 	protected static double STEP_DURATION = 2; //milliseconds
- 	protected static double[] orbitParams = new double[2];
- 	protected static ArrayList<String> routePlanets = new ArrayList<>();
- 	protected static ArrayList<double[]> routeOrbit = new ArrayList<>();
+ 	static final double STEP_DURATION = 2; //milliseconds
+ 	static final double[] orbitParams = new double[2];
+ 	static final ArrayList<String> routePlanets = new ArrayList<>();
+ 	static final ArrayList<double[]> routeOrbit = new ArrayList<>();
 
 }

@@ -2,9 +2,9 @@ package solarsystem.math;
 
 public class MathEllipse {
 
-	public double m; //mass
-	public double a; // semimajor axis
-	public double e; // eccentricity
+	private final double m; //mass
+	private final double a; // semimajor axis
+	private final double e; // eccentricity
 
 	public MathEllipse(double mass, double periapse, double apoapse) {
 		m = mass;
@@ -28,8 +28,7 @@ public class MathEllipse {
 	}
 	
 	public double semi_minor() {
-		double res = a * Math.sqrt(1 - (e * e));
-		return res;
+		return a * Math.sqrt(1 - (e * e));
 	}
 
 	public double semi_major() {
@@ -49,12 +48,12 @@ public class MathEllipse {
 		return 2.0 * Math.PI * Math.sqrt((a*a*a) / (G * m));
 	}
 
-	public double escape() {
+	private double escape() {
 		double G = 0.6612e-10;
-		double vp = Math.sqrt((2.0 * G * m) / periapse()) - speed_p();
+		return Math.sqrt((2.0 * G * m) / periapse()) - speed_p();
 		// double va = Math.sqrt((2.0 * G * m) / apoapse()) - speed_a();
 		// periapse -- min printf ("At periapse %6.0f, At apoapse %6.0f\n", vp, va);
-		return vp;
+		// return vp;
 	}
 
 	public double speed_p()

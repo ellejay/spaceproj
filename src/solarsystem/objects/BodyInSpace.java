@@ -11,17 +11,17 @@ import javafx.scene.shape.Circle;
 
 public class BodyInSpace {
 	
-	public String name; // body name
-	public double diameter; // diameter of body in 
-	public double mass; // mass of body in
-	public Circle gui_object; // GUI object to represent body
-	public double pos_x; // current position of GUI body
-	public double pos_y; // current position of GUI body
-	private double orbit; // radius of orbit from body's parent in km
-	private double period; // time taken for one full rotation around body orbit in days
+	private final String name; // body name
+	private final double diameter; // diameter of body in
+	private final double mass; // mass of body in
+	private Circle gui_object; // GUI object to represent body
+	private double pos_x; // current position of GUI body
+	private double pos_y; // current position of GUI body
+	private final double orbit; // radius of orbit from body's parent in km
+	private final double period; // time taken for one full rotation around body orbit in days
 	private double angle; // current angle of body around circle, measured from vertical in radians
-	private Circle gui_orbit; // GUI object for the orbit path
-	private BodyInSpace center; // parent object of body (eg. sun to the earth)
+	private final Circle gui_orbit; // GUI object for the orbit path
+	private final BodyInSpace center; // parent object of body (eg. sun to the earth)
 	
 	/**
 	 * Constructor method to create planet given all required data.
@@ -192,7 +192,7 @@ public class BodyInSpace {
 	 * Get the name of the css style to be applied to this body.
 	 * @return name of the css class
 	 */
-	public String getStyle() {
+	private String getStyle() {
 		return "body-" + this.name;
 	}
 	

@@ -1,20 +1,19 @@
 package solarsystem.math;
 
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import solarsystem.objects.BodyInSpace;
 import solarsystem.objects.SpaceObjects;
 
 public class Calculator {
 
-	public double dv1, dv2, t, ph1, ph2;
-	public String type;
-	public BodyInSpace current_p, new_p;
-	public MathEllipse current_e, new_e;
+	private double dv1, dv2, t, ph1, ph2;
+	private String type;
+	private BodyInSpace current_p, new_p;
+	private MathEllipse current_e, new_e;
 	private double G = 0.6612e-10;
 	
-	public Calculator(BodyInSpace initialPlanet, MathEllipse initialOrbit){
+	private Calculator(BodyInSpace initialPlanet, MathEllipse initialOrbit){
 		this.current_p = initialPlanet;
 		this.current_e = initialOrbit;
 	}
@@ -91,9 +90,7 @@ public class Calculator {
 		double minutes = Math.floor(((t % 86400) % 3600) / 60);
 		double seconds = Math.floor(((t % 86400) % 3600) % 60);
 		
-		String x = String.format("%6.0fm/s %6.0fm/s %6.0f days %6.0f hours %6.0f mins %6.0f s\n", dv1, dv2, days, hours, minutes, seconds);
-		return x;
-		
+		return String.format("%6.0fm/s %6.0fm/s %6.0f days %6.0f hours %6.0f mins %6.0f s\n", dv1, dv2, days, hours, minutes, seconds);
 	}
 
 	public void transfer_slow(BodyInSpace p, MathEllipse target){
@@ -120,20 +117,9 @@ public class Calculator {
 			}
 			else {
 				// TEST TRUE, FIX FOR ACTUAL A & P
-				boolean outward_journey;
-				if (current_e.apoapse() == target.apoapse()) {
-					outward_journey = true;
-				}
-				else if (current_e.periapse() == target.periapse()) {
-					outward_journey = false;
-				}
-				else if (current_e.periapse() < target.periapse()) {
-					outward_journey = false;
-				}
-				else {
-					outward_journey = true;
-				}
-				
+				boolean outward_journey = !(current_e.periapse() == target.periapse() ||
+						current_e.periapse() < target.periapse());
+
 				transfer(current_p, current_e, target, outward_journey);
 			}
 			System.out.printf("%6.0f %6.0f %6.0f (%s) \n", dv1, dv2, t, type);
@@ -162,9 +148,9 @@ public class Calculator {
 		current_p = p;
 		current_e = target;
 	}
-	
-	
-	public void transferToSibling(BodyInSpace startPlanet, BodyInSpace endPlanet, MathEllipse startOrbit, MathEllipse endOrbit) {
+
+
+	private void transferToSibling(BodyInSpace startPlanet, BodyInSpace endPlanet, MathEllipse startOrbit, MathEllipse endOrbit) {
 		double w1, w2, T;
 		
 		if (!startPlanet.getParent().equals(endPlanet.getParent())) {
@@ -175,13 +161,7 @@ public class Calculator {
 		MathEllipse stage1 = new MathEllipse(parent.getMass(), startPlanet.getOrbitInM());
 		MathEllipse stage2 = new MathEllipse(parent.getMass(), endPlanet.getOrbitInM());
 		
-		boolean outward_journey;
-		if (startPlanet.getOrbitInM() < endPlanet.getOrbitInM()) {
-			outward_journey = true;
-		}
-		else {
-			outward_journey = false;
-		}
+		boolean outward_journey = startPlanet.getOrbitInM() < endPlanet.getOrbitInM();
 		
 		transfer(parent, stage1, stage2, outward_journey);
 		
@@ -232,8 +212,8 @@ public class Calculator {
 		return ph1;
 	}
 	
-	public void transferToChild(BodyInSpace parent, BodyInSpace child, MathEllipse parentOrbit, MathEllipse childOrbit,
-			boolean outward_journey) {
+	private void transferToChild(BodyInSpace parent, BodyInSpace child, MathEllipse parentOrbit, MathEllipse childOrbit,
+								 boolean outward_journey) {
 		
 		if (!parent.equals(child.getParent())) {
 			return;
@@ -249,7 +229,7 @@ public class Calculator {
 		
 	}
 
-	public void transfer(BodyInSpace p, MathEllipse current, MathEllipse target, boolean outward_journey) {
+	private void transfer(BodyInSpace p, MathEllipse current, MathEllipse target, boolean outward_journey) {
 		double tot = 1.0e20; 
 		//horiz_trans("pp", tot, p.getMass(), current.periapse(), current.speed_p(), target.periapse() , target.speed_p());
 		//horiz_trans("aa", tot, p.getMass(), current.apoapse(), current.speed_a(), target.apoapse(), target.speed_a());
@@ -266,7 +246,7 @@ public class Calculator {
 	}
 
 
-	public void horiz_trans (String ty, double tot, double mass, double r1, double v1, double r2, double v2)
+	private void horiz_trans(String ty, double tot, double mass, double r1, double v1, double r2, double v2)
 	{
 		MathEllipse e = new MathEllipse(mass, r1, r2);
 		double t1 = e.speed_p();

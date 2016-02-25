@@ -1,9 +1,11 @@
 package solarsystem.math;
 
-public class Hyper {
+class Hyper {
 	
-	public double m, p, a;
-	private double G = 0.6612e-10;
+	private final double m;
+	private final double p;
+	private final double a;
+	private final double G = 0.6612e-10;
 	
 	public Hyper(double mass, double periapse, double speed) {
 		m = mass;
