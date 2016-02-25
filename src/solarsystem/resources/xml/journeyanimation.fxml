@@ -38,16 +38,15 @@
 
         <right>
 
-            <GridPane prefWidth="200">
+            <GridPane prefWidth="200" styleClass="controlPane">
+                <padding>
+                    <Insets bottom="0.0" left="0.0" right="0.0" top="150.0" />
+                </padding>
 
                 <Pane fx:id="sourcePane" styleClass="sourcePane" prefWidth="200" prefHeight="200"
                       GridPane.columnIndex="0" GridPane.rowIndex="0"/>
 
-                <Pane fx:id="destPane" styleClass="destPane" prefWidth="200" prefHeight="200"
-                      GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-
-
-                <VBox GridPane.columnIndex="0" GridPane.rowIndex="2" styleClass="controlPane" prefHeight="200"
+                <VBox GridPane.columnIndex="0" GridPane.rowIndex="1" styleClass="controlPane" prefHeight="200"
                       alignment="TOP_CENTER">
                     <padding>
                         <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
