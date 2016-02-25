@@ -2,7 +2,7 @@ package solarsystem.model;
  
 import java.io.IOException;
 import java.net.URL;
-import java.util.Objects;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
@@ -36,6 +36,8 @@ public class PathSelectionController extends SuperController implements Initiali
 	@FXML private Label planetName;
 	@FXML private Button landControl;
 	@FXML private Button orbitControl;
+	private BodyInSpace currentParent = SpaceObjects.getSun();
+	private Map<String, BodyInSpace> selection = SpaceObjects.getDictionary();
     
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -47,7 +49,7 @@ public class PathSelectionController extends SuperController implements Initiali
 						Number old_val, Number new_val) {
 					SCREEN_SCALE = (double) new_val;
 					
-					for (BodyInSpace current: planets.values()) {
+					for (BodyInSpace current: selection.values()) {
 						current.adjustGUIOrbit(current.getOrbit() * SCREEN_SCALE);
 						
 						if ((double) new_val > 0.455) {
@@ -69,27 +71,7 @@ public class PathSelectionController extends SuperController implements Initiali
 				}
 			});
 
-		systemPane.getChildren().add(SpaceObjects.getSun().getGUIObject());
-		
-		for (BodyInSpace current: planets.values()) {
-			current.adjustGUIOrbit(current.getOrbit() * SCREEN_SCALE);
-			systemPane.getChildren().add(current.getGUIOrbit());
-		}
-		
-		for (BodyInSpace current: planets.values()) {   
-			current.resetPlanet();
-			
-			current.moveGUIObject(
-					(current.getParent().getX() + 
-					(current.getOrbit() * SCREEN_SCALE) * 
-					Math.sin(current.getAngle())), 
-					
-					(current.getParent().getY() - 
-					(current.getOrbit() * SCREEN_SCALE) * 
-					Math.cos(current.getAngle())));
-			
-			systemPane.getChildren().add(current.getGUIObject());
-		}
+		displaySystem();
 
 		EventHandler<MouseEvent> moveSystem = new EventHandler<MouseEvent>() {
 			
@@ -151,8 +133,10 @@ public class PathSelectionController extends SuperController implements Initiali
                     yShift = 500;
                 }
 				help.setTranslateY(yShift);
+
+				System.out.println(event.getTarget());
 				
-				for (BodyInSpace current: planets.values()) {
+				for (BodyInSpace current: selection.values()) {
 					if (event.getTarget().equals(current.getGUIObject())){
 						final String name = current.getName();
 						planetFound = true;
@@ -161,6 +145,15 @@ public class PathSelectionController extends SuperController implements Initiali
 						
 						disableButtons(name);		
 					}
+				}
+
+				if (event.getTarget().equals(currentParent) && !currentParent.getName().equals("Sun")){
+					final String name = currentParent.getName();
+					planetFound = true;
+
+					planetName.setText(name);
+
+					disableButtons(name);
 				}
 				
 				if (!planetFound) {
@@ -209,13 +202,13 @@ public class PathSelectionController extends SuperController implements Initiali
 	}
 
 	private void markForRoute(String planet) {
-		Circle planetObj = planets.get(planet).getGUIObject();
+		Circle planetObj = selection.get(planet).getGUIObject();
 		planetObj.setStrokeWidth(2);
 		planetObj.setStroke(Paint.valueOf("white"));
 	}
 	
 	private void unmarkForRoute(String planet) {
-		Circle planetObj = planets.get(planet).getGUIObject();
+		Circle planetObj = selection.get(planet).getGUIObject();
 		planetObj.setStrokeWidth(0);
 	}
 
@@ -279,6 +272,30 @@ public class PathSelectionController extends SuperController implements Initiali
 			orbit.getChildren().add(submit);
 		}
 	}
+
+	@FXML protected void focusOnPlanet() {
+		String planet = planetName.getText();
+
+		help.toBack();
+		currentParent = SpaceObjects.getDictionary().get(planet);
+		selection = SpaceObjects.getChildren(planet);
+
+		systemPane.getChildren().clear();
+
+		SCREEN_SCALE = 200;
+		displaySystem();
+	}
+
+	@FXML protected void focusOnSun() {
+		help.toBack();
+		currentParent = SpaceObjects.getSun();
+		selection = SpaceObjects.getDictionary();
+
+		systemPane.getChildren().clear();
+
+		SCREEN_SCALE = zoomSlide.getValue();
+		displaySystem();
+	}
 	
 	@FXML protected void landOnPlanet() {
 		if (!orbit.getChildren().isEmpty()) {
@@ -329,6 +346,35 @@ public class PathSelectionController extends SuperController implements Initiali
             } else {
                 disableButtons("start");
             }
+		}
+	}
+
+	private void displaySystem() {
+
+		systemPane.getChildren().add(currentParent.getGUIObject());
+
+		currentParent.moveGUIObject(midPoint, midPoint);
+
+		if (!selection.isEmpty()) {
+			for (BodyInSpace current : selection.values()) {
+				current.adjustGUIOrbit(current.getOrbit() * SCREEN_SCALE);
+				systemPane.getChildren().add(current.getGUIOrbit());
+			}
+
+			for (BodyInSpace current : selection.values()) {
+				current.resetPlanet();
+
+				current.moveGUIObject(
+						(current.getParent().getX() +
+								(current.getOrbit() * SCREEN_SCALE) *
+										Math.sin(current.getAngle())),
+
+						(current.getParent().getY() -
+								(current.getOrbit() * SCREEN_SCALE) *
+										Math.cos(current.getAngle())));
+
+				systemPane.getChildren().add(current.getGUIObject());
+			}
 		}
 	}
 	

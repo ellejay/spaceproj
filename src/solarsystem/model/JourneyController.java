@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
 import javafx.animation.KeyFrame;
@@ -77,7 +76,7 @@ public class JourneyController extends SuperController implements Initializable 
 
     private void setUp() {
 
-        for (BodyInSpace current : planets.values()) {
+        for (BodyInSpace current : scope.values()) {
             current.resetPlanet();
         }
 
@@ -85,7 +84,7 @@ public class JourneyController extends SuperController implements Initializable 
             @Override
             public void handle(ActionEvent event) {
 
-                for (BodyInSpace current : planets.values()) {
+                for (BodyInSpace current : scope.values()) {
 
                     current.incrementAngle();
 
@@ -120,9 +119,9 @@ public class JourneyController extends SuperController implements Initializable 
 
         final Ellipse route = new Ellipse();
         route.getStyleClass().add("planet-orbit-path");
-        final Calculator calc = new Calculator(planets.get(routePlanets.get(0)));
+        final Calculator calc = new Calculator(scope.get(routePlanets.get(0)));
 
-        resetScale(285 / planets.get(routePlanets.get(0)).getOrbit());
+        resetScale(285 / scope.get(routePlanets.get(0)).getOrbit());
 
         EventHandler<ActionEvent> spaceshipMove = new EventHandler<ActionEvent>() {
             @Override
@@ -137,13 +136,13 @@ public class JourneyController extends SuperController implements Initializable 
                 String phaseEnd;
                 double[] endOrbit = null;
 
-                startPlanet = planets.get(phaseStart);
+                startPlanet = scope.get(phaseStart);
 
                 try {
                     phaseEnd = routePlanets.get(planetIndex + 1);
                     endOrbit = routeOrbit.get(planetIndex + 1);
 
-                    endPlanet = planets.get(phaseEnd);
+                    endPlanet = scope.get(phaseEnd);
 
                     if (startPlanet.getOrbit() > endPlanet.getOrbit()) {
                         movement = -1;
@@ -425,7 +424,7 @@ public class JourneyController extends SuperController implements Initializable 
                 String phaseEnd;
                 double[] endOrbit = null;
 
-                startPlanet = planets.get(phaseStart);
+                startPlanet = scope.get(phaseStart);
 
                 planetFocus.getStyleClass().add("body-" + phaseStart);
 
@@ -433,7 +432,7 @@ public class JourneyController extends SuperController implements Initializable 
                     phaseEnd = routePlanets.get(planetIndex + 1);
                     endOrbit = routeOrbit.get(planetIndex + 1);
 
-                    endPlanet = planets.get(phaseEnd);
+                    endPlanet = scope.get(phaseEnd);
 
                     if (startPlanet.getOrbit() > endPlanet.getOrbit()) {
                         movement = -1;
@@ -576,7 +575,7 @@ public class JourneyController extends SuperController implements Initializable 
 
         systemPane.getChildren().add(sun.getGUIObject());
 
-        for (BodyInSpace current : planets.values()) {
+        for (BodyInSpace current : scope.values()) {
             current.adjustGUIOrbit(current.getOrbit() * SCREEN_SCALE);
             systemPane.getChildren().add(current.getGUIOrbit());
             systemPane.getChildren().add(current.getGUIObject());
@@ -614,7 +613,7 @@ public class JourneyController extends SuperController implements Initializable 
         }
 
         SCREEN_SCALE = val;
-        for (BodyInSpace current : planets.values()) {
+        for (BodyInSpace current : scope.values()) {
             current.adjustGUIOrbit(current.getOrbit() * SCREEN_SCALE);
         }
     }

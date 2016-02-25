@@ -251,4 +251,31 @@ public class BodyInSpace {
 	public BodyInSpace getParent() {
 		return this.center;
 	}
+
+	/**
+	 *
+	 * @param other
+	 * @return
+     */
+	public boolean isSibling(BodyInSpace other) {
+		return this.getParent().equals(other.getParent());
+	}
+
+	/**
+	 *
+	 * @param other
+	 * @return
+     */
+	public boolean isChild(BodyInSpace other) {
+		return this.getParent().equals(other);
+	}
+
+	/**
+	 *
+	 * @param other
+	 * @return
+     */
+	public boolean isParent(BodyInSpace other) {
+		return other.getParent().equals(this);
+	}
 }

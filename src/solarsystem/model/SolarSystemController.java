@@ -45,7 +45,7 @@ public class SolarSystemController extends SuperController implements Initializa
 			public void changed(ObservableValue<? extends Number> ov,
 					Number old_val, Number new_val) {
 				SCREEN_SCALE = (double) new_val;
-				for (BodyInSpace current: planets.values()) {        	
+				for (BodyInSpace current: scope.values()) {
 					current.adjustGUIOrbit(current.getOrbit() * SCREEN_SCALE);
 				}
 			}
@@ -61,7 +61,7 @@ public class SolarSystemController extends SuperController implements Initializa
 			@Override
 			public void handle(ActionEvent event) {
 
-				for (BodyInSpace current: planets.values()) {
+				for (BodyInSpace current: scope.values()) {
 
 					current.incrementAngle();
 
@@ -97,7 +97,7 @@ public class SolarSystemController extends SuperController implements Initializa
 		sun.moveGUIObject(midPoint, midPoint);
 		systemPane.getChildren().add(sun.getGUIObject());
 
-		for (BodyInSpace current: planets.values()) {  
+		for (BodyInSpace current: scope.values()) {
 			current.adjustGUIOrbit(current.getOrbit() * SCREEN_SCALE);
 			systemPane.getChildren().add(current.getGUIOrbit());
 			systemPane.getChildren().add(current.getGUIObject());

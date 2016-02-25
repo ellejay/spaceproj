@@ -12,7 +12,7 @@ class SuperController {
     // Planet scale factor
  	static double SCREEN_SCALE = 0.045;
  	static final double midPoint = 300;
- 	final Map<String, BodyInSpace> planets = SpaceObjects.getDictionary();
+ 	final Map<String, BodyInSpace> scope = SpaceObjects.getDictionary();
  	Timeline timeline = null;
  	// Rotation speed
  	static final double STEP_DURATION = 2; //milliseconds
