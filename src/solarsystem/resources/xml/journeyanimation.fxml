@@ -55,8 +55,6 @@
 
                     <Text fx:id="routeData" styleClass="route_label" wrappingWidth="190" textAlignment="CENTER"/>
 
-                    <Button onAction="#nextPhase" text="Next Phase"/>
-
                     <HBox spacing="10" alignment="CENTER">
                         <Button onAction="#slowMovement" text="◀◀"/> <Button onAction="#speedUpMovement" text="▶▶"/>
                     </HBox>

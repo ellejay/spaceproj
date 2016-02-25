@@ -265,9 +265,7 @@ public class JourneyController extends SuperController implements Initializable 
                         rotateCount++;
                         //enterprise.getAngle() == 3.14
                         if (Math.abs(Math.toDegrees(enterprise.getAngle() - endAngle)) < 1) {
-                            //timeline.pause();
-                            steps++;
-                            newStep = true;
+                            nextPhase();
                         }
 
                     }
@@ -347,8 +345,7 @@ public class JourneyController extends SuperController implements Initializable 
 
                             System.out.println(Math.toDegrees(startPlanet.getAngle()) + " | " + Math.toDegrees(endPlanet.getAngle()));
                             //timeline.pause();
-                            steps++;
-                            newStep = true;
+                            nextPhase();
                         }
                     }
 
@@ -454,7 +451,7 @@ public class JourneyController extends SuperController implements Initializable 
 
                     if (newStep) {
                         movementAngle = Math.PI / 2;
-                        endAngle = Math.toRadians(270);
+                        endAngle = Math.toRadians(180);
                     }
 
                     falcon.setCenterPoint(focusWidth - ((transferRadius - startOrbit[0]) * focusScale),
@@ -471,6 +468,12 @@ public class JourneyController extends SuperController implements Initializable 
                             Math.cos(falcon.getAngle());
 
                     moveBall(falcon.getGUIShip(), moveX, moveY);
+
+
+
+                    if (Math.abs(Math.toDegrees(falcon.getAngle()) - 270) < 1) {
+                        nextPhase();
+                    }
 
 
                 } else if (steps % 2 == 1 || orbitTrans) {
@@ -537,6 +540,10 @@ public class JourneyController extends SuperController implements Initializable 
                         falcon.setCenterPoint(planetFocus.getCenterX(), planetFocus.getCenterY());
                     }
 
+                    if (Math.abs(Math.toDegrees(falcon.getAngle()) - 90) < 1 && (phaseStart.equals(phaseEnd)
+                            || phaseEnd.isEmpty())) {
+                        nextPhase();
+                    }
 
                     falcon.incrementAngle();
 
@@ -615,12 +622,12 @@ public class JourneyController extends SuperController implements Initializable 
     }
 
     @FXML
-    protected void nextPhase(ActionEvent event) throws IOException {
+    protected void nextPhase() {
         if (steps / 2 < routePlanets.size() - 1) {
             steps++;
             newStep = true;
-            timeline.play();
         } else {
+            timeline.pause();
             help.toFront();
             finalJourney.append("Total Journey Time\n\t");
             finalJourney.append(timeToString(journeyTime));
