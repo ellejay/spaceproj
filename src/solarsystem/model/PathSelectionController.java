@@ -279,10 +279,13 @@ public class PathSelectionController extends SuperController implements Initiali
 		help.toBack();
 		currentParent = SpaceObjects.getDictionary().get(planet);
 		selection = SpaceObjects.getChildren(planet);
+		
+		System.out.println(currentParent.getName());
 
 		systemPane.getChildren().clear();
 
-		SCREEN_SCALE = 200;
+		// Fix the scale issue
+		SCREEN_SCALE = 1e4;
 		displaySystem();
 	}
 
@@ -375,6 +378,9 @@ public class PathSelectionController extends SuperController implements Initiali
 
 				systemPane.getChildren().add(current.getGUIObject());
 			}
+		}
+		else {
+			System.out.println("I tried...");
 		}
 	}
 	
