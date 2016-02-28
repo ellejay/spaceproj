@@ -16,7 +16,7 @@
             </padding>
             <Label text="Journey Complete!" styleClass="completeMsg"/>
 
-            <Label fx:id="journeyInfo" text="" textFill="white"/>
+            <TextArea fx:id="journeyInfo" text="" maxHeight="600" styleClass="routeList" wrapText="true" editable="false"/>
 
             <HBox spacing="10" alignment="CENTER">
                 <Button onAction="#saveJourney" text="Save Journey Data"/>

@@ -20,6 +20,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -52,8 +53,7 @@ public class JourneyController extends SuperController implements Initializable 
     private Text routeData;
     @FXML
     private Pane help;
-    @FXML
-    private Label journeyInfo;
+    @FXML private TextArea journeyInfo;
     private int steps;
     private boolean newStep = true;
     private int rotateCount = 0;
@@ -145,7 +145,8 @@ public class JourneyController extends SuperController implements Initializable 
 
                     endPlanet = SpaceObjects.getBody(phaseEnd);
 
-                    if (startPlanet.getOrbit() > endPlanet.getOrbit()) {
+                    if ((startPlanet.isSibling(endPlanet) && startPlanet.getOrbit() > endPlanet.getOrbit())
+                            || (startPlanet.isChild(endPlanet))) {
                         movement = -1;
                         resetScale(285 / startPlanet.getOrbit());
                     } else {
@@ -156,6 +157,21 @@ public class JourneyController extends SuperController implements Initializable 
                     phaseEnd = "";
                 }
 
+                if (newStep && !phaseEnd.isEmpty()) {
+                    if (startPlanet.isSibling(endPlanet)) {
+                        System.out.println("FRAME: " + startPlanet.getParent().getName());
+                        changeFrame(startPlanet.getParent().getName(), enterprise);
+                    }
+                    else if (startPlanet.isParent(endPlanet)) {
+                        System.out.println("FRAME: " + startPlanet.getName());
+                        changeFrame(startPlanet.getName(), enterprise);
+                    }
+                    else if (startPlanet.isChild(endPlanet)) {
+                        System.out.println("FRAME: " + endPlanet.getName());
+                        changeFrame(endPlanet.getName(), enterprise);
+                    }
+                }
+
                 double moveX, moveY;
                 double periapse;
                 double apoapsis = startOrbit[0];
@@ -164,7 +180,7 @@ public class JourneyController extends SuperController implements Initializable 
 
                 if (steps % 2 == 1) {
 
-                    if (!phaseStart.equals(phaseEnd)) {
+                    if (!phaseStart.equals(phaseEnd) && startPlanet.isSibling(endPlanet)) {
                         enterprise.setParent(startPlanet.getParent());
 
                         double distance = Math.abs(endPlanet.getOrbit() - startPlanet.getOrbit());
@@ -203,7 +219,41 @@ public class JourneyController extends SuperController implements Initializable 
 
 
                         enterprise.setRadius(route.getRadiusX() / SCREEN_SCALE, route.getRadiusY() / SCREEN_SCALE);
-                    } else {
+                    } else if (!phaseStart.equals(phaseEnd)) {
+
+                        double distance;
+                        if (startPlanet.isChild(endPlanet)) {
+                            enterprise.setParent(startPlanet.getParent());
+                            distance = startPlanet.getOrbit();
+                        } else {
+                            enterprise.setParent(endPlanet.getParent());
+                            distance = endPlanet.getOrbit();
+                        }
+
+                        route.setRadiusX((distance) / 2 * SCREEN_SCALE);
+                        route.setRadiusY((distance) / 2 * SCREEN_SCALE);
+
+                        //+ (nearestPlanet.getOrbit()) * SCREEN_SCALE
+                        radiusJourney = route.getRadiusY();
+
+                        route.setCenterX(enterprise.getParent().getX());
+                        route.setCenterY(enterprise.getParent().getY() - radiusJourney);
+
+                        if (newStep) {
+                            journeyMoveX = enterprise.getParent().getX() + ((radiusJourney) *
+                                    Math.sin(startPlanet.getAngle()));
+
+                            journeyMoveY = enterprise.getParent().getY() - ((radiusJourney) *
+                                    Math.cos(startPlanet.getAngle()));
+
+                        }
+
+                        route.setCenterX(journeyMoveX);
+                        route.setCenterY(journeyMoveY);
+
+                        enterprise.setRadius(route.getRadiusX() / SCREEN_SCALE, route.getRadiusY() / SCREEN_SCALE);
+                    }
+                    else {
                         enterprise.setCenterPoint(startPlanet.getX(), startPlanet.getY());
                         enterprise.setRadius(0, 0);
                     }
@@ -240,10 +290,15 @@ public class JourneyController extends SuperController implements Initializable 
                         journeyTime += calc.getTime();
 
                         double speed;
-                        if (endPlanet.getAngularV() < startPlanet.getAngularV()) {
-                            speed = endPlanet.getAngularV();
-                        } else {
-                            speed = startPlanet.getAngularV();
+                        if (startPlanet.isSibling(endPlanet)) {
+                            if (endPlanet.getAngularV() < startPlanet.getAngularV()) {
+                                speed = endPlanet.getAngularV();
+                            } else {
+                                speed = startPlanet.getAngularV();
+                            }
+                        }
+                        else {
+                            speed = 360 / (2 * (calc.getTime() / 86400));
                         }
 
                         double transitionSpeed = 360 / ((speed * Math.PI) / (transAngle));
@@ -306,31 +361,63 @@ public class JourneyController extends SuperController implements Initializable 
 
                     if (transferWindow && !(phaseEnd.isEmpty())) {
 
-                        orbitsSearch++;
+                        if (startPlanet.isSibling(endPlanet)) {
 
-                        double phase = Math.toDegrees(startPlanet.getAngle() - endPlanet.getAngle());
-                        if (phase < 0) {
-                            phase += 360.0;
-                        }
-                        //System.out.println(phase + " | " + calc.getStartPhaseAngle());
-                        if (Math.abs(phase - calc.getStartPhaseAngle()) < 1) {
+                            orbitsSearch++;
 
-                            double angleTravelled = Math.toDegrees(orbitsSearch * startPlanet.angleIncrease());
-                            System.out.println("ORBITS: " + angleTravelled);
+                            double phase = Math.toDegrees(startPlanet.getAngle() - endPlanet.getAngle());
+                            if (phase < 0) {
+                                phase += 360.0;
+                            }
 
-                            double timeTaken = startPlanet.getPeriodAsSeconds() *
-                                    (angleTravelled / 360);
+                            if (Math.abs(phase - calc.getStartPhaseAngle()) < 1) {
 
-                            finalJourney.append(startPlanet.getName() + "\n\t");
-                            finalJourney.append(timeToString(timeTaken));
+                                double angleTravelled = Math.toDegrees(orbitsSearch * startPlanet.angleIncrease());
+                                System.out.println("ORBITS: " + angleTravelled);
 
-                            journeyTime += timeTaken;
+                                double timeTaken = startPlanet.getPeriodAsSeconds() *
+                                        (angleTravelled / 360);
 
-                            movementAngle = startPlanet.getAngle() - Math.PI;
+                                finalJourney.append(startPlanet.getName() + "\n\t");
+                                finalJourney.append(timeToString(timeTaken));
+
+                                journeyTime += timeTaken;
+
+                                movementAngle = startPlanet.getAngle() - Math.PI;
+                                if (movementAngle < 0) {
+                                    movementAngle += 2 * Math.PI;
+                                }
+                                endAngle = startPlanet.getAngle();
+
+                                if (movement == -1) {
+                                    double temp = movementAngle;
+                                    movementAngle = endAngle;
+                                    endAngle = temp;
+                                }
+
+                                transAngle = startPlanet.getAngle() - endPlanet.getAngle();
+
+                                if (transAngle < 0) {
+                                    transAngle += 2 * Math.PI;
+                                }
+
+                                System.out.println(Math.toDegrees(startPlanet.getAngle()) + " | " + Math.toDegrees(endPlanet.getAngle()));
+                                nextPhase();
+                            }
+                        } else {
+                            BodyInSpace childPlanet;
+                            if (startPlanet.isChild(endPlanet)) {
+                                childPlanet = startPlanet;
+                            }
+                            else {
+                                childPlanet = endPlanet;
+                            }
+
+                            movementAngle = childPlanet.getAngle() - Math.PI;
                             if (movementAngle < 0) {
                                 movementAngle += 2 * Math.PI;
                             }
-                            endAngle = startPlanet.getAngle();
+                            endAngle = childPlanet.getAngle();
 
                             if (movement == -1) {
                                 double temp = movementAngle;
@@ -338,39 +425,22 @@ public class JourneyController extends SuperController implements Initializable 
                                 endAngle = temp;
                             }
 
-                            transAngle = startPlanet.getAngle() - endPlanet.getAngle();
+                            transAngle = childPlanet.getAngle() + (childPlanet.getAngularV() * (calc.getTime()/24/60/60));
 
                             if (transAngle < 0) {
                                 transAngle += 2 * Math.PI;
                             }
 
-                            System.out.println(Math.toDegrees(startPlanet.getAngle()) + " | " + Math.toDegrees(endPlanet.getAngle()));
-                            //timeline.pause();
                             nextPhase();
+
                         }
                     }
 
-
-                    double offset;
-
-					/*if (startOrbit[0] != 0 && startOrbit[1] != 0) {
-						MathEllipse orbit = new MathEllipse(startPlanet.getMass(), startOrbit[0], startOrbit[1]);
-
-						offset = (startOrbit[0] - startOrbit[1]) / 2;
-
-						enterprise.setRadius(orbit.semi_major(), orbit.semi_minor());
-						//enterprise.getGUITrail().setRotate(45);
-
-					}
-
-					else {*/
                     enterprise.setRadius(0, 0);
-                    offset = 0;
-                    //}
 
                     enterprise.incrementAngle();
 
-                    enterprise.setCenterPoint(startPlanet.getX() + (offset * SCREEN_SCALE), startPlanet.getY());
+                    enterprise.setCenterPoint(startPlanet.getX(), startPlanet.getY());
 
                 }
 
@@ -432,7 +502,7 @@ public class JourneyController extends SuperController implements Initializable 
 
                     endPlanet = SpaceObjects.getBody(phaseEnd);
 
-                    if (startPlanet.getOrbit() > endPlanet.getOrbit()) {
+                    if (startPlanet.getOrbit() > endPlanet.getOrbit() || startPlanet.isChild(endPlanet)) {
                         movement = -1;
                     } else {
                         movement = 1;
@@ -479,6 +549,8 @@ public class JourneyController extends SuperController implements Initializable 
                     if (incIn < 100) {
                         orbitTrans = false;
                         entryLine.setStroke(Color.TRANSPARENT);
+                        incIn = 200;
+                        incOut = 100;
                     }
 
                     if (Math.abs(Math.toDegrees(falcon.getAngle()) - 90) < 1 && incOut < 205) {
@@ -491,7 +563,8 @@ public class JourneyController extends SuperController implements Initializable 
                         incOut += 0.2;
                         moveBall(falcon.getGUIShip(), (startOrbit[0] * focusScale) + focusWidth, incOut);
 
-                    } else if (Math.abs(Math.toDegrees(enterprise.getAngle() - endAngle)) < 10 && incIn > 100) {
+                    } else if (((Math.abs(Math.toDegrees(enterprise.getAngle() - endAngle)) < 10 && incIn > 100)
+                            || incIn != 200) && orbitTrans) {
                         if (newMove) {
                             MathEllipse orbit = new MathEllipse(startPlanet.getMass(), endOrbit[0], endOrbit[1]);
 
@@ -511,7 +584,6 @@ public class JourneyController extends SuperController implements Initializable 
                         entryLine.setEndX(lineIn * focusScale + focusWidth);
                         incIn -= 0.2;
                         moveBall(falcon.getGUIShip(), (lineIn * focusScale) + focusWidth, incIn);
-
                     } else if (!orbitTrans) {
                         falcon.incrementAngle();
 
@@ -586,8 +658,6 @@ public class JourneyController extends SuperController implements Initializable 
         sourcePane.getChildren().add(planetFocus);
 
         timeline.play();
-
-        changeFrame("Jupiter", enterprise);
     }
 
 
@@ -723,11 +793,17 @@ public class JourneyController extends SuperController implements Initializable 
     }
 
     private void changeFrame(String parent, Spaceship spaceship) {
-        currentParent = SpaceObjects.getPlanets().get(parent);
-        selection = SpaceObjects.getChildren(parent);
+        if (parent.equals("Sun")) {
+            currentParent = SpaceObjects.getSun();
+            selection = SpaceObjects.getPlanets();
+        } else {
+            currentParent = SpaceObjects.getPlanets().get(parent);
+            selection = SpaceObjects.getChildren(parent);
+        }
 
         systemPane.getChildren().clear();
 
+        currentParent.resetPlanet();
         systemPane.getChildren().add(currentParent.getGUIObject());
         currentParent.moveGUIObject(midPoint, midPoint);
 

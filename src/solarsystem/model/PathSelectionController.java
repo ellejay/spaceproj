@@ -209,13 +209,13 @@ public class PathSelectionController extends SuperController implements Initiali
 	}
 
 	private void markForRoute(String planet) {
-		Circle planetObj = selection.get(planet).getGUIObject();
+		Circle planetObj = SpaceObjects.getBody(planet).getGUIObject();
 		planetObj.setStrokeWidth(2);
 		planetObj.setStroke(Paint.valueOf("white"));
 	}
 	
 	private void unmarkForRoute(String planet) {
-		Circle planetObj = selection.get(planet).getGUIObject();
+		Circle planetObj = SpaceObjects.getBody(planet).getGUIObject();
 		planetObj.setStrokeWidth(0);
 	}
 
