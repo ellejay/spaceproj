@@ -2,6 +2,7 @@ package solarsystem.model;
  
 import java.io.IOException;
 import java.net.URL;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javafx.animation.KeyFrame;
@@ -29,11 +30,12 @@ import solarsystem.objects.BodyInSpace;
 import solarsystem.objects.SpaceObjects;
  
 public class SolarSystemController extends SuperController implements Initializable {
-		
+
     @FXML private Text actiontarget;
     @FXML private Pane systemPane;
     @FXML private Slider zoomSlide;
     @FXML private Button switchScene;
+	private Map<String, BodyInSpace> selection = SpaceObjects.getPlanets();
     
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -45,7 +47,7 @@ public class SolarSystemController extends SuperController implements Initializa
 			public void changed(ObservableValue<? extends Number> ov,
 					Number old_val, Number new_val) {
 				SCREEN_SCALE = (double) new_val;
-				for (BodyInSpace current: scope.values()) {
+				for (BodyInSpace current: selection.values()) {
 					current.adjustGUIOrbit(current.getOrbit() * SCREEN_SCALE);
 				}
 			}
@@ -54,14 +56,12 @@ public class SolarSystemController extends SuperController implements Initializa
     
     
     private void setUp() {
-
-
 		
 		EventHandler<ActionEvent> planetMovement = new EventHandler<ActionEvent>() { 
 			@Override
 			public void handle(ActionEvent event) {
 
-				for (BodyInSpace current: scope.values()) {
+				for (BodyInSpace current: selection.values()) {
 
 					current.incrementAngle();
 
@@ -97,7 +97,7 @@ public class SolarSystemController extends SuperController implements Initializa
 		sun.moveGUIObject(midPoint, midPoint);
 		systemPane.getChildren().add(sun.getGUIObject());
 
-		for (BodyInSpace current: scope.values()) {
+		for (BodyInSpace current: selection.values()) {
 			current.adjustGUIOrbit(current.getOrbit() * SCREEN_SCALE);
 			systemPane.getChildren().add(current.getGUIOrbit());
 			systemPane.getChildren().add(current.getGUIObject());

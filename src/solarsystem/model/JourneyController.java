@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javafx.animation.KeyFrame;
@@ -67,6 +68,8 @@ public class JourneyController extends SuperController implements Initializable 
     private double incIn = 200;
     private boolean orbitTrans = false, newMove = false;
     private double lineIn;
+    private BodyInSpace currentParent = SpaceObjects.getSun();
+    private Map<String, BodyInSpace> selection = SpaceObjects.getPlanets();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -76,7 +79,7 @@ public class JourneyController extends SuperController implements Initializable 
 
     private void setUp() {
 
-        for (BodyInSpace current : scope.values()) {
+        for (BodyInSpace current : selection.values()) {
             current.resetPlanet();
         }
 
@@ -84,7 +87,7 @@ public class JourneyController extends SuperController implements Initializable 
             @Override
             public void handle(ActionEvent event) {
 
-                for (BodyInSpace current : scope.values()) {
+                for (BodyInSpace current : selection.values()) {
 
                     current.incrementAngle();
 
@@ -109,9 +112,7 @@ public class JourneyController extends SuperController implements Initializable 
             }
         };
 
-
-        BodyInSpace sun = SpaceObjects.getSun();
-        sun.moveGUIObject(midPoint, midPoint);
+        currentParent.moveGUIObject(midPoint, midPoint);
 
         final Spaceship enterprise = new Spaceship();
 
@@ -119,9 +120,9 @@ public class JourneyController extends SuperController implements Initializable 
 
         final Ellipse route = new Ellipse();
         route.getStyleClass().add("planet-orbit-path");
-        final Calculator calc = new Calculator(scope.get(routePlanets.get(0)));
+        final Calculator calc = new Calculator(SpaceObjects.getBody(routePlanets.get(0)));
 
-        resetScale(285 / scope.get(routePlanets.get(0)).getOrbit());
+        //resetScale(285 / selection.get(routePlanets.get(0)).getOrbit());
 
         EventHandler<ActionEvent> spaceshipMove = new EventHandler<ActionEvent>() {
             @Override
@@ -136,13 +137,13 @@ public class JourneyController extends SuperController implements Initializable 
                 String phaseEnd;
                 double[] endOrbit = null;
 
-                startPlanet = scope.get(phaseStart);
+                startPlanet = SpaceObjects.getBody(phaseStart);
 
                 try {
                     phaseEnd = routePlanets.get(planetIndex + 1);
                     endOrbit = routeOrbit.get(planetIndex + 1);
 
-                    endPlanet = scope.get(phaseEnd);
+                    endPlanet = SpaceObjects.getBody(phaseEnd);
 
                     if (startPlanet.getOrbit() > endPlanet.getOrbit()) {
                         movement = -1;
@@ -389,9 +390,6 @@ public class JourneyController extends SuperController implements Initializable 
         final double focusWidth = sourcePane.getPrefWidth() / 2;
         System.out.println(focusWidth);
         final Circle planetFocus = new Circle(focusWidth, focusWidth, 10);
-        planetFocus.getStyleClass().add("body-Mars");
-        Circle endPlanet = new Circle(focusWidth, focusWidth, 10);
-        endPlanet.getStyleClass().add("body-Earth");
 
         final Spaceship falcon = new Spaceship();
         falcon.setCenterPoint(planetFocus.getCenterX(), planetFocus.getCenterY());
@@ -412,19 +410,19 @@ public class JourneyController extends SuperController implements Initializable 
         entryLine.setStroke(Color.TRANSPARENT);
         entryLine.setStrokeWidth(1);
 
-        EventHandler<ActionEvent> startFocus = new EventHandler<ActionEvent>() {
+        EventHandler<ActionEvent> focusMovement = new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 int planetIndex = steps / 2;
                 int movement = 1;
 
-                BodyInSpace startPlanet, endPlanet = null;
+                BodyInSpace startPlanet, endPlanet;
                 String phaseStart = routePlanets.get(planetIndex);
                 double[] startOrbit = routeOrbit.get(planetIndex);
                 String phaseEnd;
                 double[] endOrbit = null;
 
-                startPlanet = scope.get(phaseStart);
+                startPlanet = SpaceObjects.getBody(phaseStart);
 
                 planetFocus.getStyleClass().add("body-" + phaseStart);
 
@@ -432,7 +430,7 @@ public class JourneyController extends SuperController implements Initializable 
                     phaseEnd = routePlanets.get(planetIndex + 1);
                     endOrbit = routeOrbit.get(planetIndex + 1);
 
-                    endPlanet = scope.get(phaseEnd);
+                    endPlanet = SpaceObjects.getBody(phaseEnd);
 
                     if (startPlanet.getOrbit() > endPlanet.getOrbit()) {
                         movement = -1;
@@ -556,26 +554,22 @@ public class JourneyController extends SuperController implements Initializable 
                     moveBall(falcon.getGUIShip(), moveX, moveY);
 
                 }
-
-
-                //falcon.setRadius(falcon.getRadiusX() * SCREEN_SCALE, falcon.getRadiusY() * SCREEN_SCALE);
-
-
-                // moveBall(falcon.getGUIShip(), falcon.getCenterX() - 50, falcon.getCenterY());
             }
         };
 
 
         timeline = new Timeline(new KeyFrame(Duration.ZERO, planetMovement),
                 new KeyFrame(Duration.ZERO, spaceshipMove),
-                new KeyFrame(Duration.ZERO, startFocus),
+                new KeyFrame(Duration.ZERO, focusMovement),
                 new KeyFrame(Duration.millis(STEP_DURATION)));
 
         timeline.setCycleCount(Timeline.INDEFINITE);
 
-        systemPane.getChildren().add(sun.getGUIObject());
+        //timeline.setRate();
 
-        for (BodyInSpace current : scope.values()) {
+        systemPane.getChildren().add(currentParent.getGUIObject());
+
+        for (BodyInSpace current : selection.values()) {
             current.adjustGUIOrbit(current.getOrbit() * SCREEN_SCALE);
             systemPane.getChildren().add(current.getGUIOrbit());
             systemPane.getChildren().add(current.getGUIObject());
@@ -593,6 +587,7 @@ public class JourneyController extends SuperController implements Initializable 
 
         timeline.play();
 
+        changeFrame("Jupiter", enterprise);
     }
 
 
@@ -606,14 +601,14 @@ public class JourneyController extends SuperController implements Initializable 
 
     private void resetScale(double new_val) {
         double val;
-        if (new_val > 0.36) {
+        /*if (new_val > 0.36) {
             val = 0.36;
-        } else {
+        } else {*/
             val = new_val;
-        }
+        //}
 
         SCREEN_SCALE = val;
-        for (BodyInSpace current : scope.values()) {
+        for (BodyInSpace current : selection.values()) {
             current.adjustGUIOrbit(current.getOrbit() * SCREEN_SCALE);
         }
     }
@@ -725,6 +720,35 @@ public class JourneyController extends SuperController implements Initializable 
         double seconds = Math.floor(((t % 86400) % 3600) % 60);
 
         return String.format("%6.0f days %6.0f hours %6.0f mins %6.0f s\n", days, hours, minutes, seconds);
+    }
+
+    private void changeFrame(String parent, Spaceship spaceship) {
+        currentParent = SpaceObjects.getPlanets().get(parent);
+        selection = SpaceObjects.getChildren(parent);
+
+        systemPane.getChildren().clear();
+
+        systemPane.getChildren().add(currentParent.getGUIObject());
+        currentParent.moveGUIObject(midPoint, midPoint);
+
+        if (!selection.isEmpty()) {
+            for (BodyInSpace current : selection.values()) {
+                current.adjustGUIOrbit(current.getOrbit() * SCREEN_SCALE);
+                systemPane.getChildren().add(current.getGUIOrbit());
+            }
+
+            for (BodyInSpace current : selection.values()) {
+                current.resetPlanet();
+                systemPane.getChildren().add(current.getGUIObject());
+            }
+
+        }
+        else {
+            System.out.println("I tried...");
+        }
+
+        systemPane.getChildren().add(spaceship.getGUIShip());
+        systemPane.getChildren().add(spaceship.getGUITrail());
     }
 
 }

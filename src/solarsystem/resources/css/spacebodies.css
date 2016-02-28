@@ -16,10 +16,6 @@
 	-fx-fill: yellow;
 }
 
-.body-Moon {
-	-fx-fill: #AF94A3;
-}
-
 .body-Mercury {
     -fx-fill: #DBD4A0;
 }
@@ -54,4 +50,20 @@
 
 .body-Pluto {
     -fx-fill: #AD998E;
+}
+
+.body-Moon, .body-Phobos, .body-Deimos {
+	-fx-fill: #AF94A3;
+}
+
+.body-Io, .body-Europa, .body-Ganymede, .body-Callisto {
+    -fx-fill: #AF94A3;
+}
+
+.body-Adrastea, .body-Amalthea, .body-Metis, .body-Thebe, .body-Leda, .body-Elara {
+    -fx-fill: #AF94A3;
+}
+
+.body-Himalia, .body-Lysithea, .body-Ananke, .body-Carme, .body-Pasiphae, .body-Sinope {
+    -fx-fill: #AF94A3;
 }

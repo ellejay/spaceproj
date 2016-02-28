@@ -37,7 +37,8 @@ public class PathSelectionController extends SuperController implements Initiali
 	@FXML private Button landControl;
 	@FXML private Button orbitControl;
 	private BodyInSpace currentParent = SpaceObjects.getSun();
-	private Map<String, BodyInSpace> selection = SpaceObjects.getDictionary();
+	private Map<String, BodyInSpace> selection = SpaceObjects.getPlanets();
+	private double scaleSave;
     
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -52,12 +53,12 @@ public class PathSelectionController extends SuperController implements Initiali
 					for (BodyInSpace current: selection.values()) {
 						current.adjustGUIOrbit(current.getOrbit() * SCREEN_SCALE);
 						
-						if ((double) new_val > 0.455) {
+						/*if ((double) new_val > 0.455) {
 							current.getGUIObject().setRadius(8);
 						}
 						else {
 							current.getGUIObject().setRadius(4);
-						}
+						}*/
 						
 						current.moveGUIObject(
 								(current.getParent().getX() + 
@@ -134,8 +135,6 @@ public class PathSelectionController extends SuperController implements Initiali
                 }
 				help.setTranslateY(yShift);
 
-				System.out.println(event.getTarget());
-				
 				for (BodyInSpace current: selection.values()) {
 					if (event.getTarget().equals(current.getGUIObject())){
 						final String name = current.getName();
@@ -147,7 +146,7 @@ public class PathSelectionController extends SuperController implements Initiali
 					}
 				}
 
-				if (event.getTarget().equals(currentParent) && !currentParent.getName().equals("Sun")){
+				if (event.getTarget().equals(currentParent.getGUIObject()) && !currentParent.getName().equals("Sun")){
 					final String name = currentParent.getName();
 					planetFound = true;
 
@@ -175,22 +174,30 @@ public class PathSelectionController extends SuperController implements Initiali
 					int lastItem = routePlanets.size() - 1;
 					String prev = routePlanets.get(lastItem);
 					double[] prevOrbit = routeOrbit.get(lastItem);
-					
-					// If landed and selecting new planet, disable all
-					if (!prev.equals(name) && (prevOrbit[0] == 0.0 && prevOrbit[1] == 0.0)) {
-						landControl.setDisable(true);
-						orbitControl.setDisable(true);
-					}
+
+					BodyInSpace previous = SpaceObjects.getBody(prev);
+					BodyInSpace current = SpaceObjects.getBody(name);
+
 					// If landed and selecting same planet, allow orbit
-					else if (prevOrbit[0] == 0.0 && prevOrbit[1] == 0.0) {
+					if (prev.equals(name) && prevOrbit[0] == 0.0 && prevOrbit[1] == 0.0) {
 						orbitControl.setDisable(false);
 						landControl.setDisable(true);
 					}
+					else if (prevOrbit[0] == 0.0 && prevOrbit[1] == 0.0) {
+						landControl.setDisable(true);
+						orbitControl.setDisable(true);
+					}
 					else if (prev.equals(name)) {
 						landControl.setDisable(false);
+						orbitControl.setDisable(false);
+					}
+					else if(previous.isSibling(current) || previous.isChild(current) || previous.isParent(current)) {
+						landControl.setDisable(true);
+						orbitControl.setDisable(false);
 					}
 					else {
 						landControl.setDisable(true);
+						orbitControl.setDisable(true);
 					}
 				// When selecting start point
 				} catch (ArrayIndexOutOfBoundsException e) {
@@ -277,26 +284,35 @@ public class PathSelectionController extends SuperController implements Initiali
 		String planet = planetName.getText();
 
 		help.toBack();
-		currentParent = SpaceObjects.getDictionary().get(planet);
+		currentParent = SpaceObjects.getPlanets().get(planet);
 		selection = SpaceObjects.getChildren(planet);
 		
 		System.out.println(currentParent.getName());
 
 		systemPane.getChildren().clear();
 
+		scaleSave = SCREEN_SCALE;
+
 		// Fix the scale issue
-		SCREEN_SCALE = 1e4;
+		SCREEN_SCALE = SpaceObjects.getScale(planet).get(0);
+		zoomSlide.setMin(SpaceObjects.getScale(planet).get(0));
+		zoomSlide.setMax(SpaceObjects.getScale(planet).get(1));
+		zoomSlide.setValue(SCREEN_SCALE);
 		displaySystem();
 	}
 
 	@FXML protected void focusOnSun() {
 		help.toBack();
 		currentParent = SpaceObjects.getSun();
-		selection = SpaceObjects.getDictionary();
+		selection = SpaceObjects.getPlanets();
 
 		systemPane.getChildren().clear();
 
-		SCREEN_SCALE = zoomSlide.getValue();
+		zoomSlide.setMin(SpaceObjects.getScale("Sun").get(0));
+		zoomSlide.setMax(SpaceObjects.getScale("Sun").get(1));
+		SCREEN_SCALE = scaleSave;
+		zoomSlide.setValue(scaleSave);
+
 		displaySystem();
 	}
 	
@@ -354,7 +370,9 @@ public class PathSelectionController extends SuperController implements Initiali
 
 	private void displaySystem() {
 
-		systemPane.getChildren().add(currentParent.getGUIObject());
+		if(currentParent.getName().equals("Sun")) {
+			systemPane.getChildren().add(currentParent.getGUIObject());
+		}
 
 		currentParent.moveGUIObject(midPoint, midPoint);
 
@@ -377,6 +395,10 @@ public class PathSelectionController extends SuperController implements Initiali
 										Math.cos(current.getAngle())));
 
 				systemPane.getChildren().add(current.getGUIObject());
+			}
+
+			if(!currentParent.getName().equals("Sun")) {
+				systemPane.getChildren().add(currentParent.getGUIObject());
 			}
 		}
 		else {

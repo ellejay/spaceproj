@@ -30,8 +30,8 @@ public class Calculator {
 
 		//System.out.printf("%10s %10s %10s %6s %6s\n", "", "DISTANCE", "RADIUS", "G", "ESCAPE");
 
-		Map<String, BodyInSpace> p = SpaceObjects.getDictionary();
-		BodyInSpace earth = SpaceObjects.getEarth();
+		Map<String, BodyInSpace> p = SpaceObjects.getPlanets();
+		BodyInSpace earth = SpaceObjects.getBody("Earth");
 		for (BodyInSpace planet: p.values()) {
 
 			//System.out.println(planet.getName() + " " + planet.getRadius() + " " + planet.getOrbit() + " " + planet.getOrbitInM());
