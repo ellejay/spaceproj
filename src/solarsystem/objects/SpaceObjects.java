@@ -25,6 +25,7 @@ public class SpaceObjects {
 		planetScales.put("Earth", new LinkedList<>(Arrays.asList(450.0, 450.0)));
 		planetScales.put("Mars", new LinkedList<>(Arrays.asList(1e4, 1e4)));
 		planetScales.put("Jupiter", new LinkedList<>(Arrays.asList(1e1, 1e3)));
+		planetScales.put("Saturn", new LinkedList<>(Arrays.asList(80.0, 1e3)));
 
 		sun = new BodyInSpace("Sun", 1392530, 1.9891e30, 0.0, 0.0, 0.0, null, SCREEN_SCALE);
 
@@ -59,6 +60,26 @@ public class SpaceObjects {
 		jupiterChild.put("Carme", new BodyInSpace("Carme", 30, 1e17, 23400e3, 734.2, 1.2, planetsList.get("Jupiter"), SCREEN_SCALE));
 		jupiterChild.put("Pasiphae", new BodyInSpace("Pasiphae", 36, 3e17, 23620e3, 744, 0.8, planetsList.get("Jupiter"), SCREEN_SCALE));
 		jupiterChild.put("Sinope", new BodyInSpace("Sinope", 28, 8e16, 23940e3, 759, 4.5, planetsList.get("Jupiter"), SCREEN_SCALE));
+	
+		saturnChild.put("Mimas", new BodyInSpace("Mimas", 399, 0.379e20, 185.52e3, 0.942, 0.4, planetsList.get("Saturn"), SCREEN_SCALE));
+		saturnChild.put("Enceladus", new BodyInSpace("Enceladus", 505, 1.08e20, 238.02e3, 1.37, 3.4, planetsList.get("Saturn"), SCREEN_SCALE));
+		saturnChild.put("Tethys", new BodyInSpace("Tethys", 1066, 6.18e20, 294.66e3, 1.887, 5.8, planetsList.get("Saturn"), SCREEN_SCALE));
+		saturnChild.put("Dione", new BodyInSpace("Dione", 1124, 11.0e20, 377.04e3, 2.74, 1.4, planetsList.get("Saturn"), SCREEN_SCALE));
+		saturnChild.put("Rhea", new BodyInSpace("Rhea", 1526, 23.1e20, 527.04e3, 4.52, 2.9, planetsList.get("Saturn"), SCREEN_SCALE));
+		saturnChild.put("Titan", new BodyInSpace("Titan", 5150, 1345.5e20, 1221.83e3, 15.95, 2.1, planetsList.get("Saturn"), SCREEN_SCALE));
+		saturnChild.put("Hyperion", new BodyInSpace("Hyperion", 277, 0.056e20, 1481.1e3, 21.3, 3.8, planetsList.get("Saturn"), SCREEN_SCALE));
+		saturnChild.put("Iapetus", new BodyInSpace("Iapetus", 1442, 18.1e20, 3561.3e3, 79.33, 5.1, planetsList.get("Saturn"), SCREEN_SCALE));
+		saturnChild.put("Pan", new BodyInSpace("Pan", 26, 5e15, 133.583e3, 0.575, 1.1, planetsList.get("Saturn"), SCREEN_SCALE));
+		saturnChild.put("Daphnis", new BodyInSpace("Daphnis", 8, 1e14, 136.5e3, 0.594, 2.4, planetsList.get("Saturn"), SCREEN_SCALE));
+		saturnChild.put("Atlas", new BodyInSpace("Atlas", 31, 7e15, 137.6e3, 0.602, 3.8, planetsList.get("Saturn"), SCREEN_SCALE));
+		saturnChild.put("Prometheus", new BodyInSpace("Prometheus", 86, 1.6e17, 139.3e3, 0.613, 4.8, planetsList.get("Saturn"), SCREEN_SCALE));
+		saturnChild.put("Pandora", new BodyInSpace("Pandora", 80, 1.4e17, 141.7e3, 0.6285, 2.1, planetsList.get("Saturn"), SCREEN_SCALE));
+		saturnChild.put("Epimetheus", new BodyInSpace("Epimetheus", 120, 5.3e17, 151.422e3, 0.6942, 3.4, planetsList.get("Saturn"), SCREEN_SCALE));
+		saturnChild.put("Janus", new BodyInSpace("Janus", 181, 0.19e20, 151.472e3, 0.6945, 0.2, planetsList.get("Saturn"), SCREEN_SCALE));
+		saturnChild.put("Calypso", new BodyInSpace("Calypso", 25, 4e15, 294.66e3, 1.88, 5.6, planetsList.get("Saturn"), SCREEN_SCALE));
+		saturnChild.put("Telesto", new BodyInSpace("Telesto", 26, 7e15, 294.66e3, 1.88, 2.5, planetsList.get("Saturn"), SCREEN_SCALE));
+		saturnChild.put("Helene", new BodyInSpace("Helene", 40, 3e16, 377.4e3, 2.74, 5.2, planetsList.get("Saturn"), SCREEN_SCALE));
+		saturnChild.put("Phoebe", new BodyInSpace("Phoebe", 220, 8.3e18, 12944e3, 548, 1.2, planetsList.get("Saturn"), SCREEN_SCALE));
 	}
 	
 	public static Map<String, BodyInSpace> getPlanets() {
@@ -75,6 +96,9 @@ public class SpaceObjects {
 		else if (planet.equals("Jupiter")) {
 			return jupiterChild;
 		}
+		else if (planet.equals("Saturn")) {
+			return saturnChild;
+		}
 		else {
 			return new HashMap<>();
 		}
@@ -90,6 +114,7 @@ public class SpaceObjects {
 		combined.putAll(earthChild);
 		combined.putAll(marsChild);
 		combined.putAll(jupiterChild);
+		combined.putAll(saturnChild);
 
 		return combined.get(name);
 	}
