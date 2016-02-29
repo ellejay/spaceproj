@@ -41,6 +41,7 @@ public class SolarSystemController extends SuperController implements Initializa
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setUp();
 
+        SCREEN_SCALE = 0.045; 
 		zoomSlide.setValue(SCREEN_SCALE);
 
 		zoomSlide.valueProperty().addListener(new ChangeListener<Number>() {
@@ -56,6 +57,10 @@ public class SolarSystemController extends SuperController implements Initializa
     
     
     private void setUp() {
+    	
+    	for (BodyInSpace current : selection.values()) {
+            current.resetPlanet();
+        }
 		
 		EventHandler<ActionEvent> planetMovement = new EventHandler<ActionEvent>() { 
 			@Override
