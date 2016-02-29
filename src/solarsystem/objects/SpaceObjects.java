@@ -26,6 +26,8 @@ public class SpaceObjects {
 		planetScales.put("Mars", new LinkedList<>(Arrays.asList(1e4, 1e4)));
 		planetScales.put("Jupiter", new LinkedList<>(Arrays.asList(1e1, 1e3)));
 		planetScales.put("Saturn", new LinkedList<>(Arrays.asList(80.0, 1e3)));
+		planetScales.put("Neptune", new LinkedList<>(Arrays.asList(5e2, 5e3)));
+		planetScales.put("Pluto", new LinkedList<>(Arrays.asList(1e4, 1e4)));
 
 		sun = new BodyInSpace("Sun", 1392530, 1.9891e30, 0.0, 0.0, 0.0, null, SCREEN_SCALE);
 
@@ -80,6 +82,16 @@ public class SpaceObjects {
 		saturnChild.put("Telesto", new BodyInSpace("Telesto", 26, 7e15, 294.66e3, 1.88, 2.5, planetsList.get("Saturn"), SCREEN_SCALE));
 		saturnChild.put("Helene", new BodyInSpace("Helene", 40, 3e16, 377.4e3, 2.74, 5.2, planetsList.get("Saturn"), SCREEN_SCALE));
 		saturnChild.put("Phoebe", new BodyInSpace("Phoebe", 220, 8.3e18, 12944e3, 548, 1.2, planetsList.get("Saturn"), SCREEN_SCALE));
+	
+		neptuneChild.put("Naiad", new BodyInSpace("Naiad", 70, 2e17, 48.22e3, 0.29, 1.2, planetsList.get("Neptune"), SCREEN_SCALE));
+		neptuneChild.put("Thalassa", new BodyInSpace("Thalassa", 87, 4e17, 50.1e3, 0.31, 5.4, planetsList.get("Neptune"), SCREEN_SCALE));
+		neptuneChild.put("Despina", new BodyInSpace("Despina", 152, 2e18, 52.5e3, 0.33, 3.6, planetsList.get("Neptune"), SCREEN_SCALE));
+		neptuneChild.put("Galatea", new BodyInSpace("Galatea", 174, 4e18, 61.9e3, 0.42, 0.8, planetsList.get("Neptune"), SCREEN_SCALE));
+		neptuneChild.put("Larissa", new BodyInSpace("Larissa", 185, 5e18, 73.5e3, 0.55, 6.1, planetsList.get("Neptune"), SCREEN_SCALE));
+		neptuneChild.put("Proteus", new BodyInSpace("Proteus", 420, 5e19, 117.6e3, 1.12, 4.8, planetsList.get("Neptune"), SCREEN_SCALE));
+		neptuneChild.put("Triton", new BodyInSpace("Triton", 2706, 3e19, 354.7e3, 5.87, 3.1, planetsList.get("Neptune"), SCREEN_SCALE));
+		
+		plutoChild.put("Charon", new BodyInSpace("Charon", 1212, 1.586e21, 19596, 6.39, 2.3, planetsList.get("Pluto"), SCREEN_SCALE));
 	}
 	
 	public static Map<String, BodyInSpace> getPlanets() {
@@ -99,6 +111,15 @@ public class SpaceObjects {
 		else if (planet.equals("Saturn")) {
 			return saturnChild;
 		}
+		else if (planet.equals("Neptune")) {
+			return neptuneChild;
+		}
+		else if (planet.equals("Uranus")) {
+			return uranusChild;
+		}
+		else if (planet.equals("Pluto")) {
+			return plutoChild;
+		}
 		else {
 			return new HashMap<>();
 		}
@@ -115,7 +136,10 @@ public class SpaceObjects {
 		combined.putAll(marsChild);
 		combined.putAll(jupiterChild);
 		combined.putAll(saturnChild);
-
+		combined.putAll(neptuneChild);
+		combined.putAll(uranusChild);
+		combined.putAll(plutoChild);
+		
 		return combined.get(name);
 	}
 
