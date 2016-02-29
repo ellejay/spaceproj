@@ -50,7 +50,7 @@
                 <Button onAction="#removeLast" text="U"
                         GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
-                <Button onAction="#focusOnSun" text="Up"
+                <Button fx:id="unfocusFrame" onAction="#focusOnSun" text="Up"
                         GridPane.columnIndex="2" GridPane.rowIndex="2"/>
 
                 <Button fx:id="startButton" onAction="#startJourney" text="Start Journey"

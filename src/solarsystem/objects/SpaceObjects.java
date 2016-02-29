@@ -44,8 +44,8 @@ public class SpaceObjects {
 
 		earthChild.put("Moon", new BodyInSpace("Moon", 3475, 0.073e24, 0.384e6, 27.3, 1.3, planetsList.get("Earth"), SCREEN_SCALE));
 
-		marsChild.put("Deimos", new BodyInSpace("Deimos", 12.7, 2.4e15, 23459, 1.26244e3, 3.8, planetsList.get("Mars"), SCREEN_SCALE));
-		marsChild.put("Phobos", new BodyInSpace("Phobos", 22.6, 10.6e15, 9378, 0.31891e3, 0.4, planetsList.get("Mars"), SCREEN_SCALE));
+		marsChild.put("Deimos", new BodyInSpace("Deimos", 12.7, 2.4e15, 23459, 1.26244, 3.8, planetsList.get("Mars"), SCREEN_SCALE));
+		marsChild.put("Phobos", new BodyInSpace("Phobos", 22.6, 10.6e15, 9378, 0.31891, 0.4, planetsList.get("Mars"), SCREEN_SCALE));
 
 		jupiterChild.put("Io", new BodyInSpace("Io", 3643, 893.2e20, 421.6e3, 1.76, 1.3, planetsList.get("Jupiter"), SCREEN_SCALE));
 		jupiterChild.put("Europa", new BodyInSpace("Europa", 3122, 480e20, 670.9e3, 3.55, 0.6, planetsList.get("Jupiter"), SCREEN_SCALE));

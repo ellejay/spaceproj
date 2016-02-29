@@ -89,7 +89,7 @@ public class JourneyController extends SuperController implements Initializable 
 
                 for (BodyInSpace current : selection.values()) {
 
-                    current.incrementAngle();
+                	current.incrementAngle();
 
                     // p(x) = x(0) + r * sin(a)
                     // p(y) = y(y) - r * cos(a)
@@ -709,6 +709,7 @@ public class JourneyController extends SuperController implements Initializable 
 
         routePlanets.clear();
         routeOrbit.clear();
+        SCREEN_SCALE = 0.045; 
 
         root = FXMLLoader.load(getClass().getResource("../resources/xml/pathselect.fxml"));
         Scene scene = new Scene(root);
@@ -767,7 +768,7 @@ public class JourneyController extends SuperController implements Initializable 
 
     @FXML
     protected void slowMovement() {
-        updateSpeed(-0.25);
+        updateSpeed(-0.05);
     }
 
     @FXML
@@ -777,7 +778,7 @@ public class JourneyController extends SuperController implements Initializable 
 
     private void updateSpeed(double speed) {
 
-        if (!(timeline.getRate() + speed < 0.25)) {
+        if (!(timeline.getRate() + speed < 0.05)) {
             timeline.setRate(timeline.getRate() + speed);
         }
 

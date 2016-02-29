@@ -22,6 +22,7 @@ public class BodyInSpace {
 	private double angle; // current angle of body around circle, measured from vertical in radians
 	private final Circle gui_orbit; // GUI object for the orbit path
 	private final BodyInSpace center; // parent object of body (eg. sun to the earth)
+	private final double factor; // rotation factor to help control movement speeds
 	
 	/**
 	 * Constructor method to create planet given all required data.
@@ -45,6 +46,7 @@ public class BodyInSpace {
 		this.period = period;
 		this.angle = angle;
 		this.center = center;
+		this.factor = 1;
 
 		/* Create default body object, add at origin point of 
 		* canvas (top left) for calculation purposes, and add css style to object. */
@@ -80,6 +82,7 @@ public class BodyInSpace {
 		pos_y = y;
 	}
 	
+	
 	/**
 	 * Increment the current angle of the body by a number of degrees.
 	 * This number is calculated from the period of the object so that
@@ -87,7 +90,7 @@ public class BodyInSpace {
 	 */
 	public void incrementAngle() {
 		//
-		this.angle += Math.toRadians( (2 * Math.PI) / (this.period / 10) );
+		this.angle += Math.toRadians( (2 * Math.PI) / (this.period * this.factor / 10) );
 		
 		if (this.angle >= (2 * Math.PI)) {
 			this.angle -= 2 * Math.PI;
@@ -95,7 +98,7 @@ public class BodyInSpace {
 	}
 
 	public double angleIncrease(){
-		return Math.toRadians( (2 * Math.PI) / (this.period / 10) );
+		return Math.toRadians( (2 * Math.PI) / (this.period * this.factor / 10) );
 	}
 	
 	/**
