@@ -290,18 +290,22 @@ public class JourneyController extends SuperController implements Initializable 
                         journeyTime += calc.getTime();
 
                         double speed;
+                        double factor;
                         if (startPlanet.isSibling(endPlanet)) {
                             if (endPlanet.getAngularV() < startPlanet.getAngularV()) {
                                 speed = endPlanet.getAngularV();
                             } else {
                                 speed = startPlanet.getAngularV();
                             }
+                            factor = startPlanet.getFactor();
                         }
                         else {
-                            speed = 360 / (2 * (calc.getTime() / 86400));
+                            //speed = 360 / (2 * (calc.getTime() / 86400));
+                            speed = endPlanet.getAngularV();
+                            factor = endPlanet.getFactor();
                         }
 
-                        double transitionSpeed = 360 / ((speed * Math.PI) / (transAngle));
+                        double transitionSpeed = (360 / ((speed * Math.PI) / (transAngle))) * factor;
 
                         System.out.println("SPEED: " + transitionSpeed + " ANGLE: " + transAngle);
 
@@ -413,22 +417,24 @@ public class JourneyController extends SuperController implements Initializable 
                                 childPlanet = endPlanet;
                             }
 
-                            movementAngle = childPlanet.getAngle() - Math.PI;
-                            if (movementAngle < 0) {
-                                movementAngle += 2 * Math.PI;
-                            }
-                            endAngle = childPlanet.getAngle();
-
-                            if (movement == -1) {
-                                double temp = movementAngle;
-                                movementAngle = endAngle;
-                                endAngle = temp;
-                            }
-
-                            transAngle = childPlanet.getAngle() + (childPlanet.getAngularV() * (calc.getTime()/24/60/60));
+                            transAngle = childPlanet.getAngle() + Math.toRadians(childPlanet.getAngularV() * (calc.getTime()/24/60/60));
 
                             if (transAngle < 0) {
                                 transAngle += 2 * Math.PI;
+                            }
+
+                            movementAngle = childPlanet.getAngle() - Math.PI + transAngle;
+                            if (movementAngle < 0) {
+                                movementAngle += 2 * Math.PI;
+                            }
+                            endAngle = childPlanet.getAngle() + transAngle;
+
+                            System.out.println(movementAngle + " END: " + endAngle);
+
+                            if (endPlanet.isChild(startPlanet)) {
+                                double temp = movementAngle;
+                                movementAngle = endAngle;
+                                endAngle = temp;
                             }
 
                             nextPhase();
@@ -540,6 +546,21 @@ public class JourneyController extends SuperController implements Initializable 
 
 
                     if (Math.abs(Math.toDegrees(falcon.getAngle()) - 270) < 1) {
+
+                        if (startOrbit[0] != 0 && startOrbit[1] != 0) {
+                            MathEllipse orbit = new MathEllipse(startPlanet.getMass(), startOrbit[0], startOrbit[1]);
+
+                            double offset = (startOrbit[0] - startOrbit[1]) / 2;
+
+                            falcon.setRadius(orbit.semi_major() * focusScale, orbit.semi_minor() * focusScale);
+
+                            falcon.setCenterPoint(focusWidth + (offset * focusScale), focusWidth);
+
+                        } else {
+                            falcon.setRadius(0, 0);
+                            falcon.setCenterPoint(planetFocus.getCenterX(), planetFocus.getCenterY());
+                        }
+
                         nextPhase();
                     }
 

@@ -222,6 +222,8 @@ public class BodyInSpace {
 	public double getPeriod() {
 		return this.period;
 	}
+
+	public double getFactor() { return this.factor;}
 	
 	/**
 	 * Get orbital period of the body in seconds
