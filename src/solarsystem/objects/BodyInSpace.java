@@ -87,7 +87,7 @@ public class BodyInSpace {
 	 */
 	public void incrementAngle() {
 		//
-		this.angle += Math.toRadians( (2 * Math.PI) / (this.period / 10) );
+		this.angle += Math.toRadians( (2 * Math.PI) / (this.period) );
 		
 		if (this.angle >= (2 * Math.PI)) {
 			this.angle -= 2 * Math.PI;
@@ -95,7 +95,7 @@ public class BodyInSpace {
 	}
 
 	public double angleIncrease(){
-		return Math.toRadians( (2 * Math.PI) / (this.period / 10) );
+		return Math.toRadians( (2 * Math.PI) / (this.period) );
 	}
 	
 	/**

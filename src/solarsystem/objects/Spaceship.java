@@ -58,7 +58,7 @@ public class Spaceship {
 	}
 	
 	public void incrementAngle() {
-		this.angle += this.rotation * Math.toRadians( (2 * Math.PI) / (this.period / 10));
+		this.angle += this.rotation * Math.toRadians( (2 * Math.PI) / (this.period));
 		
 		if (this.angle >= (2 * Math.PI)) {
 			this.angle -= 2 * Math.PI;

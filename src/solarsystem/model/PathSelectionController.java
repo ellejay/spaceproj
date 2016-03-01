@@ -36,6 +36,8 @@ public class PathSelectionController extends SuperController implements Initiali
 	@FXML private Label planetName;
 	@FXML private Button landControl;
 	@FXML private Button orbitControl;
+	@FXML private Button focusControl;
+	@FXML private Button unfocusFrame;
 	private BodyInSpace currentParent = SpaceObjects.getSun();
 	private Map<String, BodyInSpace> selection = SpaceObjects.getPlanets();
 	private double scaleSave;
@@ -73,6 +75,7 @@ public class PathSelectionController extends SuperController implements Initiali
 			});
 
 		displaySystem();
+		unfocusFrame.setDisable(true);
 
 		EventHandler<MouseEvent> moveSystem = new EventHandler<MouseEvent>() {
 			
@@ -204,8 +207,13 @@ public class PathSelectionController extends SuperController implements Initiali
                     landControl.setDisable(false);
 					orbitControl.setDisable(true);
 				}
-			
-		
+
+				if (SpaceObjects.getChildren(name).isEmpty()) {
+					focusControl.setDisable(true);
+				}
+				else {
+					focusControl.setDisable(false);
+				}
 	}
 
 	private void markForRoute(String planet) {
@@ -298,6 +306,7 @@ public class PathSelectionController extends SuperController implements Initiali
 		zoomSlide.setMin(SpaceObjects.getScale(planet).get(0));
 		zoomSlide.setMax(SpaceObjects.getScale(planet).get(1));
 		zoomSlide.setValue(SCREEN_SCALE);
+		unfocusFrame.setDisable(false);
 		displaySystem();
 	}
 
@@ -312,7 +321,7 @@ public class PathSelectionController extends SuperController implements Initiali
 		zoomSlide.setMax(SpaceObjects.getScale("Sun").get(1));
 		SCREEN_SCALE = scaleSave;
 		zoomSlide.setValue(scaleSave);
-
+		unfocusFrame.setDisable(true);
 		displaySystem();
 	}
 	

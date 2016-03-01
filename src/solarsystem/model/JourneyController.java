@@ -560,7 +560,7 @@ public class JourneyController extends SuperController implements Initializable 
                         lineIn = endOrbit[1] * -1;
                         entryLine.setStartX(startOrbit[0] * focusScale + focusWidth);
                         entryLine.setEndX(startOrbit[0] * focusScale + focusWidth);
-                        incOut += 0.2;
+                        incOut += 0.5;
                         moveBall(falcon.getGUIShip(), (startOrbit[0] * focusScale) + focusWidth, incOut);
 
                     } else if (((Math.abs(Math.toDegrees(enterprise.getAngle() - endAngle)) < 10 && incIn > 100)
@@ -582,7 +582,7 @@ public class JourneyController extends SuperController implements Initializable 
                         }
                         entryLine.setStartX(lineIn * focusScale + focusWidth);
                         entryLine.setEndX(lineIn * focusScale + focusWidth);
-                        incIn -= 0.2;
+                        incIn -= 0.5;
                         moveBall(falcon.getGUIShip(), (lineIn * focusScale) + focusWidth, incIn);
                     } else if (!orbitTrans) {
                         falcon.incrementAngle();
@@ -709,6 +709,7 @@ public class JourneyController extends SuperController implements Initializable 
 
         routePlanets.clear();
         routeOrbit.clear();
+        SCREEN_SCALE = 0.045;
 
         root = FXMLLoader.load(getClass().getResource("../resources/xml/pathselect.fxml"));
         Scene scene = new Scene(root);
