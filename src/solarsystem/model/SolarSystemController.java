@@ -161,17 +161,20 @@ public class SolarSystemController extends SuperController implements Initializa
 	}
     
     @FXML protected void slowMovement() {
-    	updateSpeed(-0.25);
+    	updateSpeed(false);
     }
     
     @FXML protected void speedUpMovement() {
-    	updateSpeed(0.25);
+    	updateSpeed(true);
     }
     
-    private void updateSpeed(double speed) {
+    private void updateSpeed(boolean increase) {
 
-		if (!(timeline.getRate() + speed < 0.25)) {
-			timeline.setRate(timeline.getRate() + speed);
+		if (increase && timeline.getRate() < 32) {
+			timeline.setRate(timeline.getRate() * 2);
+		}
+		else if (!increase && timeline.getRate() > (1/32)){
+			timeline.setRate(timeline.getRate() / 2);
 		}
 
     }
