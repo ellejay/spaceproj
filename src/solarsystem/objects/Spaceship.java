@@ -15,12 +15,14 @@ public class Spaceship {
 	private BodyInSpace parent;
 	private int rotation;
 	private double period;
+	private double factor;
 	
 	public Spaceship() {
 
 		this.radius_x = 0;
 		this.radius_y = 0;
-		angle = 0;
+		this.angle = 0;
+		this.factor = 1;
 
 		this.rotation = 1;
 		this.period = 600;
@@ -52,13 +54,17 @@ public class Spaceship {
 		return this.rotation;
 	}
 	
+	public void setFactor(double factor) {
+		this.factor = factor;
+	}
+	
 	public void setPeriod(double period) {
 		if (period > 100) { this.period = period; }
 		else { this.period = 100; }
 	}
 	
 	public void incrementAngle() {
-		this.angle += this.rotation * Math.toRadians( (2 * Math.PI) / (this.period / 10));
+		this.angle += this.rotation * Math.toRadians( (2 * Math.PI) / (this.period * this.factor / 10));
 		
 		if (this.angle >= (2 * Math.PI)) {
 			this.angle -= 2 * Math.PI;

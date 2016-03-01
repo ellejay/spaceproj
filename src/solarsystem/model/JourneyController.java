@@ -838,6 +838,7 @@ public class JourneyController extends SuperController implements Initializable 
             for (BodyInSpace current : selection.values()) {
                 current.resetPlanet();
                 systemPane.getChildren().add(current.getGUIObject());
+                spaceship.setFactor(current.getFactor());
             }
 
         }
@@ -847,6 +848,7 @@ public class JourneyController extends SuperController implements Initializable 
 
         systemPane.getChildren().add(spaceship.getGUIShip());
         systemPane.getChildren().add(spaceship.getGUITrail());
+        
     }
 
 }
