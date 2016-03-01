@@ -37,7 +37,7 @@ public class BodyInSpace {
 	 * @param orbit_scale Current scale displayed on the GUI
 	 */
 	public BodyInSpace(String name, double diameter, double mass, double orbit, double period, 
-			double angle, BodyInSpace center, double orbit_scale) {
+			double angle, double factor, BodyInSpace center, double orbit_scale) {
 		// Assign parameters to specified properties
 		this.name = name;
 		this.diameter = diameter;
@@ -46,7 +46,7 @@ public class BodyInSpace {
 		this.period = period;
 		this.angle = angle;
 		this.center = center;
-		this.factor = 1;
+		this.factor = factor;
 
 		/* Create default body object, add at origin point of 
 		* canvas (top left) for calculation purposes, and add css style to object. */
@@ -126,7 +126,7 @@ public class BodyInSpace {
 		this.pos_x = point_x;
 		this.pos_y = point_y;
 	}
-	
+
 	/**
 	 * Get name of body
 	 * @return name of body
