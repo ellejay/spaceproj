@@ -39,21 +39,15 @@ import solarsystem.math.MathEllipse;
 
 public class JourneyController extends SuperController implements Initializable {
 
-    @FXML
-    private Text actiontarget;
-    @FXML
-    private Label routeStage;
-    @FXML
-    private Pane systemPane;
-    @FXML
-    private Pane sourcePane;
-    @FXML
-    private Button switchScene;
-    @FXML
-    private Text routeData;
-    @FXML
-    private Pane help;
+    @FXML private Text actiontarget;
+    @FXML private Label routeStage;
+    @FXML private Pane systemPane;
+    @FXML private Pane sourcePane;
+    @FXML private Button switchScene;
+    @FXML private Text routeData;
+    @FXML private Pane help;
     @FXML private TextArea journeyInfo;
+    private Timeline timeline;
     private int steps;
     private boolean newStep = true;
     private int rotateCount = 0;
@@ -75,7 +69,6 @@ public class JourneyController extends SuperController implements Initializable 
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setUp();
     }
-
 
     private void setUp() {
 
@@ -670,12 +663,15 @@ public class JourneyController extends SuperController implements Initializable 
     }
 
     private void resetScale(double new_val) {
+
+        double min = SpaceObjects.getScale(currentParent.getName()).get(1);
+
         double val;
-        /*if (new_val > 0.36) {
-            val = 0.36;
-        } else {*/
+        if (new_val > min) {
+            val = min;
+        } else {
             val = new_val;
-        //}
+        }
 
         SCREEN_SCALE = val;
         for (BodyInSpace current : selection.values()) {

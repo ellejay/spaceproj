@@ -23,7 +23,6 @@ import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import solarsystem.objects.BodyInSpace;
@@ -31,10 +30,10 @@ import solarsystem.objects.SpaceObjects;
  
 public class SolarSystemController extends SuperController implements Initializable {
 
-    @FXML private Text actiontarget;
     @FXML private Pane systemPane;
     @FXML private Slider zoomSlide;
     @FXML private Button switchScene;
+	private Timeline timeline;
 	private Map<String, BodyInSpace> selection = SpaceObjects.getPlanets();
     
     @Override
@@ -92,7 +91,7 @@ public class SolarSystemController extends SuperController implements Initializa
 		};
 
 
-		timeline = new Timeline(new KeyFrame(Duration.ZERO, planetMovement), 
+		timeline = new Timeline(new KeyFrame(Duration.ZERO, planetMovement),
 				new KeyFrame(Duration.millis(STEP_DURATION)));
 
 		timeline.setCycleCount(Timeline.INDEFINITE);
@@ -179,7 +178,7 @@ public class SolarSystemController extends SuperController implements Initializa
 
     }
     
-    @FXML protected void stopTimeline(ActionEvent event) throws IOException { 
+    @FXML protected void stopTimeline() throws IOException {
     	timeline.pause();
     	
     	Stage stage; 
