@@ -53,7 +53,7 @@ public class JourneyController extends SuperController implements Initializable 
     private int rotateCount = 0;
     private boolean transferWindow = false;
     private double journeyMoveX = 0, journeyMoveY = 0;
-    private double movementAngle, endAngle, transAngle;
+    private double startAngle, endAngle, transAngle, drawAngle;
     private final StringBuilder finalJourney = new StringBuilder();
     private double journeyTime;
     private double startSearch, endSearch, orbitsSearch;
@@ -234,10 +234,10 @@ public class JourneyController extends SuperController implements Initializable 
 
                         if (newStep) {
                             journeyMoveX = enterprise.getParent().getX() + ((radiusJourney) *
-                                    Math.sin(startPlanet.getAngle()));
+                                    Math.sin(drawAngle));
 
                             journeyMoveY = enterprise.getParent().getY() - ((radiusJourney) *
-                                    Math.cos(startPlanet.getAngle()));
+                                    Math.cos(drawAngle));
 
                         }
 
@@ -256,7 +256,7 @@ public class JourneyController extends SuperController implements Initializable 
 
                         routeStage.setText(startPlanet.getName() + " > " + endPlanet.getName());
 
-                        enterprise.setAngle(movementAngle);
+                        enterprise.setAngle(startAngle);
 
                         newStep = false;
                         rotateCount = 0;
@@ -289,16 +289,20 @@ public class JourneyController extends SuperController implements Initializable 
                             } else {
                                 speed = startPlanet.getAngularV();
                             }
+
+                            double transitionSpeed = 360 / ((speed * Math.PI) / (transAngle));
+
+                            System.out.println("SPEED: " + transitionSpeed + " ANGLE: " + transAngle);
+
+                            enterprise.setPeriod(transitionSpeed);
                         }
                         else {
-                            speed = 360 / (2 * (calc.getTime() / 86400));
+                            speed = (2 * (calc.getTime() / 86400));
+
+                            System.out.println("SPEED: " + speed + " ANGLE: " + transAngle);
+
+                            enterprise.setPeriod(speed);
                         }
-
-                        double transitionSpeed = 360 / ((speed * Math.PI) / (transAngle));
-
-                        System.out.println("SPEED: " + transitionSpeed + " ANGLE: " + transAngle);
-
-                        enterprise.setPeriod(transitionSpeed);
 
                     } else {
                         enterprise.incrementAngle();
@@ -376,16 +380,18 @@ public class JourneyController extends SuperController implements Initializable 
 
                                 journeyTime += timeTaken;
 
-                                movementAngle = startPlanet.getAngle() - Math.PI;
-                                if (movementAngle < 0) {
-                                    movementAngle += 2 * Math.PI;
+                                startAngle = startPlanet.getAngle() - Math.PI;
+                                if (startAngle < 0) {
+                                    startAngle += 2 * Math.PI;
                                 }
                                 endAngle = startPlanet.getAngle();
 
+                                drawAngle = endAngle;
                                 if (movement == -1) {
-                                    double temp = movementAngle;
-                                    movementAngle = endAngle;
+                                    double temp = startAngle;
+                                    startAngle = endAngle;
                                     endAngle = temp;
+
                                 }
 
                                 transAngle = startPlanet.getAngle() - endPlanet.getAngle();
@@ -406,15 +412,24 @@ public class JourneyController extends SuperController implements Initializable 
                                 childPlanet = endPlanet;
                             }
 
-                            movementAngle = childPlanet.getAngle() - Math.PI;
-                            if (movementAngle < 0) {
-                                movementAngle += 2 * Math.PI;
-                            }
-                            endAngle = childPlanet.getAngle();
+                            double transferTime = (calc.getTime() / 86400);
+                            double angleCovered = Math.toRadians(childPlanet.getAngularV() * transferTime);
+                            System.out.println("COVER: " + angleCovered);
 
-                            if (movement == -1) {
-                                double temp = movementAngle;
-                                movementAngle = endAngle;
+                            endAngle = childPlanet.getAngle() + angleCovered;
+                            while (endAngle < 0) {
+                                endAngle += 2 * Math.PI;
+                            }
+
+                            startAngle = endAngle - Math.PI;
+                            if (startAngle < 0) {
+                                startAngle += 2 * Math.PI;
+                            }
+
+                            drawAngle = endAngle;
+                            if (movement == -1 || childPlanet.equals(startPlanet)) {
+                                double temp = startAngle;
+                                startAngle = endAngle;
                                 endAngle = temp;
                             }
 
@@ -511,7 +526,7 @@ public class JourneyController extends SuperController implements Initializable 
                     transferRadius = (endOrbit[1] + startOrbit[0]) / 2;
 
                     if (newStep) {
-                        movementAngle = Math.PI / 2;
+                        startAngle = Math.PI / 2;
                         endAngle = Math.toRadians(180);
                     }
 
