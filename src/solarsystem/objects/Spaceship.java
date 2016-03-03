@@ -21,7 +21,7 @@ public class Spaceship {
 		this.radius_y = 0;
 		angle = 0;
 
-		this.period = 100;
+		this.period = 30;
 
 		this.gui_object = new Circle(0, 0, 3);
 		this.gui_object.getStyleClass().add("spacecraft");

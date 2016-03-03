@@ -60,7 +60,8 @@ public class JourneyController extends SuperController implements Initializable 
     private double focusScale;
     private double incOut = 100;
     private double incIn = 200;
-    private boolean orbitTrans = false, newMove = false;
+    private double transOrb1, transOrb2;
+    private boolean orbitTrans, newMove, transferComplete;
     private double lineIn;
     private BodyInSpace currentParent = SpaceObjects.getSun();
     private Map<String, BodyInSpace> selection = SpaceObjects.getPlanets();
@@ -285,7 +286,7 @@ public class JourneyController extends SuperController implements Initializable 
                         if (startPlanet.equals(endPlanet)) {
                             enterprise.setPeriod(startPlanet.getPeriod());
                         }
-                        /*else if (startPlanet.isSibling(endPlanet)) {
+                        else if (startPlanet.isSibling(endPlanet)) {
                             if (endPlanet.getAngularV() < startPlanet.getAngularV()) {
                                 speed = endPlanet.getAngularV();
                             } else {
@@ -297,9 +298,8 @@ public class JourneyController extends SuperController implements Initializable 
                             System.out.println("SPEED: " + transitionSpeed + " ANGLE: " + transAngle);
 
                             enterprise.setPeriod(transitionSpeed);
-                        }*/
-                        //if (startPlanet.isChild(endPlanet) || endPlanet.isChild(startPlanet))
-                        else {
+                        }
+                        else if (startPlanet.isChild(endPlanet) || endPlanet.isChild(startPlanet)) {
                             speed = (2 * (calc.getTime() / 86400));
 
                             System.out.println("SPEED: " + speed + " ANGLE: " + transAngle);
@@ -386,7 +386,7 @@ public class JourneyController extends SuperController implements Initializable 
                                 }
 
                                 drawAngle = endAngle;
-                                transAngle = startPlanet.getAngle() - endPlanet.getAngle();
+                                transAngle = endAngle - endPlanet.getAngle();
 
                                 if (transAngle < 0) {
                                     transAngle += 2 * Math.PI;
@@ -548,32 +548,39 @@ public class JourneyController extends SuperController implements Initializable 
                     }
 
 
-                } else if (steps % 2 == 1 || orbitTrans) {
+                } else if (steps % 2 == 1 || orbitTrans && !phaseEnd.equals("")) {
+
+                    if (newStep) {
+                        transferComplete = false;
+                        transOrb1 = endOrbit[0];
+                        transOrb2 = endOrbit[1];
+                    }
+
 
                     if (incIn < 100) {
                         orbitTrans = false;
+                        transferComplete = true;
                         entryLine.setStroke(Color.TRANSPARENT);
                         incIn = 200;
                         incOut = 100;
                     }
 
-                    if (Math.abs(Math.toDegrees(falcon.getAngle()) - 90) < 1 && incOut < 205) {
+                    if (Math.abs(Math.toDegrees(falcon.getAngle()) - 90) < 1 && incOut < 205 && !transferComplete) {
                         entryLine.setStroke(Color.ORANGE);
                         newMove = true;
                         orbitTrans = true;
-                        //TODO fix the exception caused here
-                        lineIn = endOrbit[1] * -1;
+                        lineIn = transOrb2 * -1;
                         entryLine.setStartX(startOrbit[0] * focusScale + focusWidth);
                         entryLine.setEndX(startOrbit[0] * focusScale + focusWidth);
                         incOut += 0.5;
                         moveBall(falcon.getGUIShip(), (startOrbit[0] * focusScale) + focusWidth, incOut);
 
-                    } else if (((Math.abs(Math.toDegrees(enterprise.getAngle() - endAngle)) < 10 && incIn > 100)
+                    } else if (((Math.abs(Math.toDegrees(enterprise.getAngle() - endAngle)) < 10 && incIn > 100 && !transferComplete)
                             || incIn != 200) && orbitTrans) {
                         if (newMove) {
-                            MathEllipse orbit = new MathEllipse(startPlanet.getMass(), endOrbit[0], endOrbit[1]);
+                            MathEllipse orbit = new MathEllipse(startPlanet.getMass(), transOrb1, transOrb2);
 
-                            double offset = (endOrbit[0] - endOrbit[1]) / 2;
+                            double offset = (transOrb1 - transOrb2) / 2;
 
                             planetFocus.getStyleClass().add("body-" + phaseEnd);
 
