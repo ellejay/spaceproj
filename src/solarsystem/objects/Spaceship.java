@@ -13,7 +13,6 @@ public class Spaceship {
 	private double center_x;
 	private double center_y;
 	private BodyInSpace parent;
-	private int rotation;
 	private double period;
 	
 	public Spaceship() {
@@ -22,8 +21,7 @@ public class Spaceship {
 		this.radius_y = 0;
 		angle = 0;
 
-		this.rotation = 1;
-		this.period = 600;
+		this.period = 100;
 
 		this.gui_object = new Circle(0, 0, 3);
 		this.gui_object.getStyleClass().add("spacecraft");
@@ -44,23 +42,14 @@ public class Spaceship {
 		this.angle = angle;
 	}
 	
-	public void setRotation(int rotate) {
-		this.rotation = rotate;
-	}
-
-	public int getRotation() {
-		return this.rotation;
-	}
-	
 	public void setPeriod(double period) {
-		/*if (period > 100) { this.period = period; }
-		else { this.period = 100; }*/
-
 		this.period = period;
 	}
+
+	public void setPathRotation(double rotate) { this.gui_trail.setRotate(rotate);}
 	
 	public void incrementAngle() {
-		this.angle += this.rotation * Math.toRadians( (2 * Math.PI) / (this.period));
+		this.angle += Math.toRadians( (2 * Math.PI) / (this.period));
 		
 		if (this.angle >= (2 * Math.PI)) {
 			this.angle -= 2 * Math.PI;
