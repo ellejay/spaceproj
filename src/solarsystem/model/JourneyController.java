@@ -283,7 +283,10 @@ public class JourneyController extends SuperController implements Initializable 
                         journeyTime += calc.getTime();
 
                         double speed;
-                        if (startPlanet.isSibling(endPlanet)) {
+                        if (startPlanet.equals(endPlanet)) {
+                            enterprise.setPeriod(startPlanet.getPeriod());
+                        }
+                        else if (startPlanet.isSibling(endPlanet)) {
                             if (endPlanet.getAngularV() < startPlanet.getAngularV()) {
                                 speed = endPlanet.getAngularV();
                             } else {
@@ -296,7 +299,7 @@ public class JourneyController extends SuperController implements Initializable 
 
                             enterprise.setPeriod(transitionSpeed);
                         }
-                        else {
+                        else if (startPlanet.isChild(endPlanet) || endPlanet.isChild(startPlanet)){
                             speed = (2 * (calc.getTime() / 86400));
 
                             System.out.println("SPEED: " + speed + " ANGLE: " + transAngle);
@@ -405,15 +408,17 @@ public class JourneyController extends SuperController implements Initializable 
                             }
                         } else {
                             BodyInSpace childPlanet;
+                            double angleCovered = 0;
                             if (startPlanet.isChild(endPlanet)) {
                                 childPlanet = startPlanet;
                             }
                             else {
                                 childPlanet = endPlanet;
+                                double transferTime = (calc.getTime() / 86400);
+                                angleCovered = Math.toRadians(childPlanet.getAngularV() * transferTime);
                             }
 
-                            double transferTime = (calc.getTime() / 86400);
-                            double angleCovered = Math.toRadians(childPlanet.getAngularV() * transferTime);
+
                             System.out.println("COVER: " + angleCovered);
 
                             endAngle = childPlanet.getAngle() + angleCovered;
@@ -425,6 +430,8 @@ public class JourneyController extends SuperController implements Initializable 
                             if (startAngle < 0) {
                                 startAngle += 2 * Math.PI;
                             }
+
+                            System.out.println("STARTS AT: " + childPlanet.getAngle());
 
                             drawAngle = endAngle;
                             if (movement == -1 || childPlanet.equals(startPlanet)) {
