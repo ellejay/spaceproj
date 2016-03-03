@@ -24,6 +24,48 @@
     -fx-background-color: #000000, linear-gradient(#5e5e5e, #383838);
 }
 
+#centerButton {
+    -fx-background-image: url("../img/center.png");
+    -fx-background-size: 18 18;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position:center;
+}
+
+#undoButton {
+    -fx-background-image: url("../img/undo.png");
+    -fx-background-size: 18 18;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position:center;
+}
+
+#unfocusFrame {
+    -fx-background-image: url("../img/levelup.png");
+    -fx-background-size: 18 18;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position:center;
+}
+
+#slowButton {
+    -fx-background-image: url("../img/rewind.png");
+    -fx-background-size: 14 14;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position:center;
+}
+
+#speedButton {
+    -fx-background-image: url("../img/fastforward.png");
+    -fx-background-size: 14 14;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position:center;
+}
+
+#confirmButton {
+    -fx-background-image: url("../img/ok.png");
+    -fx-background-size: 13 13;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position:center;
+}
+
 .route_label {
 	-fx-fill: white;
 }

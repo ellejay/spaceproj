@@ -256,7 +256,8 @@ public class PathSelectionController extends SuperController implements Initiali
 		if (orbit.getChildren().isEmpty()) {
 			TextField text = new TextField();
 			TextField text2 = new TextField();
-			Button submit = new Button("Y");
+			Button submit = new Button();
+			submit.setId("confirmButton");
 			submit.setOnAction(new EventHandler<ActionEvent>() {
 			    @Override public void handle(ActionEvent e) {
 			        orbit.getChildren().clear();
@@ -362,7 +363,7 @@ public class PathSelectionController extends SuperController implements Initiali
 				}
 				else {
 					newRouteList.append("Orbit\r\n\t");
-					newRouteList.append(routeOrbit.get(i)[0] + " " + routeOrbit.get(i)[1]);
+					newRouteList.append(routeOrbit.get(i)[0] + " " + routeOrbit.get(i)[1] + "\r\n");
 				}
 				
 				markForRoute(routePlanets.get(i));

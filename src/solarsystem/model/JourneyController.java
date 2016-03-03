@@ -39,24 +39,21 @@ import solarsystem.math.MathEllipse;
 
 public class JourneyController extends SuperController implements Initializable {
 
-    @FXML private Text actiontarget;
     @FXML private Label routeStage;
     @FXML private Pane systemPane;
     @FXML private Pane sourcePane;
-    @FXML private Button switchScene;
     @FXML private Text routeData;
-    @FXML private Pane help;
+    @FXML private Pane completionPane;
     @FXML private TextArea journeyInfo;
     private Timeline timeline;
     private int steps;
     private boolean newStep = true;
-    private int rotateCount = 0;
     private boolean transferWindow = false;
     private double journeyMoveX = 0, journeyMoveY = 0;
     private double startAngle, endAngle, transAngle, drawAngle;
     private final StringBuilder finalJourney = new StringBuilder();
     private double journeyTime;
-    private double startSearch, endSearch, orbitsSearch;
+    private double orbitsSearch;
     private double focusScale;
     private double incOut = 100;
     private double incIn = 200;
@@ -253,7 +250,6 @@ public class JourneyController extends SuperController implements Initializable 
                         enterprise.setAngle(startAngle);
 
                         newStep = false;
-                        rotateCount = 0;
                         routeData.setText(calc.getTransferData());
 
 
@@ -308,7 +304,6 @@ public class JourneyController extends SuperController implements Initializable 
                     if (!phaseStart.equals(phaseEnd)) {
                         enterprise.setCenterPoint(journeyMoveX, journeyMoveY);
 
-                        rotateCount++;
                         if (Math.abs(Math.toDegrees(enterprise.getAngle() - endAngle)) < 1) {
                             nextPhase();
                         }
@@ -699,7 +694,7 @@ public class JourneyController extends SuperController implements Initializable 
             newStep = true;
         } else {
             timeline.pause();
-            help.toFront();
+            completionPane.toFront();
             finalJourney.append("Total Journey Time\n\t");
             finalJourney.append(timeToString(journeyTime));
             journeyInfo.setText(finalJourney.toString());

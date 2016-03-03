@@ -9,7 +9,7 @@
 <StackPane fx:controller="solarsystem.model.JourneyController"
            xmlns:fx="http://javafx.com/fxml">
 
-    <Pane fx:id="help" styleClass="journeyDialog" maxWidth="575" maxHeight="450">
+    <Pane fx:id="completionPane" styleClass="journeyDialog" maxWidth="575" maxHeight="450">
         <VBox alignment="CENTER" prefWidth="575">
             <padding>
                 <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
@@ -56,7 +56,8 @@
                     <Text fx:id="routeData" styleClass="route_label" wrappingWidth="190" textAlignment="CENTER"/>
 
                     <HBox spacing="10" alignment="CENTER">
-                        <Button onAction="#slowMovement" text="◀◀"/> <Button onAction="#speedUpMovement" text="▶▶"/>
+                        <Button onAction="#slowMovement" fx:id="slowButton"/>
+                        <Button onAction="#speedUpMovement" fx:id="speedButton"/>
                     </HBox>
                 </VBox>
 
