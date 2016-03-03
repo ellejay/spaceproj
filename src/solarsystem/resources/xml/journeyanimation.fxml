@@ -10,13 +10,14 @@
            xmlns:fx="http://javafx.com/fxml">
 
     <Pane fx:id="completionPane" styleClass="journeyDialog" maxWidth="575" maxHeight="450">
-        <VBox alignment="CENTER" prefWidth="575">
+        <VBox alignment="CENTER" prefWidth="575" spacing="10">
             <padding>
                 <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
             </padding>
             <Label text="Journey Complete!" styleClass="completeMsg"/>
 
-            <TextArea fx:id="journeyInfo" text="" maxHeight="600" styleClass="routeList" wrapText="true" editable="false"/>
+            <TextArea fx:id="journeyInfo" text="" prefHeight="320" styleClass="completeList"
+                      wrapText="true" editable="false"/>
 
             <HBox spacing="10" alignment="CENTER">
                 <Button onAction="#saveJourney" text="Save Journey Data"/>
@@ -53,7 +54,8 @@
                     </padding>
                     <Label text="" fx:id="routeStage" styleClass="route_stage"/>
 
-                    <Text fx:id="routeData" styleClass="route_label" wrappingWidth="190" textAlignment="CENTER"/>
+                    <TextArea fx:id="routeData" styleClass="routeList" maxWidth="190" maxHeight="200" wrapText="true"
+                              editable="false"/>
 
                     <HBox spacing="10" alignment="CENTER">
                         <Button onAction="#slowMovement" fx:id="slowButton"/>

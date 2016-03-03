@@ -9,7 +9,7 @@
 <StackPane fx:controller="solarsystem.model.PathSelectionController"
            xmlns:fx="http://javafx.com/fxml" alignment="TOP_LEFT">
 
-    <Pane fx:id="help" styleClass="journeyDialog" maxWidth="250" maxHeight="100">
+    <Pane fx:id="inputPane" styleClass="journeyDialog" maxWidth="250" maxHeight="100">
         <VBox alignment="CENTER" prefWidth="250" spacing="5">
             <padding>
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>

@@ -42,7 +42,7 @@ public class JourneyController extends SuperController implements Initializable 
     @FXML private Label routeStage;
     @FXML private Pane systemPane;
     @FXML private Pane sourcePane;
-    @FXML private Text routeData;
+    @FXML private TextArea routeData;
     @FXML private Pane completionPane;
     @FXML private TextArea journeyInfo;
     private Timeline timeline;
@@ -250,14 +250,16 @@ public class JourneyController extends SuperController implements Initializable 
                         enterprise.setAngle(startAngle);
 
                         newStep = false;
-                        routeData.setText(calc.getTransferData());
+                        String data = calc.getTransferData();
+                        String newData = data.replace("\t", "\n");
 
+                        routeData.setText(newData.replace("days ", "days\n"));
 
                         finalJourney.append(startPlanet.getName() + " ");
                         if (startOrbit[0] == 0 && startOrbit[1] == 0) {
                             finalJourney.append("Surface");
                         } else {
-                            finalJourney.append(String.format("%.0f/%.0f", startOrbit[0], startOrbit[1]));
+                            finalJourney.append(String.format("%.0fm/%.0fm", startOrbit[0], startOrbit[1]));
                         }
 
                         finalJourney.append(" > " + endPlanet.getName() + " ");
@@ -265,7 +267,7 @@ public class JourneyController extends SuperController implements Initializable 
                         if (endOrbit[0] == 0 && endOrbit[1] == 0) {
                             finalJourney.append("Surface");
                         } else {
-                            finalJourney.append(String.format("%.0f/%.0f", endOrbit[0], endOrbit[1]));
+                            finalJourney.append(String.format("%.0fm/%.0fm", endOrbit[0], endOrbit[1]));
                         }
 
                         finalJourney.append("\n\t" + calc.getTransferData());
@@ -317,6 +319,7 @@ public class JourneyController extends SuperController implements Initializable 
                         newStep = false;
 
                         routeStage.setText(startPlanet.getName() + " Orbit");
+                        routeData.setText("Apoapsis = " + startOrbit[0] + "m\nPeriapsis = " + startOrbit[1] + "m");
 
                         if (movement == -1) {
                             enterprise.setAngle(3.14);
@@ -363,7 +366,7 @@ public class JourneyController extends SuperController implements Initializable 
                                         (angleTravelled / 360);
 
                                 finalJourney.append(startPlanet.getName() + "\n\t");
-                                finalJourney.append(timeToString(timeTaken));
+                                finalJourney.append("Time In Orbit = " + timeToString(timeTaken));
 
                                 journeyTime += timeTaken;
 
@@ -452,7 +455,7 @@ public class JourneyController extends SuperController implements Initializable 
 
         final double focusWidth = sourcePane.getPrefWidth() / 2;
         System.out.println(focusWidth);
-        final Circle planetFocus = new Circle(focusWidth, focusWidth, 10);
+        final Circle planetFocus = new Circle(focusWidth, focusWidth, 6);
 
         final Spaceship falcon = new Spaceship();
         falcon.setCenterPoint(planetFocus.getCenterX(), planetFocus.getCenterY());
@@ -695,7 +698,7 @@ public class JourneyController extends SuperController implements Initializable 
         } else {
             timeline.pause();
             completionPane.toFront();
-            finalJourney.append("Total Journey Time\n\t");
+            finalJourney.append("\r\nTotal Journey Time\n\t");
             finalJourney.append(timeToString(journeyTime));
             journeyInfo.setText(finalJourney.toString());
             System.out.println("journey complete");

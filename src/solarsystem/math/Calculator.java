@@ -90,7 +90,7 @@ public class Calculator {
 		double minutes = Math.floor(((t % 86400) % 3600) / 60);
 		double seconds = Math.floor(((t % 86400) % 3600) % 60);
 		
-		return String.format("%6.0fm/s %6.0fm/s %6.0f days %6.0f hours %6.0f mins %6.0f s\n", dv1, dv2, days, hours, minutes, seconds);
+		return String.format("Δv Exit = %6.0fm/s\tΔv Entry = %6.0fm/s\r\n\tTransfer Time = %6.0f days %6.0f hours %6.0f mins %6.0f s\n", dv1, dv2, days, hours, minutes, seconds);
 	}
 
 	public void transfer_slow(BodyInSpace p, MathEllipse target){

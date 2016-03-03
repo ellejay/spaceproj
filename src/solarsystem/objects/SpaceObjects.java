@@ -26,7 +26,7 @@ public class SpaceObjects {
 		planetScales.put("Mars", new LinkedList<>(Arrays.asList(1e4, 1e4)));
 		planetScales.put("Jupiter", new LinkedList<>(Arrays.asList(25.0, 1e3)));
 		planetScales.put("Saturn", new LinkedList<>(Arrays.asList(80.0, 1e3)));
-		planetScales.put("Uranus", new LinkedList<>(Arrays.asList(5e2, 4e3)));
+		planetScales.put("Uranus", new LinkedList<>(Arrays.asList(500.0, 1500.0)));
 		planetScales.put("Neptune", new LinkedList<>(Arrays.asList(8e2, 5e3)));
 		planetScales.put("Pluto", new LinkedList<>(Arrays.asList(1e4, 1e4)));
 

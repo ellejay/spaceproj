@@ -31,7 +31,7 @@ public class PathSelectionController extends SuperController implements Initiali
     @FXML private Slider zoomSlide;
     @FXML private TextArea routeList;
     @FXML private Button startButton;
-	@FXML private Pane help;
+	@FXML private Pane inputPane;
 	@FXML private HBox orbit;
 	@FXML private Label planetName;
 	@FXML private Button landControl;
@@ -128,15 +128,19 @@ public class PathSelectionController extends SuperController implements Initiali
 				//final double[] landed = {0, 0};
 				boolean planetFound = false;
 
-				help.toFront();
+				inputPane.toFront();
 
-				help.setTranslateX(event.getSceneX());
+                double xShift = event.getSceneX();
+                if (event.getSceneX() + 250 > 750) {
+                    xShift = 500;
+                }
+				inputPane.setTranslateX(xShift);
 
                 double yShift = event.getSceneY();
                 if (event.getSceneY() > 500) {
                     yShift = 500;
                 }
-				help.setTranslateY(yShift);
+				inputPane.setTranslateY(yShift);
 
 				for (BodyInSpace current: selection.values()) {
 					if (event.getTarget().equals(current.getGUIObject())){
@@ -160,7 +164,7 @@ public class PathSelectionController extends SuperController implements Initiali
 				
 				if (!planetFound) {
 			        contextFileMenu.hide();
-					help.toBack();
+					inputPane.toBack();
 					orbit.getChildren().clear();
 				}
 				
@@ -292,11 +296,9 @@ public class PathSelectionController extends SuperController implements Initiali
 	@FXML protected void focusOnPlanet() {
 		String planet = planetName.getText();
 
-		help.toBack();
+		inputPane.toBack();
 		currentParent = SpaceObjects.getPlanets().get(planet);
 		selection = SpaceObjects.getChildren(planet);
-		
-		System.out.println(currentParent.getName());
 
 		systemPane.getChildren().clear();
 
@@ -304,20 +306,28 @@ public class PathSelectionController extends SuperController implements Initiali
 
 		// Fix the scale issue
 		SCREEN_SCALE = SpaceObjects.getScale(planet).get(0);
-		zoomSlide.setMin(SpaceObjects.getScale(planet).get(0));
-		zoomSlide.setMax(SpaceObjects.getScale(planet).get(1));
-		zoomSlide.setValue(SCREEN_SCALE);
+
+        if (SpaceObjects.getScale(planet).get(0).equals(SpaceObjects.getScale(planet).get(1))) {
+            zoomSlide.setVisible(false);
+        }
+        else {
+            zoomSlide.setVisible(true);
+            zoomSlide.setMin(SpaceObjects.getScale(planet).get(0));
+            zoomSlide.setMax(SpaceObjects.getScale(planet).get(1));
+            zoomSlide.setValue(SCREEN_SCALE);
+        }
 		unfocusFrame.setDisable(false);
 		displaySystem();
 	}
 
 	@FXML protected void focusOnSun() {
-		help.toBack();
+		inputPane.toBack();
 		currentParent = SpaceObjects.getSun();
 		selection = SpaceObjects.getPlanets();
 
 		systemPane.getChildren().clear();
 
+        zoomSlide.setVisible(true);
 		zoomSlide.setMin(SpaceObjects.getScale("Sun").get(0));
 		zoomSlide.setMax(SpaceObjects.getScale("Sun").get(1));
 		SCREEN_SCALE = scaleSave;
@@ -405,14 +415,15 @@ public class PathSelectionController extends SuperController implements Initiali
 										Math.cos(current.getAngle())));
 
 				systemPane.getChildren().add(current.getGUIObject());
+
+                if (routePlanets.contains(current.getName())) {
+                    markForRoute(current.getName());
+                }
 			}
 
 			if(!currentParent.getName().equals("Sun")) {
 				systemPane.getChildren().add(currentParent.getGUIObject());
 			}
-		}
-		else {
-			System.out.println("I tried...");
 		}
 	}
 	
