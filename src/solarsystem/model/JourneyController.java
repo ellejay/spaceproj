@@ -83,7 +83,7 @@ public class JourneyController extends SuperController implements Initializable 
 
                 for (BodyInSpace current : selection.values()) {
 
-                    current.incrementAngle();
+                    current.incrementAngle(SPEED_FACTOR);
 
                     // p(x) = x(0) + r * sin(a)
                     // p(y) = y(y) - r * cos(a)
@@ -95,14 +95,8 @@ public class JourneyController extends SuperController implements Initializable 
                             Math.cos(current.getAngle());
 
                     current.setPosition(moveX, moveY);
-                    current.adjustGUIOrbit(current.getOrbit() * SCREEN_SCALE);
-
                     moveBall(current.getGUIObject(), moveX, moveY);
-
-                    //current.moveGUIObject(moveX, moveY);
-
                 }
-
             }
         };
 
@@ -308,7 +302,7 @@ public class JourneyController extends SuperController implements Initializable 
                         }
 
                     } else {
-                        enterprise.incrementAngle();
+                        enterprise.incrementAngle(SPEED_FACTOR);
                     }
 
                     if (!phaseStart.equals(phaseEnd)) {
@@ -442,7 +436,7 @@ public class JourneyController extends SuperController implements Initializable 
 
                     enterprise.setRadius(0, 0);
 
-                    enterprise.incrementAngle();
+                    enterprise.incrementAngle(SPEED_FACTOR);
 
                     enterprise.setCenterPoint(startPlanet.getX(), startPlanet.getY());
 
@@ -531,7 +525,7 @@ public class JourneyController extends SuperController implements Initializable 
                     falcon.setRadius(transferRadius * focusScale, transferRadius * focusScale);
 
 
-                    falcon.incrementAngle();
+                    falcon.incrementAngle(1);
 
                     double moveX = falcon.getCenterX() + (falcon.getRadiusX()) *
                             Math.sin(falcon.getAngle());
@@ -597,7 +591,7 @@ public class JourneyController extends SuperController implements Initializable 
                         incIn -= 0.5;
                         moveBall(falcon.getGUIShip(), (lineIn * focusScale) + focusWidth, incIn);
                     } else if (!orbitTrans) {
-                        falcon.incrementAngle();
+                        falcon.incrementAngle(1);
 
                         double moveX = falcon.getCenterX() + (falcon.getRadiusX()) *
                                 Math.sin(falcon.getAngle());
@@ -627,7 +621,7 @@ public class JourneyController extends SuperController implements Initializable 
                         nextPhase();
                     }
 
-                    falcon.incrementAngle();
+                    falcon.incrementAngle(1);
 
                     double moveX = falcon.getCenterX() + (falcon.getRadiusX()) *
                             Math.sin(falcon.getAngle());
@@ -792,10 +786,12 @@ public class JourneyController extends SuperController implements Initializable 
     private void updateSpeed(boolean increase) {
 
         if (increase && timeline.getRate() < 32) {
-            timeline.setRate(timeline.getRate() * 2);
+            //timeline.setRate(timeline.getRate() * 2);
+            SPEED_FACTOR = SPEED_FACTOR * 2;
         }
         else if (!increase && timeline.getRate() > (1/32)){
-            timeline.setRate(timeline.getRate() / 2);
+            //timeline.setRate(timeline.getRate() / 2);
+            SPEED_FACTOR = SPEED_FACTOR / 2;
         }
 
     }

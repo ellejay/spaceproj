@@ -11,17 +11,17 @@ import javafx.scene.shape.Circle;
 
 public class BodyInSpace {
 	
-	private final String name;
-	private final double diameter;
-	private final double mass;
-	private Circle gui_object;
-	private double pos_x;
-	private double pos_y;
-	private final double orbit;
-	private final double period;
-	private double angle;
-	private final Circle gui_orbit;
-	private final BodyInSpace center;
+	private final String name; // body name
+	private final double diameter; // diameter of body in
+	private final double mass; // mass of body in
+	private Circle gui_object; // GUI object to represent body
+	private double pos_x; // current position of GUI body
+	private double pos_y; // current position of GUI body
+	private final double orbit; // radius of orbit from body's parent in km
+	private final double period; // time taken for one full rotation around body orbit in days
+	private double angle; // current angle of body around circle, measured from vertical in radians
+	private final Circle gui_orbit; // GUI object for the orbit path
+	private final BodyInSpace center; // parent object of body (eg. sun to the earth)
 	
 	/**
 	 * Constructor method to create planet given all required data.
@@ -85,9 +85,9 @@ public class BodyInSpace {
 	 * This number is calculated from the period of the object so that
 	 * speeds of planet objects are relative in the GUI animation.
 	 */
-	public void incrementAngle() {
+	public void incrementAngle(double factor) {
 		//
-		this.angle += Math.toRadians( (2 * Math.PI) / (this.period) );
+		this.angle += factor * Math.toRadians( (2 * Math.PI) / (this.period));
 		
 		if (this.angle >= (2 * Math.PI)) {
 			this.angle -= 2 * Math.PI;

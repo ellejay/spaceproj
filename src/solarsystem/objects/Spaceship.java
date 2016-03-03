@@ -48,15 +48,12 @@ public class Spaceship {
 
 	public void setPathRotation(double rotate) { this.gui_trail.setRotate(rotate);}
 	
-	public void incrementAngle() {
-		this.angle += Math.toRadians( (2 * Math.PI) / (this.period));
+	public void incrementAngle(double factor) {
+		this.angle += factor * Math.toRadians( (2 * Math.PI) / (this.period));
 		
 		if (this.angle >= (2 * Math.PI)) {
 			this.angle -= 2 * Math.PI;
         }
-		else if (this.angle < 0) {
-			this.angle += 2 * Math.PI;
-		}
 	}
 	
 	public void setRadius(double radius_x, double radius_y) {

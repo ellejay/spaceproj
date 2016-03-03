@@ -67,7 +67,7 @@ public class SolarSystemController extends SuperController implements Initializa
 
 				for (BodyInSpace current: selection.values()) {
 
-					current.incrementAngle();
+					current.incrementAngle(SPEED_FACTOR);
 
 					// p(x) = x(0) + r * sin(a)
 					// p(y) = y(y) - r * cos(a)
@@ -79,12 +79,7 @@ public class SolarSystemController extends SuperController implements Initializa
 							Math.cos(current.getAngle());
 					
 					current.setPosition(moveX, moveY);
-					current.adjustGUIOrbit(current.getOrbit() * SCREEN_SCALE);
-					
 					moveBall(current.getGUIObject(), moveX, moveY);
-					
-					//current.moveGUIObject(moveX, moveY);
-
 				}
 
 			}
@@ -170,10 +165,12 @@ public class SolarSystemController extends SuperController implements Initializa
     private void updateSpeed(boolean increase) {
 
 		if (increase && timeline.getRate() < 32) {
-			timeline.setRate(timeline.getRate() * 2);
+			//timeline.setRate(timeline.getRate() * 2);
+			SPEED_FACTOR = SPEED_FACTOR * 2;
 		}
 		else if (!increase && timeline.getRate() > (1/32)){
-			timeline.setRate(timeline.getRate() / 2);
+			//timeline.setRate(timeline.getRate() / 2);
+			SPEED_FACTOR = SPEED_FACTOR / 2;
 		}
 
     }

@@ -24,10 +24,10 @@ public class SpaceObjects {
 		planetScales.put("Sun", new LinkedList<>(Arrays.asList(0.045, 1.25)));
 		planetScales.put("Earth", new LinkedList<>(Arrays.asList(450.0, 450.0)));
 		planetScales.put("Mars", new LinkedList<>(Arrays.asList(1e4, 1e4)));
-		planetScales.put("Jupiter", new LinkedList<>(Arrays.asList(1e1, 1e3)));
+		planetScales.put("Jupiter", new LinkedList<>(Arrays.asList(25.0, 1e3)));
 		planetScales.put("Saturn", new LinkedList<>(Arrays.asList(80.0, 1e3)));
 		planetScales.put("Uranus", new LinkedList<>(Arrays.asList(5e2, 4e3)));
-		planetScales.put("Neptune", new LinkedList<>(Arrays.asList(5e2, 5e3)));
+		planetScales.put("Neptune", new LinkedList<>(Arrays.asList(8e2, 5e3)));
 		planetScales.put("Pluto", new LinkedList<>(Arrays.asList(1e4, 1e4)));
 
 		sun = new BodyInSpace("Sun", 1392530, 1.9891e30, 0.0, 0.0, 0.0, null, SCREEN_SCALE);

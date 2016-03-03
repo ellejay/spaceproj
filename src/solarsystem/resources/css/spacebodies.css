@@ -60,10 +60,38 @@
     -fx-fill: #AF94A3;
 }
 
-.body-Adrastea, .body-Amalthea, .body-Metis, .body-Thebe, .body-Leda, .body-Elara {
+.body-Adrastea, .body-Amalthea, .body-Metis, .body-Thebe, .body-Leda {
     -fx-fill: #AF94A3;
 }
 
-.body-Himalia, .body-Lysithea, .body-Ananke, .body-Carme, .body-Pasiphae, .body-Sinope {
+.body-Himalia, .body-Lysithea, .body-Elara {
+    -fx-fill: #AF94A3;
+}
+
+.body-Mimas, .body-Enceladus, .body-Tethys, .body-Dione, .body-Rhea {
+    -fx-fill: #AF94A3;
+}
+
+.body-Titan, .body-Hyperion, .body-Iapetus, .body-Pan, .body-Daphnis {
+    -fx-fill: #AF94A3;
+}
+
+.body-Atlas, .body-Prometheus, .body-Pandora, .body-Epimetheus, .body-Janus {
+    -fx-fill: #AF94A3;
+}
+
+.body-Calypso, .body-Telesto, .body-Helene {
+     -fx-fill: #AF94A3;
+ }
+
+ .body-Miranda, .body-Ariel, .body-Umbriel, .body-Titania, .body-Oberon {
+     -fx-fill: #AF94A3;
+ }
+
+ .body-Naiad, .body-Thalassa, .body-Despina, .body-Galatea, .body-Larissa {
+      -fx-fill: #AF94A3;
+ }
+
+ .body-Larissa, .body-Proteus, .body-Triton, .body-Charon {
     -fx-fill: #AF94A3;
 }
