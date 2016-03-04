@@ -811,9 +811,11 @@ public class JourneyController extends SuperController implements Initializable 
         if (parent.equals("Sun")) {
             currentParent = SpaceObjects.getSun();
             selection = SpaceObjects.getPlanets();
+            SPEED_FACTOR = 1;
         } else {
             currentParent = SpaceObjects.getPlanets().get(parent);
             selection = SpaceObjects.getChildren(parent);
+            SPEED_FACTOR = 0.25;
         }
 
         systemPane.getChildren().clear();

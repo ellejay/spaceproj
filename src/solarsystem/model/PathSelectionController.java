@@ -212,7 +212,7 @@ public class PathSelectionController extends SuperController implements Initiali
 					orbitControl.setDisable(true);
 				}
 
-				if (SpaceObjects.getChildren(name).isEmpty()) {
+				if (SpaceObjects.getChildren(name).isEmpty() || name.equals(currentParent.getName())) {
 					focusControl.setDisable(true);
 				}
 				else {
