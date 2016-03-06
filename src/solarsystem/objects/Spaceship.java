@@ -47,6 +47,8 @@ public class Spaceship {
 	}
 
 	public void setPathRotation(double rotate) { this.gui_trail.setRotate(rotate);}
+
+	public double getPathRotation() { return Math.toRadians(this.gui_trail.getRotate()); }
 	
 	public void incrementAngle(double factor) {
 		this.angle += factor * Math.toRadians( (2 * Math.PI) / (this.period));

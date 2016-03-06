@@ -21,6 +21,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import solarsystem.objects.BodyInSpace;
 import solarsystem.objects.SpaceObjects;
@@ -264,27 +265,34 @@ public class PathSelectionController extends SuperController implements Initiali
 			submit.setId("confirmButton");
 			submit.setOnAction(new EventHandler<ActionEvent>() {
 			    @Override public void handle(ActionEvent e) {
-			        orbit.getChildren().clear();
-			        
-			        String planet = planetName.getText();
-			        
-			        routePlanets.add(planet);
-			        double first = Double.parseDouble(text.getText());
-			        double second = Double.parseDouble(text2.getText());
-			        double pass[] = new double[2];
-			        if (first > second) {
-			        	pass[0] = first;
-			        	pass[1] = second;
-			        } else {
-			        	pass[0] = second;
-			        	pass[1] = first;
-			        }
-					routeOrbit.add(pass);
-					
-					routeList.setText(routeList.getText() + " " + planet + " Orbit\r\n\t" + pass[0] + " " +
-								      pass[1] + "\r\n");
-					markForRoute(planet);
-					disableButtons(planet);
+					String planet = planetName.getText();
+			        try {
+
+						double first = Double.parseDouble(text.getText());
+						double second = Double.parseDouble(text2.getText());
+						double pass[] = new double[2];
+						if (first > second) {
+							pass[0] = first;
+							pass[1] = second;
+						} else {
+							pass[0] = second;
+							pass[1] = first;
+						}
+						routeOrbit.add(pass);
+
+						routePlanets.add(planet);
+
+						routeList.setText(routeList.getText() + " " + planet + " Orbit\r\n\t" + pass[0] + " " +
+								pass[1] + "\r\n");
+						markForRoute(planet);
+						disableButtons(planet);
+
+						orbit.getChildren().clear();
+					} catch (NumberFormatException exception) {
+						System.out.println("Non number value passed to orbit");
+						text.setText("Invalid");
+						text2.setText("orbit.");
+					}
 			    }
 			});
 			orbit.getChildren().add(text);
