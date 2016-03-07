@@ -178,8 +178,8 @@ public class JourneyController extends SuperController implements Initializable 
                         MathEllipse transferPath = new MathEllipse(currentParent.getMass(),
                                 nearestPlanet.getOrbit(), furthestPlanet.getOrbit());
 
-                        route.setRadiusX((distance) / 2 * SCREEN_SCALE);
-                        route.setRadiusY((distance) / 2 * SCREEN_SCALE);
+                        route.setRadiusX(transferPath.semi_minor() * SCREEN_SCALE);
+                        route.setRadiusY(transferPath.semi_major() * SCREEN_SCALE);
 
 
                         radiusJourney = route.getRadiusY() - (endPlanet.getOrbit()) * SCREEN_SCALE;
@@ -194,8 +194,7 @@ public class JourneyController extends SuperController implements Initializable 
                             journeyMoveY = enterprise.getParent().getY() - ((radiusJourney) *
                                     Math.cos(startPlanet.getAngle()));
 
-                            //enterprise.setPathRotation(Math.toDegrees(startPlanet.getAngle()));
-
+                            enterprise.setPathRotation(Math.toDegrees(startPlanet.getAngle()));
                         }
 
                         route.setCenterX(journeyMoveX);
@@ -370,7 +369,8 @@ public class JourneyController extends SuperController implements Initializable 
 
                                 journeyTime += timeTaken;
 
-                                startAngle = startPlanet.getAngle();
+                                //startAngle = startPlanet.getAngle();
+                                startAngle = 0;
 
                                 endAngle = startPlanet.getAngle() - Math.PI;
                                 if (endAngle < 0) {
@@ -383,6 +383,8 @@ public class JourneyController extends SuperController implements Initializable 
                                 if (transAngle < 0) {
                                     transAngle += 2 * Math.PI;
                                 }
+
+                                endAngle = Math.PI;
 
                                 System.out.println(Math.toDegrees(startPlanet.getAngle()) + " | " + Math.toDegrees(endPlanet.getAngle()));
                                 nextPhase();
@@ -448,8 +450,16 @@ public class JourneyController extends SuperController implements Initializable 
 
                 enterprise.setRadius(enterprise.getRadiusX() * SCREEN_SCALE, enterprise.getRadiusY() * SCREEN_SCALE);
 
-                moveBall(enterprise.getGUIShip(), moveX, moveY);
+                double cx = enterprise.getCenterX();
+                double cy = enterprise.getCenterY();
 
+                double nmoveX = (moveX - cx) * Math.cos(enterprise.getPathRotation())
+                        - (moveY - cy) * Math.sin(enterprise.getPathRotation()) + cx;
+
+                double nmoveY = (moveX-cx)*Math.sin(enterprise.getPathRotation())
+                        + (moveY - cy) * Math.cos(enterprise.getPathRotation()) + cy;
+
+                moveBall(enterprise.getGUIShip(), nmoveX, nmoveY);
             }
         };
 
@@ -513,14 +523,18 @@ public class JourneyController extends SuperController implements Initializable 
 
                     transferRadius = (endOrbit[1] + startOrbit[0]) / 2;
 
+                    MathEllipse transferPath = new MathEllipse(currentParent.getMass(),
+                            endOrbit[1], startOrbit[0]);
+
                     if (newStep) {
                         startAngle = Math.PI / 2;
                         endAngle = Math.toRadians(180);
                     }
 
+
                     falcon.setCenterPoint(focusWidth - ((transferRadius - startOrbit[0]) * focusScale),
                             focusWidth);
-                    falcon.setRadius(transferRadius * focusScale, transferRadius * focusScale);
+                    falcon.setRadius(transferPath.semi_major() * focusScale, transferPath.semi_minor() * focusScale);
 
 
                     falcon.incrementAngle(1);
@@ -718,7 +732,7 @@ public class JourneyController extends SuperController implements Initializable 
         routeOrbit.clear();
         SCREEN_SCALE = 0.045;
 
-        root = FXMLLoader.load(getClass().getResource("../resources/xml/pathselect.fxml"));
+        root = FXMLLoader.load(getClass().getResource("/solarsystem/resources/xml/pathselect.fxml"));
         Scene scene = new Scene(root);
 
         stage.setScene(scene);
@@ -737,7 +751,7 @@ public class JourneyController extends SuperController implements Initializable 
         routePlanets.clear();
         routeOrbit.clear();
 
-        root = FXMLLoader.load(getClass().getResource("../resources/xml/system.fxml"));
+        root = FXMLLoader.load(getClass().getResource("/solarsystem/resources/xml/system.fxml"));
         Scene scene = new Scene(root);
 
         stage.setScene(scene);
