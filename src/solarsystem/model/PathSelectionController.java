@@ -249,7 +249,7 @@ public class PathSelectionController extends SuperController implements Initiali
 	    	Parent root;
 	    	stage=(Stage) startButton.getScene().getWindow();
 	    	
-	    	root = FXMLLoader.load(getClass().getResource("../resources/xml/journeyanimation.fxml"));
+	    	root = FXMLLoader.load(getClass().getResource("/solarsystem/resources/xml/journeyanimation.fxml"));
 	    	Scene scene = new Scene(root);
 	    	
 	        stage.setScene(scene);

@@ -116,11 +116,7 @@ public class Calculator {
 				dv2 += e1.speed_p();
 			}
 			else {
-				// TEST TRUE, FIX FOR ACTUAL A & P
-				boolean outward_journey = !(current_e.periapse() == target.periapse() ||
-						current_e.periapse() < target.periapse());
-
-				transfer(current_p, current_e, target, outward_journey);
+				transfer(current_p, current_e, target, true);
 			}
 			System.out.printf("%6.0f %6.0f %6.0f (%s) \n", dv1, dv2, t, type);
 		}

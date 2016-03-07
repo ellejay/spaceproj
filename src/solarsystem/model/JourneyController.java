@@ -732,7 +732,7 @@ public class JourneyController extends SuperController implements Initializable 
         routeOrbit.clear();
         SCREEN_SCALE = 0.045;
 
-        root = FXMLLoader.load(getClass().getResource("../resources/xml/pathselect.fxml"));
+        root = FXMLLoader.load(getClass().getResource("/solarsystem/resources/xml/pathselect.fxml"));
         Scene scene = new Scene(root);
 
         stage.setScene(scene);
@@ -751,7 +751,7 @@ public class JourneyController extends SuperController implements Initializable 
         routePlanets.clear();
         routeOrbit.clear();
 
-        root = FXMLLoader.load(getClass().getResource("../resources/xml/system.fxml"));
+        root = FXMLLoader.load(getClass().getResource("/solarsystem/resources/xml/system.fxml"));
         Scene scene = new Scene(root);
 
         stage.setScene(scene);
