@@ -107,6 +107,29 @@ public class JourneyController extends SuperController implements Initializable 
         route.getStyleClass().add("planet-orbit-path");
         final Calculator calc = new Calculator(SpaceObjects.getBody(routePlanets.get(0)));
 
+        final double focusWidth = sourcePane.getPrefWidth() / 2;
+        System.out.println(focusWidth);
+        final Circle planetFocus = new Circle(focusWidth, focusWidth, 6);
+
+        final Spaceship falcon = new Spaceship();
+        falcon.setCenterPoint(planetFocus.getCenterX(), planetFocus.getCenterY());
+        falcon.setRadius(0, 0);
+
+        double maxOrbit = Double.MIN_VALUE;
+        for (double[] orbit : routeOrbit) {
+            for (double val : orbit) {
+                if (val > maxOrbit) {
+                    maxOrbit = val;
+                }
+            }
+        }
+
+        focusScale = (focusWidth - 4) / maxOrbit;
+
+        Line entryLine = new Line(195, 0, 195, 200);
+        entryLine.setStroke(Color.TRANSPARENT);
+        entryLine.setStrokeWidth(1);
+
         EventHandler<ActionEvent> spaceshipMove = new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -390,47 +413,49 @@ public class JourneyController extends SuperController implements Initializable 
                                 nextPhase();
                             }
                         } else {
-                            BodyInSpace childPlanet;
-                            double angleCovered = 0;
-                            if (startPlanet.isChild(endPlanet)) {
-                                childPlanet = startPlanet;
+
+                            if (Math.abs(Math.toDegrees(falcon.getAngle()) - 90) < 1) {
+                                BodyInSpace childPlanet;
+                                double angleCovered = 0;
+                                if (startPlanet.isChild(endPlanet)) {
+                                    childPlanet = startPlanet;
+                                } else {
+                                    childPlanet = endPlanet;
+                                    double transferTime = (calc.getTime() / 86400);
+                                    angleCovered = Math.toRadians(childPlanet.getAngularV() * transferTime);
+                                }
+
+
+                                System.out.println("COVER: " + angleCovered);
+
+                                endAngle = childPlanet.getAngle() + angleCovered;
+                                while (endAngle < 0) {
+                                    endAngle += 2 * Math.PI;
+                                }
+
+                                startAngle = endAngle - Math.PI;
+                                if (startAngle < 0) {
+                                    startAngle += 2 * Math.PI;
+                                }
+
+                                System.out.println("STARTS AT: " + childPlanet.getAngle());
+
+                                drawAngle = endAngle;
+                                if (movement == -1 || childPlanet.equals(startPlanet)) {
+                                    double temp = startAngle;
+                                    startAngle = endAngle;
+                                    endAngle = temp;
+                                }
+
+                                transAngle = childPlanet.getAngle() + (childPlanet.getAngularV() * (calc.getTime() / 24 / 60 / 60));
+
+                                if (transAngle < 0) {
+                                    transAngle += 2 * Math.PI;
+                                }
+
+                                nextPhase();
+
                             }
-                            else {
-                                childPlanet = endPlanet;
-                                double transferTime = (calc.getTime() / 86400);
-                                angleCovered = Math.toRadians(childPlanet.getAngularV() * transferTime);
-                            }
-
-
-                            System.out.println("COVER: " + angleCovered);
-
-                            endAngle = childPlanet.getAngle() + angleCovered;
-                            while (endAngle < 0) {
-                                endAngle += 2 * Math.PI;
-                            }
-
-                            startAngle = endAngle - Math.PI;
-                            if (startAngle < 0) {
-                                startAngle += 2 * Math.PI;
-                            }
-
-                            System.out.println("STARTS AT: " + childPlanet.getAngle());
-
-                            drawAngle = endAngle;
-                            if (movement == -1 || childPlanet.equals(startPlanet)) {
-                                double temp = startAngle;
-                                startAngle = endAngle;
-                                endAngle = temp;
-                            }
-
-                            transAngle = childPlanet.getAngle() + (childPlanet.getAngularV() * (calc.getTime()/24/60/60));
-
-                            if (transAngle < 0) {
-                                transAngle += 2 * Math.PI;
-                            }
-
-                            nextPhase();
-
                         }
                     }
 
@@ -463,28 +488,6 @@ public class JourneyController extends SuperController implements Initializable 
             }
         };
 
-        final double focusWidth = sourcePane.getPrefWidth() / 2;
-        System.out.println(focusWidth);
-        final Circle planetFocus = new Circle(focusWidth, focusWidth, 6);
-
-        final Spaceship falcon = new Spaceship();
-        falcon.setCenterPoint(planetFocus.getCenterX(), planetFocus.getCenterY());
-        falcon.setRadius(0, 0);
-
-        double maxOrbit = Double.MIN_VALUE;
-        for (double[] orbit : routeOrbit) {
-            for (double val : orbit) {
-                if (val > maxOrbit) {
-                    maxOrbit = val;
-                }
-            }
-        }
-
-        focusScale = (focusWidth - 4) / maxOrbit;
-
-        Line entryLine = new Line(195, 0, 195, 200);
-        entryLine.setStroke(Color.TRANSPARENT);
-        entryLine.setStrokeWidth(1);
 
         EventHandler<ActionEvent> focusMovement = new EventHandler<ActionEvent>() {
             @Override
