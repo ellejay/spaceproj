@@ -236,8 +236,16 @@ public class JourneyController extends SuperController implements Initializable 
                             distance = endPlanet.getOrbit();
                         }
 
-                        route.setRadiusX((distance) / 2 * SCREEN_SCALE);
-                        route.setRadiusY((distance) / 2 * SCREEN_SCALE);
+                        MathEllipse transferPath = new MathEllipse(currentParent.getMass(),
+                                0, distance);
+
+                        double pathWidth = transferPath.semi_minor();
+                        if (transferPath.semi_minor() == 0) {
+                            pathWidth = currentParent.getGUIObject().getRadius() * 2 / SCREEN_SCALE;
+                        }
+
+                        route.setRadiusX(pathWidth * SCREEN_SCALE);
+                        route.setRadiusY(transferPath.semi_major() * SCREEN_SCALE);
 
                         //+ (nearestPlanet.getOrbit()) * SCREEN_SCALE
                         radiusJourney = route.getRadiusY();
@@ -251,6 +259,8 @@ public class JourneyController extends SuperController implements Initializable 
 
                             journeyMoveY = enterprise.getParent().getY() - ((radiusJourney) *
                                     Math.cos(drawAngle));
+
+                            enterprise.setPathRotation(Math.toDegrees(drawAngle));
 
                         }
 
@@ -441,6 +451,9 @@ public class JourneyController extends SuperController implements Initializable 
                                 System.out.println("STARTS AT: " + childPlanet.getAngle());
 
                                 drawAngle = endAngle;
+                                startAngle = Math.PI;
+                                endAngle = 0;
+
                                 if (movement == -1 || childPlanet.equals(startPlanet)) {
                                     double temp = startAngle;
                                     startAngle = endAngle;
@@ -537,7 +550,13 @@ public class JourneyController extends SuperController implements Initializable 
 
                     falcon.setCenterPoint(focusWidth - ((transferRadius - startOrbit[0]) * focusScale),
                             focusWidth);
-                    falcon.setRadius(transferPath.semi_major() * focusScale, transferPath.semi_minor() * focusScale);
+
+                    double pathWidth = transferPath.semi_minor();
+                    if (transferPath.semi_minor() == 0) {
+                        pathWidth = planetFocus.getRadius() * 2;
+                    }
+
+                    falcon.setRadius(transferPath.semi_major() * focusScale, pathWidth * focusScale);
 
 
                     falcon.incrementAngle(1);
