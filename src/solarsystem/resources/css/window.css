@@ -75,10 +75,12 @@
     -fx-text-fill: #fff;
     -fx-highlight-text-fill: #222;
     -fx-background-color: #222;
+    -fx-font-size:12px;
 }
 
 .routeList .content {
     -fx-background-color: #222;
+    -fx-font-size:12px;
 }
 
 .completeList {
@@ -86,10 +88,12 @@
     -fx-text-fill: #fff;
     -fx-highlight-text-fill: #000;
     -fx-background-color: #000;
+    -fx-font-size:12px;
 }
 
 .completeList .content {
     -fx-background-color: #000;
+    -fx-font-size:12px;
 }
 
 .completeMsg {
