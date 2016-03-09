@@ -261,6 +261,8 @@ public class PathSelectionController extends SuperController implements Initiali
 		if (orbit.getChildren().isEmpty()) {
 			TextField text = new TextField();
 			TextField text2 = new TextField();
+			text.setPromptText("Apoapsis (km)");
+			text2.setPromptText("Periapsis (km)");
 			Button submit = new Button();
 			submit.setId("confirmButton");
 			submit.setOnAction(new EventHandler<ActionEvent>() {
