@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -42,6 +43,8 @@ public class PathSelectionController extends SuperController implements Initiali
 	private BodyInSpace currentParent = SpaceObjects.getSun();
 	private Map<String, BodyInSpace> selection = SpaceObjects.getPlanets();
 	private double scaleSave;
+
+	private final static Logger LOGGER = Logger.getLogger(PathSelectionController.class.getName());
     
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -237,7 +240,7 @@ public class PathSelectionController extends SuperController implements Initiali
 	@FXML protected void startJourney(ActionEvent event) throws IOException { 
 		
 		if (routePlanets.size() < 2) {
-			System.out.println("Your journey does not contain 2 stages - please add more and try again.");
+			LOGGER.info("Your journey does not contain 2 stages - please add more and try again.");
 		}
 		else {
 	    	Stage stage; 
@@ -285,7 +288,7 @@ public class PathSelectionController extends SuperController implements Initiali
 
 						PathSelectionController.this.orbit.getChildren().clear();
 					} catch (NumberFormatException exception) {
-						System.out.println("Non number value passed to orbit");
+						LOGGER.warning("Non number value passed to orbit");
 						apoapsisEntry.setText("Invalid");
 						periapsisEntry.setText("orbit.");
 					}
@@ -358,7 +361,7 @@ public class PathSelectionController extends SuperController implements Initiali
 	@FXML protected void removeLast() {
 		int lastItem = routePlanets.size() - 1;
 
-        System.out.println(lastItem);
+        LOGGER.info("Removing " + routePlanets.get(lastItem) + "...");
 
 		if (!(lastItem < 0))  {
 			

@@ -1,6 +1,7 @@
 package solarsystem.math;
 
 import java.util.Map;
+import java.util.logging.Logger;
 
 import solarsystem.objects.BodyInSpace;
 import solarsystem.objects.SpaceObjects;
@@ -12,6 +13,8 @@ public class Calculator {
 	private BodyInSpace current_p, new_p;
 	private MathEllipse current_e, new_e;
 	private double G = 0.6612e-10;
+
+	private final static Logger LOGGER = Logger.getLogger(Calculator.class.getName());
 	
 	private Calculator(BodyInSpace initialPlanet, MathEllipse initialOrbit){
 		this.current_p = initialPlanet;
@@ -103,14 +106,14 @@ public class Calculator {
 		{
 			if (current_e == null) // currently landed on planet
 			{
-				System.out.println("landed");
+				LOGGER.info("Landed on planet.");
 				MathEllipse e1 = new MathEllipse(current_p.getMass(), current_p.getRadius());
 				transfer(current_p, e1, target, true);
 				dv1 += e1.speed_p();
 			}
 			else if (target == null) // landing on planet surface
 			{
-				System.out.println("landing on destination");
+				LOGGER.info("Landing on destination");
 				MathEllipse e1 = new MathEllipse(p.getMass(), p.getRadius());
 				transfer(current_p, current_e, e1, false);
 				dv2 += e1.speed_p();
@@ -118,7 +121,7 @@ public class Calculator {
 			else {
 				transfer(current_p, current_e, target, true);
 			}
-			System.out.printf("%6.0f %6.0f %6.0f (%s) \n", dv1, dv2, t, type);
+			LOGGER.info(String.format("%6.0f %6.0f %6.0f (%s) \n", dv1, dv2, t, type));
 		}
 		
 		// Sibling Transfer
@@ -138,7 +141,7 @@ public class Calculator {
 		}
 		
 		else {
-			System.out.println("You cannot make this transfer");
+			LOGGER.severe("You cannot make this transfer");
 		}
 		
 		current_p = p;
@@ -190,17 +193,9 @@ public class Calculator {
 			while (ph2 < 0.0)
 				ph2 += 360.0;
 		}
-		
-		String test = "";
-		if (outward_journey) {
-			test = "ap";
-		}
-		else {
-			test = "pa";
-		}
-				
-		System.out.println(dv1 + " " + dv2 + " " + t + " (" + test + ")");
-		System.out.printf("%s-%s phase angle before %1.0f after %1.0f\n", startPlanet.getName(), endPlanet.getName(), ph1, ph2);
+
+		LOGGER.info(String.format("%s-%s phase angle before %1.0f after %1.0f\n", startPlanet.getName(),
+				endPlanet.getName(), ph1, ph2));
 	
 	}
 	
@@ -220,9 +215,6 @@ public class Calculator {
 		
 		Hyper h2 = new Hyper(child.getMass(), childOrbit.periapse(), dv2);
 		dv2 = h2.speed_p() - childOrbit.speed_p();
-		
-		System.out.println(dv1 + " " + dv2 + " " + t);
-		
 	}
 
 	private void transfer(BodyInSpace p, MathEllipse current, MathEllipse target, boolean outward_journey) {
