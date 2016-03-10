@@ -10,7 +10,7 @@ class Hyper {
 	private final double mass;
 	private final double periapse;
 	private final double a;
-	private final double GRAVATATIONAL_C = 0.6612e-10;
+	private final double GRAVITATIONAL_C = 0.6612e-10;
 
 	/**
 	 * Constructor to make a hyperbola with the specified mass, periapse and speed at this point
@@ -21,7 +21,7 @@ class Hyper {
 	public Hyper(double mass, double periapse, double speed) {
 		this.mass = mass;
 		this.periapse = periapse;
-		a = (GRAVATATIONAL_C * this.mass) / (speed * speed);
+		a = (GRAVITATIONAL_C * this.mass) / (speed * speed);
 	}
 
 	/**
@@ -37,7 +37,7 @@ class Hyper {
 	 * @return speed in m/s
      */
 	public double speed_p() {
-		return Math.sqrt(GRAVATATIONAL_C * mass * (2.0 / periapse + 1.0 / a));
+		return Math.sqrt(GRAVITATIONAL_C * mass * (2.0 / periapse + 1.0 / a));
 	}
 
 	/**
@@ -45,7 +45,7 @@ class Hyper {
 	 * @return speed in m/s
      */
 	public double speed_i() {
-		return Math.sqrt((GRAVATATIONAL_C * mass) / a);
+		return Math.sqrt((GRAVITATIONAL_C * mass) / a);
 	}
 
 }
