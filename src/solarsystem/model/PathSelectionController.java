@@ -55,14 +55,7 @@ public class PathSelectionController extends SuperController implements Initiali
 					
 					for (BodyInSpace current: selection.values()) {
 						current.adjustGUIOrbit(current.getOrbit() * SCREEN_SCALE);
-						
-						/*if ((double) new_val > 0.455) {
-							current.getGUIObject().setRadius(8);
-						}
-						else {
-							current.getGUIObject().setRadius(4);
-						}*/
-						
+
 						current.moveGUIObject(
 								(current.getParent().getX() + 
 								(current.getOrbit() * SCREEN_SCALE) * 
@@ -125,12 +118,14 @@ public class PathSelectionController extends SuperController implements Initiali
 			final ContextMenu contextFileMenu = new ContextMenu(orbitItem, landItem);
 
 			@Override
-			public void handle(MouseEvent event) {	
-				//final double[] landed = {0, 0};
+			public void handle(MouseEvent event) {
 				boolean planetFound = false;
 
+				// Display the orbit entry dialog by bringing it to the front of the stack
 				inputPane.toFront();
 
+				/* If the orbit entry dialog is going to display outside of the window, move it so that it is
+				 * completely within the window. */
                 double xShift = event.getSceneX();
                 if (event.getSceneX() + 250 > 750) {
                     xShift = 500;
@@ -143,6 +138,8 @@ public class PathSelectionController extends SuperController implements Initiali
                 }
 				inputPane.setTranslateY(yShift);
 
+				/* If the current target is an object corresponding to a dialog, set the name of the planet
+				 * in the dialog and disable buttons as required. */
 				for (BodyInSpace current: selection.values()) {
 					if (event.getTarget().equals(current.getGUIObject())){
 						final String name = current.getName();
@@ -207,7 +204,7 @@ public class PathSelectionController extends SuperController implements Initiali
 						landControl.setDisable(true);
 						orbitControl.setDisable(true);
 					}
-				// When selecting start point
+				// When choosing the starting point of a journey, allow land only
 				} catch (ArrayIndexOutOfBoundsException e) {
                     landControl.setDisable(false);
 					orbitControl.setDisable(true);
@@ -240,11 +237,9 @@ public class PathSelectionController extends SuperController implements Initiali
 	@FXML protected void startJourney(ActionEvent event) throws IOException { 
 		
 		if (routePlanets.size() < 2) {
-			
+			System.out.println("Your journey does not contain 2 stages - please add more and try again.");
 		}
-		
 		else {
-			
 	    	Stage stage; 
 	    	Parent root;
 	    	stage=(Stage) startButton.getScene().getWindow();
@@ -259,46 +254,45 @@ public class PathSelectionController extends SuperController implements Initiali
 	
 	@FXML protected void displayOrbit() {
 		if (orbit.getChildren().isEmpty()) {
-			TextField text = new TextField();
-			TextField text2 = new TextField();
-			text.setPromptText("Apoapsis (km)");
-			text2.setPromptText("Periapsis (km)");
+			TextField apoapsisEntry = new TextField();
+			TextField periapsisEntry = new TextField();
+			apoapsisEntry.setPromptText("Apoapsis (km)");
+			periapsisEntry.setPromptText("Periapsis (km)");
 			Button submit = new Button();
 			submit.setId("confirmButton");
 			submit.setOnAction(new EventHandler<ActionEvent>() {
 			    @Override public void handle(ActionEvent e) {
 					String planet = planetName.getText();
 			        try {
-
-						double first = Double.parseDouble(text.getText());
-						double second = Double.parseDouble(text2.getText());
-						double pass[] = new double[2];
-						if (first > second) {
-							pass[0] = first;
-							pass[1] = second;
+						double apoapsis = Double.parseDouble(apoapsisEntry.getText());
+						double periapsis = Double.parseDouble(periapsisEntry.getText());
+						double orbit[] = new double[2];
+						if (apoapsis > periapsis) {
+							orbit[0] = apoapsis;
+							orbit[1] = periapsis;
 						} else {
-							pass[0] = second;
-							pass[1] = first;
+							orbit[0] = periapsis;
+							orbit[1] = apoapsis;
 						}
-						routeOrbit.add(pass);
+						routeOrbit.add(orbit);
 
 						routePlanets.add(planet);
 
-						routeList.setText(routeList.getText() + " " + planet + " Orbit\r\n\t" + pass[0] + " " +
-								pass[1] + "\r\n");
+						routeList.setText(routeList.getText() + " " + planet + " Orbit\r\n\t" + orbit[0] + " " +
+								orbit[1] + "\r\n");
 						markForRoute(planet);
 						disableButtons(planet);
 
-						orbit.getChildren().clear();
+						PathSelectionController.this.orbit.getChildren().clear();
 					} catch (NumberFormatException exception) {
 						System.out.println("Non number value passed to orbit");
-						text.setText("Invalid");
-						text2.setText("orbit.");
+						apoapsisEntry.setText("Invalid");
+						periapsisEntry.setText("orbit.");
 					}
 			    }
 			});
-			orbit.getChildren().add(text);
-			orbit.getChildren().add(text2);
+			orbit.getChildren().add(apoapsisEntry);
+			orbit.getChildren().add(periapsisEntry);
 			orbit.getChildren().add(submit);
 		}
 	}
@@ -372,8 +366,7 @@ public class PathSelectionController extends SuperController implements Initiali
 			
 			routePlanets.remove(lastItem);
 			routeOrbit.remove(lastItem);
-			
-			//double[] landed = {0,0};
+
 			StringBuilder newRouteList = new StringBuilder();
 			for (int i = 0; i < routePlanets.size(); i++) {
 				newRouteList.append(routePlanets.get(i) + " ");
