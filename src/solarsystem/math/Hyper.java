@@ -1,5 +1,9 @@
 package solarsystem.math;
 
+/**
+ * Class used to calculate information about a hyperbolic path in
+ *
+ */
 class Hyper {
 	
 	private final double m;

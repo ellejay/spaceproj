@@ -1,72 +1,126 @@
 package solarsystem.math;
 
+/**
+ * Class used to keep information about an elliptical orbit around a given mass
+ * for mathematical calculations.
+ *
+ * @author Laura McGhie
+ */
 public class MathEllipse {
 
-	private final double m; //mass
-	private final double a; // semimajor axis
-	private final double e; // eccentricity
+	private final double mass;
+	private final double semimajorAxis;
+	private final double eccentricity;
+	private static double GRAVITATIONAL_C = 0.6612e-10;
 
+	/**
+	 * Constructor to create an Ellipse with the given apoapse and periapse measurements,
+	 * and the provided centre mass
+	 * @param mass given in kg
+	 * @param periapse closest distance to the centre mass on the orbit in m
+	 * @param apoapse furthest distance from the centre mass on the orbit in m
+     */
 	public MathEllipse(double mass, double periapse, double apoapse) {
-		m = mass;
-		a = 0.5 * (periapse + apoapse);
-		e = Math.abs(apoapse - periapse) / (2.0 * a);
+		this.mass = mass;
+		semimajorAxis = 0.5 * (periapse + apoapse);
+		eccentricity = Math.abs(apoapse - periapse) / (2 * semimajorAxis);
 	}
-	
-	//Establish a circle ellipse with a given radius & mass
+
+	/**
+	 * Constructor to create a circular Ellipse with the given centre mass
+	 * @param mass given in kg
+	 * @param radius given in m
+     */
 	public MathEllipse (double mass, double radius) 
 	{
-		m = mass;
-		a = radius;
-		e = 0.0;
+		this.mass = mass;
+		semimajorAxis = radius;
+
+		// A circle by definition has an eccentricity of 0
+		eccentricity = 0.0;
 	}
 
+
+	/**
+	 * Get a string with all the data about this ellipse
+	 * @return data string
+     */
 	public String getEllipseData() {
 		String s;
 		s =  periapse() + " " + apoapse() + " " + period() + " " +  escape();
-		s += " " + e + " " + semi_major() + " " + semi_minor();
+		s += " " + eccentricity + " " + semiMajor() + " " + semiMinor();
 		return s;
 	}
-	
-	public double semi_minor() {
-		return a * Math.sqrt(1 - (e * e));
+
+	/**
+	 * Return the semi-minor axis of the given ellipse
+	 * @return semi-minor axis in m
+     */
+	public double semiMinor() {
+		return semimajorAxis * Math.sqrt(1 - (eccentricity * eccentricity));
 	}
 
-	public double semi_major() {
-		return a;
+	/**
+	 * Return the semi-major axis of the given ellipse
+	 * @return semi-major axis in m
+     */
+	public double semiMajor() {
+		return semimajorAxis;
 	}
-	
+
+	/**
+	 * Return the periapsis of the ellipse, or the closest radial distance around the elliptical path
+	 * @return periapse distance in m
+     */
 	public double periapse() {
-		return a * (1.0 - e);
+		return semimajorAxis * (1.0 - eccentricity);
 	}
 
+	/**
+	 * Return the apoapsis of the ellipse, or the furthest radial distance around the elliptical path
+	 * @return apoapsis distance in m
+     */
 	public double apoapse() {
-		return a * (1.0 + e);
+		return semimajorAxis * (1.0 + eccentricity);
 	}
 
+	/**
+	 * Return the period of this ellipse
+	 * @return period
+     */
 	public double period() {
-		double G = 0.6612e-10;
-		return 2.0 * Math.PI * Math.sqrt((a*a*a) / (G * m));
+		return 2.0 * Math.PI * Math.sqrt((semimajorAxis * semimajorAxis * semimajorAxis) / (GRAVITATIONAL_C * mass));
 	}
 
+
+	/**
+	 * Return the escape velocity of this orbital ellipse
+	 * @return escape velocity in m/s
+     */
 	private double escape() {
-		double G = 0.6612e-10;
-		return Math.sqrt((2.0 * G * m) / periapse()) - speed_p();
-		// double va = Math.sqrt((2.0 * G * m) / apoapse()) - speed_a();
+		return Math.sqrt((2.0 * GRAVITATIONAL_C * mass) / periapse()) - speed_p();
+		// double va = Math.sqrt((2.0 * GRAVITATIONAL_C * mass) / apoapse()) - speed_a();
 		// periapse -- min printf ("At periapse %6.0f, At apoapse %6.0f\n", vp, va);
 		// return vp;
 	}
 
+	/**
+	 * Get the speed of an object at the periapsis of the ellipse, or the closest point from the centre of mass
+	 * @return speed in m/s
+     */
 	public double speed_p()
 	{
-		double G = 0.6612e-10;
-		double H = Math.sqrt(G * m * a * (1.0 - e*e));
+		double H = Math.sqrt(GRAVITATIONAL_C * mass * semimajorAxis * (1.0 - eccentricity * eccentricity));
 		return H / periapse();
 	}
 
+	/**
+	 * Get the speed of an object at the apoapsis of the ellipse, or the furthest point from the centre of mass
+	 * @return speed in m/s
+     */
 	public double speed_a()
 	{
-		double G = 0.6612e-10;
-		double H = Math.sqrt(G * m * a * (1.0 - e*e));
+		double H = Math.sqrt(GRAVITATIONAL_C * mass * semimajorAxis * (1.0 - eccentricity * eccentricity));
 		return H / apoapse();
 	}
 

@@ -1,5 +1,6 @@
 package solarsystem.objects;
 
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
 
 /**
@@ -10,7 +11,7 @@ import javafx.scene.shape.Ellipse;
  */
 public class Spaceship {
 	
-	private final Ellipse gui_object;
+	private final Circle gui_object;
 	private final Ellipse gui_trail;
 	private double angle;
 	private double radius_x;
@@ -39,7 +40,7 @@ public class Spaceship {
 
 		/* Create an object to represent the spacecraft itself, add at origin point of
 		* canvas (top left) for calculation purposes and use the spacecraft css style to colour this. */
-		this.gui_object = new Ellipse(0, 0, 3, 5);
+		this.gui_object = new Circle(0, 0, 4);
 		this.gui_object.getStyleClass().add("spacecraft");
 
 		/* Establish GUI object for the orbit path of the spacecraft, centred at the
@@ -61,7 +62,7 @@ public class Spaceship {
 	 * Get the GUI object which represents the spacecraft itself
 	 * @return Ellipse representing spacecraft
      */
-	public Ellipse getGUIShip() { return this.gui_object; }
+	public Circle getGUIShip() { return this.gui_object; }
 
 	/**
 	 * Set the rotational period of the spacecraft to the provided parameter

@@ -19,7 +19,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
@@ -28,7 +27,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -203,8 +201,8 @@ public class JourneyController extends SuperController implements Initializable 
                         MathEllipse transferPath = new MathEllipse(currentParent.getMass(),
                                 nearestPlanet.getOrbit(), furthestPlanet.getOrbit());
 
-                        route.setRadiusX(transferPath.semi_minor() * SCREEN_SCALE);
-                        route.setRadiusY(transferPath.semi_major() * SCREEN_SCALE);
+                        route.setRadiusX(transferPath.semiMinor() * SCREEN_SCALE);
+                        route.setRadiusY(transferPath.semiMajor() * SCREEN_SCALE);
 
 
                         radiusJourney = route.getRadiusY() - (endPlanet.getOrbit()) * SCREEN_SCALE;
@@ -241,13 +239,13 @@ public class JourneyController extends SuperController implements Initializable 
                         MathEllipse transferPath = new MathEllipse(currentParent.getMass(),
                                 0, distance);
 
-                        double pathWidth = transferPath.semi_minor();
-                        if (transferPath.semi_minor() == 0) {
+                        double pathWidth = transferPath.semiMinor();
+                        if (transferPath.semiMinor() == 0) {
                             pathWidth = currentParent.getGUIObject().getRadius() * 2 / SCREEN_SCALE;
                         }
 
                         route.setRadiusX(pathWidth * SCREEN_SCALE);
-                        route.setRadiusY(transferPath.semi_major() * SCREEN_SCALE);
+                        route.setRadiusY(transferPath.semiMajor() * SCREEN_SCALE);
 
                         //+ (nearestPlanet.getOrbit()) * SCREEN_SCALE
                         radiusJourney = route.getRadiusY();
@@ -542,12 +540,12 @@ public class JourneyController extends SuperController implements Initializable 
                     falcon.setCenterPoint(focusWidth - ((transferRadius - startOrbit[0]) * focusScale),
                             focusWidth);
 
-                    double pathWidth = transferPath.semi_minor();
-                    if (transferPath.semi_minor() == 0) {
+                    double pathWidth = transferPath.semiMinor();
+                    if (transferPath.semiMinor() == 0) {
                         pathWidth = planetFocus.getRadius() * 2;
                     }
 
-                    falcon.setRadius(transferPath.semi_major() * focusScale, pathWidth * focusScale);
+                    falcon.setRadius(transferPath.semiMajor() * focusScale, pathWidth * focusScale);
 
 
                     falcon.incrementAngle(1);
@@ -603,7 +601,7 @@ public class JourneyController extends SuperController implements Initializable 
 
                             planetFocus.getStyleClass().add("body-" + phaseEnd);
 
-                            falcon.setRadius(orbit.semi_major() * focusScale, orbit.semi_minor() * focusScale);
+                            falcon.setRadius(orbit.semiMajor() * focusScale, orbit.semiMinor() * focusScale);
 
                             falcon.setCenterPoint(focusWidth + (offset * focusScale), focusWidth);
 
@@ -632,7 +630,7 @@ public class JourneyController extends SuperController implements Initializable 
 
                         double offset = (startOrbit[0] - startOrbit[1]) / 2;
 
-                        falcon.setRadius(orbit.semi_major() * focusScale, orbit.semi_minor() * focusScale);
+                        falcon.setRadius(orbit.semiMajor() * focusScale, orbit.semiMinor() * focusScale);
 
                         falcon.setCenterPoint(focusWidth + (offset * focusScale), focusWidth);
 

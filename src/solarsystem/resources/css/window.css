@@ -121,13 +121,6 @@
     -fx-border-width: 0px 0px 3px 3px;
 }
 
-.destPane {
-    -fx-background-image: url("../img/stars.jpg");
-    -fx-background-size: contain;
-    -fx-border-color: #222;
-    -fx-border-width: 0px 0px 3px 3px;
-}
-
 .journeyDialog {
 	-fx-background-image: url("../img/stars.jpg");
     -fx-background-size: contain;
