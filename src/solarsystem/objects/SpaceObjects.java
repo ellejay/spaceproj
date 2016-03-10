@@ -4,14 +4,23 @@ import java.util.*;
 
 public class SpaceObjects {
 
+	/**
+	 * Static class to hold all the bodies displayed in the tool
+	 */
+
+	// Use default screen scale to establish the objects
 	private static final double SCREEN_SCALE = 0.7075;
 
+	// Create an object for the center of the entire system - in this case the Sun
 	private static final BodyInSpace sun;
 
+	// Map to hold all of the planets
 	private static final Map<String, BodyInSpace> planetsList = new HashMap<>();
 
+	// Map to hold all of the display scales for planets which can be focused on
 	private static final Map<String, List<Double>> planetScales = new HashMap<>();
 
+	// Maps to hold all of the child bodies (moons and satellites) of planets in the system
 	private static final Map<String, BodyInSpace> earthChild = new HashMap<>();
 	private static final Map<String, BodyInSpace> marsChild = new HashMap<>();
 	private static final Map<String, BodyInSpace> jupiterChild = new HashMap<>();
@@ -21,6 +30,7 @@ public class SpaceObjects {
 	private static final Map<String, BodyInSpace> plutoChild = new HashMap<>();
 
 	static {
+		// Establish the display scales for the focus on these planets
 		planetScales.put("Sun", new LinkedList<>(Arrays.asList(0.045, 1.25)));
 		planetScales.put("Earth", new LinkedList<>(Arrays.asList(450.0, 450.0)));
 		planetScales.put("Mars", new LinkedList<>(Arrays.asList(1e4, 1e4)));
@@ -30,6 +40,7 @@ public class SpaceObjects {
 		planetScales.put("Neptune", new LinkedList<>(Arrays.asList(8e2, 5e3)));
 		planetScales.put("Pluto", new LinkedList<>(Arrays.asList(1e4, 1e4)));
 
+		// Add the sun
 		sun = new BodyInSpace("Sun", 1392530, 1.9891e30, 0.0, 0.0, 0.0, null, SCREEN_SCALE);
 
 		planetsList.put("Mercury", new BodyInSpace("Mercury", 4879, 3.302e23, 57.92e6, 58.65, 5.2, sun, SCREEN_SCALE));

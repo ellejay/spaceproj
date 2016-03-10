@@ -11,17 +11,17 @@ import javafx.scene.shape.Circle;
 
 public class BodyInSpace {
 	
-	private final String name; // body name
-	private final double diameter; // diameter of body in
-	private final double mass; // mass of body in
-	private Circle gui_object; // GUI object to represent body
-	private double pos_x; // current position of GUI body
-	private double pos_y; // current position of GUI body
-	private final double orbit; // radius of orbit from body's parent in km
-	private final double period; // time taken for one full rotation around body orbit in days
-	private double angle; // current angle of body around circle, measured from vertical in radians
-	private final Circle gui_orbit; // GUI object for the orbit path
-	private final BodyInSpace center; // parent object of body (eg. sun to the earth)
+	private final String name;
+	private final double diameter;
+	private final double mass;
+	private Circle gui_object;
+	private double pos_x;
+	private double pos_y;
+	private final double orbit;
+	private final double period;
+	private double angle;
+	private final Circle gui_orbit;
+	private final BodyInSpace center;
 	
 	/**
 	 * Constructor method to create planet given all required data.
@@ -29,7 +29,7 @@ public class BodyInSpace {
 	 * @param name Name of the body created
 	 * @param diameter Diameter of the body in km
 	 * @param mass Mass of the body in kg
-	 * @param orbit Radius of the orbital distance from the Body's parent in km
+	 * @param orbit Distance from the Body's parent in km
 	 * @param period Number of days body takes to complete one full orbit
 	 * @param angle Current angle of the body along its orbital path
 	 * @param center Parent object of the body
@@ -53,9 +53,7 @@ public class BodyInSpace {
 		
 		/* Establish GUI object for the orbit of the planet, centred at the
 		 * the middle of the window. Add style class so only border of the 
-		 * object is displayed on screen.
-		 * 
-		 */
+		 * object is displayed on screen. */
 		this.gui_orbit = new Circle(295, 295, orbit/1e6 * orbit_scale);
 		this.gui_orbit.getStyleClass().add("planet-orbit-path");
 	}
@@ -249,27 +247,27 @@ public class BodyInSpace {
 	}
 
 	/**
-	 *
-	 * @param other
-	 * @return
+	 * Check if the current body shares a parent with the parameter body, thus is a sibling
+	 * @param other - BodyInSpace to compare this one to
+	 * @return boolean to indicate if body is sibling of the parameter body
      */
 	public boolean isSibling(BodyInSpace other) {
 		return this.getParent().equals(other.getParent());
 	}
 
 	/**
-	 *
-	 * @param other
-	 * @return
+	 * Check if the current body is the child of the parameter body
+	 * @param other - BodyInSpace to compare this one to
+	 * @return boolean to indicate if body is child of the parameter body
      */
 	public boolean isChild(BodyInSpace other) {
 		return this.getParent().equals(other);
 	}
 
 	/**
-	 *
-	 * @param other
-	 * @return
+	 * Check if the current body is the parent of the parameter body
+	 * @param other - BodyInSpace to compare this one to
+	 * @return boolean to indicate if body is parent of the parameter body
      */
 	public boolean isParent(BodyInSpace other) {
 		return other.getParent().equals(this);

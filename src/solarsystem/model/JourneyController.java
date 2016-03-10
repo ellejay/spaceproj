@@ -349,7 +349,7 @@ public class JourneyController extends SuperController implements Initializable 
                         newStep = false;
 
                         routeStage.setText(startPlanet.getName() + " Orbit");
-                        routeData.setText("Apoapsis = " + startOrbit[0] + "m\nPeriapsis = " + startOrbit[1] + "m");
+                        routeData.setText("Apoapsis = " + startOrbit[0] + "km\nPeriapsis = " + startOrbit[1] + "km");
 
                         if (movement == -1) {
                             enterprise.setAngle(3.14);
