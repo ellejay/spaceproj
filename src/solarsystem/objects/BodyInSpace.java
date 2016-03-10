@@ -82,6 +82,7 @@ public class BodyInSpace {
 	 * Increment the current angle of the body by a number of degrees.
 	 * This number is calculated from the period of the object so that
 	 * speeds of planet objects are relative in the GUI animation.
+	 * @param factor - the distance to move the planet in this increment
 	 */
 	public void incrementAngle(double factor) {
 		//
@@ -124,14 +125,6 @@ public class BodyInSpace {
 	 */
 	public String getName() {
 		return this.name;
-	}
-	
-	/**
-	 * Get diameter of body
-	 * @return diameter of body
-	 */
-	public double getDiameter() {
-		return this.diameter;
 	}
 	
 	/**

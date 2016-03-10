@@ -2,11 +2,13 @@ package solarsystem.objects;
 
 import java.util.*;
 
-public class SpaceObjects {
+/**
+ * Static class to hold all the bodies displayed in the tool
+ *
+ * @author 2028023m
+ */
 
-	/**
-	 * Static class to hold all the bodies displayed in the tool
-	 */
+public class SpaceObjects {
 
 	// Use default screen scale to establish the objects
 	private static final double SCREEN_SCALE = 0.7075;
@@ -117,7 +119,7 @@ public class SpaceObjects {
 
 	/**
 	 * Returns a map of all planets in the solar system
-	 * @return
+	 * @return Map of all planets
      */
 	public static Map<String, BodyInSpace> getPlanets() {
 		return planetsList;
