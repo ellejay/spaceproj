@@ -5,8 +5,8 @@ import javafx.scene.shape.Circle;
 /**
  * BodyInSpace class used to represent a planet or moon and all associated properties
  * for both calculation and GUI purposes.
- * 
- * @author 2028023m
+ *
+ * @author Laura McGhie
  */
 
 public class BodyInSpace {

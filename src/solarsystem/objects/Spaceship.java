@@ -6,7 +6,7 @@ import javafx.scene.shape.Ellipse;
  * Spaceship class used to represent a spacecraft and all associated properties
  * for GUI display purposes.
  *
- * @author 2028023m
+ * @author Laura McGhie
  */
 public class Spaceship {
 	

@@ -5,7 +5,7 @@ import java.util.*;
 /**
  * Static class to hold all the bodies displayed in the tool
  *
- * @author 2028023m
+ * @author Laura McGhie
  */
 
 public class SpaceObjects {
