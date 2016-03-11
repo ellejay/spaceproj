@@ -48,6 +48,8 @@ public class SolarSystemController extends SuperController implements Initializa
 
 		// Initialise the slider to the screen scale value
 		zoomSlide.setValue(SCREEN_SCALE);
+		zoomSlide.setMin(SpaceObjects.getScale("Sun").get(0));
+		zoomSlide.setMax(SpaceObjects.getScale("Sun").get(1));
 
 		/* Give control of the screen scale to the displayed slider, and adjust the orbits if the slider is moved */
 		zoomSlide.valueProperty().addListener(new ChangeListener<Number>() {
