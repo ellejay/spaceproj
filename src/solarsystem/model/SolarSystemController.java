@@ -46,7 +46,7 @@ public class SolarSystemController extends SuperController implements Initializa
 
 		setUpPlanets();
 
-		// Initialise the slider to the screen scale value
+		// Initialise the slider to the Sun scale values
 		zoomSlide.setValue(SCREEN_SCALE);
 		zoomSlide.setMin(SpaceObjects.getScale("Sun").get(0));
 		zoomSlide.setMax(SpaceObjects.getScale("Sun").get(1));

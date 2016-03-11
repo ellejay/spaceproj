@@ -39,17 +39,16 @@
                     <TextArea fx:id="routeList" styleClass="routeList" text=""
                               prefWidth="120" maxHeight="500" wrapText="true" editable="false"/>
 
-                    <Slider fx:id="zoomSlide" orientation="VERTICAL" min="0.045" max="1.25" value="0.045"
-                            prefHeight="510"/>
+                    <Slider fx:id="zoomSlide" orientation="VERTICAL" prefHeight="510"/>
                 </HBox>
 
                 <Button fx:id="startButton" onAction="#startJourney" text="Start Journey"/>
 
                 <HBox spacing="5" alignment="CENTER">
 
-                    <Button fx:id="centerButton" onAction="#centerPlanets"/>
+                    <Button styleClass="centerButton" onAction="#centerPlanets"/>
 
-                    <Button fx:id="undoButton" onAction="#removeLast"/>
+                    <Button styleClass="undoButton" onAction="#removeLast"/>
 
                     <Button fx:id="unfocusFrame" onAction="#focusOnSun"/>
                 </HBox>
