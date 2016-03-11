@@ -22,10 +22,11 @@
 
       <HBox spacing="10" alignment="CENTER">
           <Button onAction="#slowMovement" fx:id="slowButton"/>
+          <Button onAction="#resetMovement" fx:id="resetButton"/>
           <Button onAction="#speedUpMovement" fx:id="speedButton"/>
       </HBox>
 
-      <Button fx:id="switchScene" onAction="#stopTimeline" text="Map Journey"/>
+      <Button fx:id="switchScene" onAction="#mapJourney" text="Map Journey"/>
   </VBox>
 
   </right>

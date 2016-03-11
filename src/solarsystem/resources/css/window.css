@@ -59,6 +59,13 @@
     -fx-background-position:center;
 }
 
+#resetButton {
+    -fx-background-image: url("../img/play.png");
+    -fx-background-size: 14 14;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position:center;
+}
+
 #confirmButton {
     -fx-background-image: url("../img/ok.png");
     -fx-background-size: 13 13;
