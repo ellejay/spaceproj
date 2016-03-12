@@ -50,20 +50,28 @@ public class JourneyController extends SuperController implements Initializable 
     @FXML private TextArea journeyInfo;
     @FXML private Button speedButton;
     @FXML private Button slowButton;
+
     private Timeline timeline;
+
+    // Track the current step in the animation and whether or not this has been set up on the display
     private int steps = 0;
-    private boolean newStep = true;
+    private boolean newStepMain = true, newStepFocus = true;
+
     private boolean transferWindow = false;
     private double startAngle, endAngle, transAngle, drawAngle;
-    private final StringBuilder completeJourneyData = new StringBuilder();
-    private double totalJourneyTime;
+
     private double orbitsSearch;
     private double focusScale;
-    private double incOut = 100;
-    private double incIn = 200;
+    private double yPositionOut = 100;
+    private double yPositionIn = 200;
     private double transOrb1, transOrb2;
-    private boolean orbitTrans, newMove, transferComplete;
-    private double lineIn;
+    private boolean transferringOrbits, newMove, transferComplete;
+
+    // Store data about the journey taken as a whole
+    private final StringBuilder completeJourneyData = new StringBuilder();
+    private double totalJourneyTime;
+
+    // Store the displayed parent and its children
     private BodyInSpace currentParent = SpaceObjects.getSun();
     private Map<String, BodyInSpace> childBodies = SpaceObjects.getPlanets();
 
@@ -88,7 +96,7 @@ public class JourneyController extends SuperController implements Initializable 
         final Circle planetFocus = new Circle(sourcePane.getPrefWidth() / 2, sourcePane.getPrefHeight() / 2, 5);
 
         /* Event handler to move the planets around their orbits. For each planet shown on the screen, we
-		 * increment their current angle by the speed factor, work out the x and y co-ords on their orbit circle
+		 * increment their current angle by the speed factor, work out the x and y co-ordinates on their orbit circle
 		 * that correspond to this angle, and then move the planet to this location. */
         EventHandler<ActionEvent> planetMovement = new EventHandler<ActionEvent>() {
             @Override
@@ -98,7 +106,7 @@ public class JourneyController extends SuperController implements Initializable 
                     // Increment the angle of the planet by the speed factor
                     current.incrementAngle(SPEED_FACTOR);
 
-                    /* Work out the x & y co-ords that correspond to the new angle. Multiply by the screen scale
+                    /* Work out the x & y co-ordinates that correspond to the new angle. Multiply by the screen scale
 					 * to ensure x & y apply to the current display ratio. */
                     double moveX = current.getParent().getX() + (current.getOrbit() * SCREEN_SCALE) *
                             Math.sin(current.getAngle());
@@ -148,23 +156,26 @@ public class JourneyController extends SuperController implements Initializable 
             @Override
             public void handle(ActionEvent event) {
 
+                // Intermediate step for every item in the list, so divide by two to get the planet references
                 int planetIndex = steps / 2;
-                boolean outwardMovement = true;
 
-                BodyInSpace startPlanet, endPlanet = null;
+                // Get information about the starting planet in the current journey stage
+                BodyInSpace startPlanet, endPlanet;
                 String phaseStart = routePlanets.get(planetIndex);
                 double[] startOrbit = routeOrbit.get(planetIndex);
-                String phaseEnd;
-                double[] endOrbit = null;
-
                 startPlanet = SpaceObjects.getBody(phaseStart);
 
-                try {
+                /* Attempt to get information about the destination planet in the journey stage, as long as
+                 * we are not at the end of the journey.  */
+                boolean outwardMovement = true;
+                String phaseEnd;
+                double[] endOrbit;
+                if (routePlanets.size() > planetIndex + 1) {
                     phaseEnd = routePlanets.get(planetIndex + 1);
                     endOrbit = routeOrbit.get(planetIndex + 1);
-
                     endPlanet = SpaceObjects.getBody(phaseEnd);
 
+                    // Work out the direction of movement and set the scale of the view based on the most distant planet
                     if ((startPlanet.isSibling(endPlanet) && startPlanet.getOrbit() > endPlanet.getOrbit())
                             || (startPlanet.isChild(endPlanet))) {
                         outwardMovement = false;
@@ -172,12 +183,14 @@ public class JourneyController extends SuperController implements Initializable 
                     } else {
                         setScale(285 / endPlanet.getOrbit());
                     }
-                } catch (IndexOutOfBoundsException e) {
+                } else {
                     phaseEnd = "";
+                    endOrbit = new double[]{0,0};
+                    endPlanet = startPlanet;
                 }
 
                 // Reset the currently displayed frame based on the next transition in the journey
-                if (newStep && !phaseEnd.isEmpty()) {
+                if (newStepMain && !phaseEnd.isEmpty()) {
                     if (startPlanet.isSibling(endPlanet)) {
                         changeFrame(startPlanet.getParent().getName(), enterprise);
                     } else if (startPlanet.isParent(endPlanet)) {
@@ -191,7 +204,7 @@ public class JourneyController extends SuperController implements Initializable 
                 if (steps % 2 == 1) {
 
                     // If we are on a new step, then we need to set up the spacecraft for the new path
-                    if (newStep) {
+                    if (newStepMain) {
                         // For a sibling transfer to a new body
                         if (!phaseStart.equals(phaseEnd) && startPlanet.isSibling(endPlanet)) {
 
@@ -233,6 +246,7 @@ public class JourneyController extends SuperController implements Initializable 
                              * period required so that the spacecraft will meet the destination body at the end of
                              * its orbit. */
                             enterprise.setPeriod(360 / ((furthestPlanet.getAngularV() * Math.PI) / (transAngle)));
+                            //enterprise.setPeriod(2 * (calc.getTime() / 86400));
 
                         }
                         // For a parent/child transfer
@@ -317,7 +331,7 @@ public class JourneyController extends SuperController implements Initializable 
                         totalJourneyTime += calc.getTime();
 
                         // Finished processing a new step, so indicate this in the boolean
-                        newStep = false;
+                        newStepMain = false;
 
                     } else {
                         /* Currently making a transition, so simply increment the angle of the spacecraft
@@ -338,25 +352,31 @@ public class JourneyController extends SuperController implements Initializable 
                 // Even step thus we are currently orbiting a single body
                 else {
 
-                    if (newStep) {
-                        newStep = false;
+                    // If we are on a new step, then set up the display with data about the new orbit
+                    if (newStepMain) {
 
+                        /* Set the text on the sidebar to display the name of the current planet, as well as
+                         * data regarding the current orbit. */
                         routeStage.setText(startPlanet.getName() + " Orbit");
                         routeData.setText("Apoapsis = " + startOrbit[0] + "km\nPeriapsis = " + startOrbit[1] + "km");
 
-                        if (!outwardMovement) {
-                            enterprise.setAngle(3.14);
-                        }
-
+                        /* As long as there is another planet on the journey to move to, then set up the calculator
+                         * with information about the transfer, and set a variable to indicate we are waiting for a
+                         * window to make the transfer. */
                         if (!(phaseEnd.isEmpty())) {
+
                             MathEllipse transfer = null;
                             if (!(endOrbit[0] == 0 && endOrbit[1] == 0)) {
+                                /* As long as we are not landing on the planet, convert the inputted distances
+                                 * into metres and create an ellipse */
                                 double r1 = endPlanet.getRadius() + 1.0e3 * endOrbit[0];
                                 double r2 = endPlanet.getRadius() + 1.0e3 * endOrbit[1];
 
                                 transfer = new MathEllipse(endPlanet.getMass(), r2, r1);
                             }
 
+                            /* If we are moving to a new planet then we need to search for the correct phase
+                             * angle so that the spacecraft will meet the planet. */
                             if (!startPlanet.getName().equals(endPlanet.getName())) {
                                 transferWindow = true;
                                 orbitsSearch = 0;
@@ -364,126 +384,139 @@ public class JourneyController extends SuperController implements Initializable 
                                 transferWindow = false;
                             }
 
+                            // Get the calculator to make the transfer to the new orbit
                             calc.transfer_slow(endPlanet, transfer);
-
                         }
+
+                        // Orbiting a planet, so in this view just display the spacecraft at the same point.
+                        enterprise.setRadius(0, 0);
+
+                        // Finished processing information about the stage, so set to false
+                        newStepMain = false;
                     }
 
                     if (transferWindow && !(phaseEnd.isEmpty())) {
 
                         if (startPlanet.isSibling(endPlanet)) {
 
-                            orbitsSearch++;
+                            /* For a sibling transfer, increment the counter of how long we have been searching for a
+                             * transfer window by the speed factor. This is so we can track the effective distance
+                             * travelled in this time. */
+                            orbitsSearch += SPEED_FACTOR;
 
+                            /* Work out the phase angle between the start and end planet. This should always be positive,
+                             * so add a full circle if it is negative.*/
                             double phase = Math.toDegrees(endPlanet.getAngle() - startPlanet.getAngle());
                             if (phase < 0) {
                                 phase += 360.0;
                             }
 
+                            /* If the current phase angle matches the desired phase worked out by the calculator,
+                             * then we can begin the transfer. */
                             if (Math.abs(phase - calc.getStartPhaseAngle()) < 1) {
 
+                                /* Use the orbit search counter to work out approximately how long the spacecraft
+                                 * waited to make a transfer, and then add this to the final journey data string. */
                                 double angleTravelled = orbitsSearch * Math.toRadians(startPlanet.getAngularV());
-
-                                double timeTaken = startPlanet.getPeriodAsSeconds() *
-                                        (angleTravelled / 360);
+                                double timeTaken = startPlanet.getPeriodAsSeconds() * (angleTravelled / 360);
 
                                 completeJourneyData.append(startPlanet.getName()).append("\n\t");
                                 completeJourneyData.append("Time In Orbit = ").append(timeToString(timeTaken));
 
                                 totalJourneyTime += timeTaken;
 
-                                //startAngle = startPlanet.getAngle();
+                                // Journey is always made from 0 to 180 degrees around the transfer orbit
                                 startAngle = 0;
+                                endAngle = Math.PI;
 
-                                endAngle = startPlanet.getAngle() - Math.PI;
-                                if (endAngle < 0) {
-                                    endAngle += 2 * Math.PI;
+                                /* Get the angle at which the orbit needs to be drawn on the view. Centre point
+                                 * should be directly opposite the start planet, so subject 180 degrees and increment
+                                 * to ensure the angle is positive. */
+                                drawAngle = startPlanet.getAngle() - Math.PI;
+                                if (drawAngle < 0) {
+                                    drawAngle += 2 * Math.PI;
                                 }
 
-                                drawAngle = endAngle;
-                                transAngle = endAngle - endPlanet.getAngle();
-
+                                //@TODO need to fix this
+                                transAngle = drawAngle - endPlanet.getAngle();
                                 if (transAngle < 0) {
                                     transAngle += 2 * Math.PI;
                                 }
 
-                                endAngle = Math.PI;
-
+                                /* Have all the necessary information to make the transfer, so move to the next
+                                 * phase of the journey */
                                 nextPhase();
                             }
                         } else {
-
+                            /* For parent/child transfers, wait until the focus view spacecraft has reached an angle
+                             * of 90 degrees. This ensures the animation for the focus view runs smoothly, as all
+                             * transitions from previous stages must be completed. */
                             if (Math.abs(Math.toDegrees(falcon.getAngle()) - 90) < 1) {
+
+                                /* Work out if we are going to or from a child body. If we are going to the
+                                 * child body, then work out how far the body will have moved in the time it takes for
+                                 * the spacecraft to make the transfer. */
                                 BodyInSpace childPlanet;
                                 double angleCovered = 0;
                                 if (startPlanet.isChild(endPlanet)) {
                                     childPlanet = startPlanet;
                                 } else {
                                     childPlanet = endPlanet;
+
+                                    // Get the transfer time in days and work out the angle covered in this time
                                     double transferTime = (calc.getTime() / 86400);
                                     angleCovered = Math.toRadians(childPlanet.getAngularV() * transferTime);
                                 }
 
-                                endAngle = childPlanet.getAngle() + angleCovered;
-                                while (endAngle < 0) {
-                                    endAngle += 2 * Math.PI;
+                                /* The angle at which the transfer orbit should be drawn. Accounts for the movement
+                                 * of the body and ensures the spacecraft will meet it if appropriate. */
+                                drawAngle = childPlanet.getAngle() + angleCovered;
+                                while (drawAngle < 0) {
+                                    drawAngle += 2 * Math.PI;
                                 }
 
-                                startAngle = endAngle - Math.PI;
-                                if (startAngle < 0) {
-                                    startAngle += 2 * Math.PI;
-                                }
-
-                                drawAngle = endAngle;
-                                startAngle = Math.PI;
-                                endAngle = 0;
-
+                                /* Spacecraft always moves around half of the orbit circle. Work out which half based
+                                 * on the direction of the transfer. */
                                 if (!outwardMovement || childPlanet.equals(startPlanet)) {
-                                    double temp = startAngle;
-                                    startAngle = endAngle;
-                                    endAngle = temp;
+                                    startAngle = 0;
+                                    endAngle = Math.PI;
+                                } else {
+                                    startAngle = Math.PI;
+                                    endAngle = 0;
                                 }
 
-                                transAngle = childPlanet.getAngle() + (childPlanet.getAngularV() * (calc.getTime() / 24 / 60 / 60));
-
-                                if (transAngle < 0) {
-                                    transAngle += 2 * Math.PI;
-                                }
-
+                                // We have all the information to make the transfer, so move to next stage of the journey
                                 nextPhase();
-
                             }
                         }
                     }
 
-                    enterprise.setRadius(0, 0);
-
-                    enterprise.incrementAngle(SPEED_FACTOR);
-
+                    /* Need to move the spacecraft so that it matches the body it is orbiting, so relocate
+                     * its centre point so that it mirrors the body */
                     enterprise.setCenterPoint(startPlanet.getX(), startPlanet.getY());
 
                 }
 
-                // Work out the x & y co-ords that correspond to the angle of the spacecraft around it's orbit path.
+                // Work out the x & y co-ordinates that correspond to the angle of the spacecraft around it's orbit path.
                 double moveX = enterprise.getCenterX() + (enterprise.getRadiusX()) *
                         Math.sin(enterprise.getAngle());
                 double moveY = enterprise.getCenterY() - (enterprise.getRadiusY()) *
                         Math.cos(enterprise.getAngle());
 
                 // Get the center point of the spacecraft's orbit
-                double cx = enterprise.getCenterX();
-                double cy = enterprise.getCenterY();
+                double centreX = enterprise.getCenterX();
+                double centreY = enterprise.getCenterY();
 
-                /* Rotate the x & y co-ords axis by the same number of degrees as the orbital path is rotated.
+                /* Rotate the x & y co-ordinates axis by the same number of degrees as the orbital path is rotated.
                  * Thus the spacecraft will lie on the tilted orbit */
-                double nmoveX = (moveX - cx) * Math.cos(enterprise.getPathRotation())
-                        - (moveY - cy) * Math.sin(enterprise.getPathRotation()) + cx;
+                double rotatedX = (moveX - centreX) * Math.cos(enterprise.getPathRotation())
+                        - (moveY - centreY) * Math.sin(enterprise.getPathRotation()) + centreX;
 
-                double nmoveY = (moveX - cx) * Math.sin(enterprise.getPathRotation())
-                        + (moveY - cy) * Math.cos(enterprise.getPathRotation()) + cy;
+                double rotatedY = (moveX - centreX) * Math.sin(enterprise.getPathRotation())
+                        + (moveY - centreY) * Math.cos(enterprise.getPathRotation()) + centreY;
 
                 // Move the spacecraft to the new position
-                moveBall(enterprise.getGUIShip(), nmoveX, nmoveY);
+                moveBall(enterprise.getGUIShip(), rotatedX, rotatedY);
             }
         };
 
@@ -491,166 +524,197 @@ public class JourneyController extends SuperController implements Initializable 
         EventHandler<ActionEvent> focusMovement = new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                // Intermediate step for every item in the list, so divide by two to get the planet references
                 int planetIndex = steps / 2;
-                int movement = 1;
-                double focusWidth = sourcePane.getPrefWidth() / 2;
 
-                BodyInSpace startPlanet, endPlanet;
+                // Retrieve the starting planet of this stage and style the body in the focus pane for the start point
                 String phaseStart = routePlanets.get(planetIndex);
                 double[] startOrbit = routeOrbit.get(planetIndex);
-                String phaseEnd;
-                double[] endOrbit = null;
-
-                startPlanet = SpaceObjects.getBody(phaseStart);
-
+                BodyInSpace startPlanet = SpaceObjects.getBody(phaseStart);
                 planetFocus.getStyleClass().add("body-" + phaseStart);
 
-                try {
+                // If we are not at the end of the journey, get the destination planet of this journey stage
+                String phaseEnd;
+                double[] endOrbit;
+                if (routePlanets.size() > planetIndex + 1) {
                     phaseEnd = routePlanets.get(planetIndex + 1);
                     endOrbit = routeOrbit.get(planetIndex + 1);
-
-                    endPlanet = SpaceObjects.getBody(phaseEnd);
-
-                    if (startPlanet.getOrbit() > endPlanet.getOrbit() || startPlanet.isChild(endPlanet)) {
-                        movement = -1;
-                    } else {
-                        movement = 1;
-                    }
-                } catch (IndexOutOfBoundsException e) {
+                } else {
                     phaseEnd = "";
+                    endOrbit = new double[]{0,0};
                 }
 
+                // Reference to the width of the focus panel
+                double focusWidth = sourcePane.getPrefWidth() / 2;
+                double focusHeight = sourcePane.getPrefHeight() / 2;
+
+                // If we are transferring between two different orbits of the same body
                 if (phaseStart.equals(phaseEnd) && steps % 2 == 1) {
-                    double transferRadius = 0;
-                    falcon.setParent(startPlanet);
+                    // For a new step which has not been processed
+                    if (newStepFocus) {
+                        // Set the parent of the falcon to the new body
+                        falcon.setParent(startPlanet);
 
-                    transferRadius = (endOrbit[1] + startOrbit[0]) / 2;
+                        // Work out the ellipse for the periapsis of the end orbit to the apoapsis of the start orbit
+                        MathEllipse transferPath = new MathEllipse(currentParent.getMass(), endOrbit[1], startOrbit[0]);
 
-                    MathEllipse transferPath = new MathEllipse(currentParent.getMass(),
-                            endOrbit[1], startOrbit[0]);
+                        /* If the width of the path is 0, then draw the ellipse with a fixed width corresponding to
+                         * the size of the GUI object representing the body. */
+                        double pathWidth = transferPath.semiMinor();
+                        if (transferPath.semiMinor() == 0) {
+                            pathWidth = planetFocus.getRadius() * 2;
+                        }
+                        falcon.setRadius(transferPath.semiMajor() * focusScale, pathWidth * focusScale);
 
-                    if (newStep) {
-                        startAngle = Math.PI / 2;
-                        endAngle = Math.toRadians(180);
+                        /* Set the centre point of the ellipse so that the body is at the focus of
+                         * the ellipse, not the centre. */
+                        double transferRadius = (endOrbit[1] + startOrbit[0]) / 2;
+                        falcon.setCenterPoint(focusWidth - ((transferRadius - startOrbit[0]) * focusScale), focusHeight);
+
+                        // Finished processing the new step, so set to false
+                        newStepFocus = false;
                     }
 
-
-                    falcon.setCenterPoint(focusWidth - ((transferRadius - startOrbit[0]) * focusScale),
-                            focusWidth);
-
-                    double pathWidth = transferPath.semiMinor();
-                    if (transferPath.semiMinor() == 0) {
-                        pathWidth = planetFocus.getRadius() * 2;
-                    }
-
-                    falcon.setRadius(transferPath.semiMajor() * focusScale, pathWidth * focusScale);
-
-
+                    /* Increment the angle of the spacecraft around its orbit by a constant - does not react to speed
+                     * factor changes. */
                     falcon.incrementAngle(1);
 
-                    double moveX = falcon.getCenterX() + (falcon.getRadiusX()) *
-                            Math.sin(falcon.getAngle());
+                    // Work out the new position of the spacecraft based on its new angle
+                    double moveX = falcon.getCenterX() + falcon.getRadiusX() * Math.sin(falcon.getAngle());
+                    double moveY = falcon.getCenterY() - falcon.getRadiusY() * Math.cos(falcon.getAngle());
 
-                    double moveY = falcon.getCenterY() - (falcon.getRadiusY()) *
-                            Math.cos(falcon.getAngle());
-
+                    // Move the spacecraft to its new position
                     moveBall(falcon.getGUIShip(), moveX, moveY);
 
-
+                    // When the spacecraft has reached 270 degrees, the transfer is complete, so move to the next phase
                     if (Math.abs(Math.toDegrees(falcon.getAngle()) - 270) < 1) {
                         nextPhase();
                     }
+                }
+                // If we are making a transfer between two different bodies, or currently transitioning between orbits
+                else if (steps % 2 == 1 || transferringOrbits) {
 
-
-                } else if (steps % 2 == 1 || orbitTrans && !phaseEnd.equals("")) {
-
-                    if (newStep) {
+                    /* If we have an unhandled new step, the journey is not complete, and the last transfer is
+                     * finished then update the end orbit and mark the route for transfer. */
+                    if (newStepFocus && !phaseEnd.isEmpty() && transferComplete) {
                         transferComplete = false;
                         transOrb1 = endOrbit[0];
                         transOrb2 = endOrbit[1];
                     }
 
-
-                    if (incIn < 100) {
-                        orbitTrans = false;
+                    /* If the counter for the inward motion is below the midpoint, then the transfer is complete, so
+                     * update the variables to show this, hide the transfer line and reset the counters. */
+                    if (yPositionIn < 100) {
+                        transferringOrbits = false;
                         transferComplete = true;
                         entryLine.setStroke(Color.TRANSPARENT);
-                        incIn = 200;
-                        incOut = 100;
+                        yPositionIn = 200;
+                        yPositionOut = 100;
                     }
 
-                    if (Math.abs(Math.toDegrees(falcon.getAngle()) - 90) < 1 && incOut < 205 && !transferComplete) {
+                    /* When the spacecraft reaches the 90 degrees position and there is a transfer ongoing, move the
+                     * spacecraft along the line to make it leave its current orbit. */
+                    if (Math.abs(Math.toDegrees(falcon.getAngle()) - 90) < 1 && yPositionOut < 205 && !transferComplete) {
+                        // Make the transfer line visible
                         entryLine.setStroke(Color.ORANGE);
+
+                        // Indicate we need to handle the move on re-entry and that we are currently making a transfer
                         newMove = true;
-                        orbitTrans = true;
-                        lineIn = transOrb2 * -1;
+                        transferringOrbits = true;
+
+                        // Move the line to the right edge of the starting orbit
                         entryLine.setStartX(startOrbit[0] * focusScale + focusWidth);
                         entryLine.setEndX(startOrbit[0] * focusScale + focusWidth);
-                        incOut += 0.5;
-                        moveBall(falcon.getGUIShip(), (startOrbit[0] * focusScale) + focusWidth, incOut);
 
-                    } else if (((Math.abs(Math.toDegrees(enterprise.getAngle() - endAngle)) < 10 && incIn > 100 && !transferComplete)
-                            || incIn != 200) && orbitTrans) {
+                        // Increment the spacecraft along the exit line, and move to its new position
+                        yPositionOut += 0.5;
+                        moveBall(falcon.getGUIShip(), entryLine.getStartX(), yPositionOut);
+
+                    } else if (((Math.abs(Math.toDegrees(enterprise.getAngle() - endAngle)) < 10 && yPositionIn > 100 && !transferComplete)
+                            || yPositionIn != 200) && transferringOrbits) {
                         if (newMove) {
+                            // Create an ellipse object to calculate the radii of the new orbit
                             MathEllipse orbit = new MathEllipse(startPlanet.getMass(), transOrb1, transOrb2);
-
-                            double offset = (transOrb1 - transOrb2) / 2;
-
-                            planetFocus.getStyleClass().add("body-" + phaseEnd);
-
                             falcon.setRadius(orbit.semiMajor() * focusScale, orbit.semiMinor() * focusScale);
 
-                            falcon.setCenterPoint(focusWidth + (offset * focusScale), focusWidth);
+                            /* Calculate an offset in order to place the planet at the focus of the ellipse
+                             * instead of the centre */
+                            double offset = (transOrb1 - transOrb2) / 2;
+                            falcon.setCenterPoint(focusWidth + (offset * focusScale), focusHeight);
 
+                            /* Set the angle of the spacecraft to 270 as this is the point at
+                             * which it will rejoin the orbit path */
                             falcon.setAngle(Math.toRadians(270));
 
+                            // Restyle the planet in the focus pane to match the destination
+                            planetFocus.getStyleClass().add("body-" + phaseEnd);
+
+                            // Move the line entering the new orbit to the left edge of the orbit
+                            entryLine.setStartX(transOrb2 * -1 * focusScale + focusWidth);
+                            entryLine.setEndX(transOrb2 * -1 * focusScale + focusWidth);
+
+                            // Finished processing the new orbit data, so mark this in the boolean
                             newMove = false;
                         }
-                        entryLine.setStartX(lineIn * focusScale + focusWidth);
-                        entryLine.setEndX(lineIn * focusScale + focusWidth);
-                        incIn -= 0.5;
-                        moveBall(falcon.getGUIShip(), (lineIn * focusScale) + focusWidth, incIn);
-                    } else if (!orbitTrans) {
+
+                        /* Decrement the counter to move the spacecraft up the entry line, and move the
+                         * spacecraft to the new position */
+                        yPositionIn -= 0.5;
+                        moveBall(falcon.getGUIShip(), entryLine.getStartX(), yPositionIn);
+                    }
+                    /* If we are not currently transferring between orbits, then we need to move the spacecraft
+                     * around the orbit as previously, so that it will eventually reach a transfer point. */
+                    else if (!transferringOrbits) {
+                        /* Increment the angle of the spacecraft around its orbit by a constant - does not react to speed
+                         * factor changes. */
                         falcon.incrementAngle(1);
 
-                        double moveX = falcon.getCenterX() + (falcon.getRadiusX()) *
-                                Math.sin(falcon.getAngle());
+                        // Work out the new position of the spacecraft based on its new angle
+                        double moveX = falcon.getCenterX() + falcon.getRadiusX() * Math.sin(falcon.getAngle());
+                        double moveY = falcon.getCenterY() - falcon.getRadiusY() * Math.cos(falcon.getAngle());
 
-                        double moveY = falcon.getCenterY() - (falcon.getRadiusY()) *
-                                Math.cos(falcon.getAngle());
-
+                        // Move the spacecraft to its new position
                         moveBall(falcon.getGUIShip(), moveX, moveY);
                     }
-                } else {
+                }
+                // We therefore must be in an orbit stage of the journey
+                else {
+                    /* As long as the spacecraft is not landed on the planet, then work out the elliptical path for
+                     * the orbit using a MathEllipse object, and center it so that the planet object is the focus of
+                     * the ellipse, not the centre. */
                     if (startOrbit[0] != 0 && startOrbit[1] != 0) {
                         MathEllipse orbit = new MathEllipse(startPlanet.getMass(), startOrbit[0], startOrbit[1]);
 
-                        double offset = (startOrbit[0] - startOrbit[1]) / 2;
-
                         falcon.setRadius(orbit.semiMajor() * focusScale, orbit.semiMinor() * focusScale);
 
-                        falcon.setCenterPoint(focusWidth + (offset * focusScale), focusWidth);
+                        double offset = ((startOrbit[0] - startOrbit[1]) / 2) * focusScale;
+                        falcon.setCenterPoint((sourcePane.getPrefWidth() / 2) + offset, sourcePane.getPrefHeight() / 2);
 
                     } else {
+                        /* If we are landed on the planet, then set the radius of the spacecraft's path to 0 and
+                         * center it on the planet. */
                         falcon.setRadius(0, 0);
                         falcon.setCenterPoint(planetFocus.getCenterX(), planetFocus.getCenterY());
                     }
 
-                    if (Math.abs(Math.toDegrees(falcon.getAngle()) - 90) < 1 && (phaseStart.equals(phaseEnd)
-                            || phaseEnd.isEmpty())) {
+                    /* If the next transition moves to a new orbit around the same body, then trigger this when
+                     * the spacecraft reaches an angle of 90 degrees around the body in the focus panel. Also use this
+                     * position to finish the journey if we are at the end of the journey. */
+                    if (Math.abs(Math.toDegrees(falcon.getAngle()) - 90) < 1 &&
+                            (phaseStart.equals(phaseEnd) || phaseEnd.isEmpty())) {
                         nextPhase();
                     }
 
+                    /* Increment the angle of the spacecraft around its orbit by a constant - does not react to speed
+                     * factor changes. */
                     falcon.incrementAngle(1);
 
-                    double moveX = falcon.getCenterX() + (falcon.getRadiusX()) *
-                            Math.sin(falcon.getAngle());
+                    // Work out the new position of the spacecraft around its orbit from this new angle.
+                    double moveX = falcon.getCenterX() + falcon.getRadiusX() * Math.sin(falcon.getAngle());
+                    double moveY = falcon.getCenterY() - falcon.getRadiusY() * Math.cos(falcon.getAngle());
 
-                    double moveY = falcon.getCenterY() - (falcon.getRadiusY()) *
-                            Math.cos(falcon.getAngle());
-
+                    // Move the spacecraft to this new location
                     moveBall(falcon.getGUIShip(), moveX, moveY);
-
                 }
             }
         };
@@ -737,7 +801,8 @@ public class JourneyController extends SuperController implements Initializable 
          * counter and indicate that we are on a new stage */
         if (steps / 2 < routePlanets.size() - 1) {
             steps++;
-            newStep = true;
+            newStepMain = true;
+            newStepFocus = true;
         } else {
             /* When there are no stages left, pause the animation, show the completion
              * dialog and show the journey data in the dialog. */
