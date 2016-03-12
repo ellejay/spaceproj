@@ -39,7 +39,7 @@ public class SolarSystemController extends SuperController implements Initializa
 	@FXML private Button speedButton;
 	@FXML private Button slowButton;
 	private Timeline timeline;
-	private Map<String, BodyInSpace> selection = SpaceObjects.getPlanets();
+	private Map<String, BodyInSpace> childBodies = SpaceObjects.getPlanets();
     
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -55,18 +55,21 @@ public class SolarSystemController extends SuperController implements Initializa
 		zoomSlide.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
 				SCREEN_SCALE = (double) new_val;
-				for (BodyInSpace current: selection.values()) {
+				for (BodyInSpace current: childBodies.values()) {
 					current.adjustGUIOrbit(current.getOrbit() * SCREEN_SCALE);
 				}
 			}
 		});
     }
-    
-    
-    private void setUpPlanets() {
+
+
+    /**
+	 * Sets up the planets on the display and adds them to a timeline for animation
+	 */
+	private void setUpPlanets() {
 
 		// Redraw the planet set at 0,0 to counteract object displacement
-    	for (BodyInSpace current : selection.values()) {
+    	for (BodyInSpace current : childBodies.values()) {
             current.resetPlanet();
         }
 
@@ -77,7 +80,7 @@ public class SolarSystemController extends SuperController implements Initializa
 			@Override
 			public void handle(ActionEvent event) {
 
-				for (BodyInSpace current: selection.values()) {
+				for (BodyInSpace current: childBodies.values()) {
 
 					// Increment the angle of the planet by the speed factor
 					current.incrementAngle(SPEED_FACTOR);
@@ -114,7 +117,7 @@ public class SolarSystemController extends SuperController implements Initializa
 		SCREEN_SCALE = SpaceObjects.getScale("Sun").get(0);
 
 		// Draw the orbit at the scale indicated and add the orbit path and the planet to the screen
-		for (BodyInSpace current: selection.values()) {
+		for (BodyInSpace current: childBodies.values()) {
 			current.adjustGUIOrbit(current.getOrbit() * SCREEN_SCALE);
 			systemPane.getChildren().add(current.getGUIOrbit());
 			systemPane.getChildren().add(current.getGUIObject());

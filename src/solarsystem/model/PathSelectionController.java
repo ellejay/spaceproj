@@ -32,7 +32,7 @@ import solarsystem.objects.SpaceObjects;
  * @author Laura McGhie
  */
 public class PathSelectionController extends SuperController implements Initializable {
-	
+
     @FXML private Pane systemPane;
     @FXML private Slider zoomSlide;
     @FXML private TextArea routeList;
@@ -47,7 +47,7 @@ public class PathSelectionController extends SuperController implements Initiali
 
 	// Initialise the display to the sun and the set of planets
 	private BodyInSpace currentParent = SpaceObjects.getSun();
-	private Map<String, BodyInSpace> selection = SpaceObjects.getPlanets();
+	private Map<String, BodyInSpace> childBodies = SpaceObjects.getPlanets();
 
 	// Variable to save the scale of the display between changes
 	private double scaleSave;
@@ -71,7 +71,7 @@ public class PathSelectionController extends SuperController implements Initiali
 					Number old_val, Number new_val) {
 				SCREEN_SCALE = (double) new_val;
 
-				for (BodyInSpace current: selection.values()) {
+				for (BodyInSpace current: childBodies.values()) {
 					current.adjustGUIOrbit(current.getOrbit() * SCREEN_SCALE);
 
 					// Calculate the x & y positions of the planet at the new scale and move it to there
@@ -175,7 +175,7 @@ public class PathSelectionController extends SuperController implements Initiali
 
 				/* If the current target is an object corresponding to a body, set the name of the planet
 				 * in the dialog and disable buttons as required. */
-				for (BodyInSpace current: selection.values()) {
+				for (BodyInSpace current: childBodies.values()) {
 					if (event.getTarget().equals(current.getGUIObject())){
 
 						planetFound = true;
@@ -228,20 +228,20 @@ public class PathSelectionController extends SuperController implements Initiali
 		}
 
 		// Place the current parent in the center of the available space
-		currentParent.moveGUIObject(midPoint, midPoint);
+		currentParent.moveGUIObject(systemPane.getPrefWidth() / 2, systemPane.getPrefHeight() / 2);
 
 		// As long as the current parent has child bodies to display
-		if (!selection.isEmpty()) {
+		if (!childBodies.isEmpty()) {
 
 			/* Iterate through the body list and add all planet orbit circles to the display first
 			 * This is so they are at the bottom of the stack and do not cover the planet objects. */
-			for (BodyInSpace current : selection.values()) {
+			for (BodyInSpace current : childBodies.values()) {
 				current.adjustGUIOrbit(current.getOrbit() * SCREEN_SCALE);
 				systemPane.getChildren().add(current.getGUIOrbit());
 			}
 
 			/* Iterate through the body list and add all planet objects at the appropriate locations.*/
-			for (BodyInSpace current : selection.values()) {
+			for (BodyInSpace current : childBodies.values()) {
 
 				// Reset the body so that it is drawn at the origin point, counteracting any displacement issues
 				current.resetPlanet();
@@ -485,7 +485,8 @@ public class PathSelectionController extends SuperController implements Initiali
 		// As long as the route list has content, remove the item
 		if (!(lastItem < 0))  {
 
-			LOGGER.info("Removing " + routePlanets.get(lastItem) + " from the route list...");
+			LOGGER.info("Removing " + routePlanets.get(lastItem) + " " + routeOrbit.get(lastItem)[0] + " "
+					+ routeOrbit.get(lastItem)[1] + " from the route list...");
 
 			// Unmark the item on the GUI and remove the item from the lists
 			unmarkForRoute(routePlanets.get(lastItem));
@@ -536,7 +537,7 @@ public class PathSelectionController extends SuperController implements Initiali
 
 		// Set the system parent to the selected planet and make the child bodies the currently displayed selection
 		currentParent = SpaceObjects.getPlanets().get(planet);
-		selection = SpaceObjects.getChildren(planet);
+		childBodies = SpaceObjects.getChildren(planet);
 
 		// Clear all bodies on the screen so the new ones can be added
 		systemPane.getChildren().clear();
@@ -571,7 +572,7 @@ public class PathSelectionController extends SuperController implements Initiali
 		// Hide the data entry dialog and reset the display to the sun and the planets
 		inputPane.toBack();
 		currentParent = SpaceObjects.getSun();
-		selection = SpaceObjects.getPlanets();
+		childBodies = SpaceObjects.getPlanets();
 
 		// Empty the display of the current frame
 		systemPane.getChildren().clear();
