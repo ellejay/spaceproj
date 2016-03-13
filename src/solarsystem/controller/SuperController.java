@@ -1,4 +1,4 @@
-package solarsystem.model;
+package solarsystem.controller;
 
 import java.util.ArrayList;
 

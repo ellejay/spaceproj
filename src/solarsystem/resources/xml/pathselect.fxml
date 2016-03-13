@@ -5,7 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<StackPane fx:controller="solarsystem.model.PathSelectionController"
+<StackPane fx:controller="solarsystem.controller.PathSelectionController"
            xmlns:fx="http://javafx.com/fxml" alignment="TOP_LEFT">
 
     <Pane fx:id="inputPane" styleClass="journeyDialog" maxWidth="250" maxHeight="100">

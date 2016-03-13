@@ -5,7 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane fx:controller="solarsystem.model.SolarSystemController" 
+<BorderPane fx:controller="solarsystem.controller.SolarSystemController"
     xmlns:fx="http://javafx.com/fxml" styleClass="root">
 
   <center>
