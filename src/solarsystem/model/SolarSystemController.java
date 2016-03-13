@@ -151,8 +151,13 @@ public class SolarSystemController extends SuperController implements Initializa
 
 		if (SPEED_FACTOR == 0.015625) {
 			slowButton.setDisable(true);
+			speedButton.setDisable(false);
+		} else if (SPEED_FACTOR == 512) {
+			slowButton.setDisable(false);
+			speedButton.setDisable(true);
 		} else {
 			slowButton.setDisable(false);
+			speedButton.setDisable(false);
 		}
     }
 
@@ -164,9 +169,14 @@ public class SolarSystemController extends SuperController implements Initializa
 			SPEED_FACTOR = SPEED_FACTOR * 2;
 		}
 
-		if (SPEED_FACTOR == 512) {
+		if (SPEED_FACTOR == 0.015625) {
+			slowButton.setDisable(true);
+			speedButton.setDisable(false);
+		} else if (SPEED_FACTOR == 512) {
+			slowButton.setDisable(false);
 			speedButton.setDisable(true);
 		} else {
+			slowButton.setDisable(false);
 			speedButton.setDisable(false);
 		}
     }

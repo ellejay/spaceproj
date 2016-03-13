@@ -1,7 +1,3 @@
-.body-Sun {
-	-fx-fill: sienna;
-}
-
 .planet-orbit-path {
 	-fx-fill: transparent;
 	-fx-stroke: darkgrey;
@@ -14,6 +10,10 @@
 
 .spacecraft {
 	-fx-fill: yellow;
+}
+
+.body-Sun {
+	-fx-fill: sienna;
 }
 
 .body-Mercury {
@@ -52,46 +52,34 @@
     -fx-fill: #AD998E;
 }
 
-.body-Moon, .body-Phobos, .body-Deimos {
-	-fx-fill: #AF94A3;
+.body-Moon, .body-Phobos, .body-Adrastea, .body-Metis, .body-Pan, .body-Miranda, .body-Naiad, .body-Charon {
+	-fx-fill: #E1D8ED;
 }
 
-.body-Io, .body-Europa, .body-Ganymede, .body-Callisto {
-    -fx-fill: #AF94A3;
+.body-Deimos, .body-Ariel, .body-Thalassa, .body-Despina, .body-Io, .body-Europa, .body-Ganymede, .body-Callisto {
+    -fx-fill: #DED8EB;
 }
 
-.body-Adrastea, .body-Amalthea, .body-Metis, .body-Thebe, .body-Leda {
-    -fx-fill: #AF94A3;
+.body-Umbriel, .body-Galatea, .body-Amalthea, .body-Thebe, .body-Leda {
+    -fx-fill: #DAD8E9;
 }
 
-.body-Himalia, .body-Lysithea, .body-Elara {
-    -fx-fill: #AF94A3;
+.body-Titania, .body-Larissa, .body-Himalia, .body-Lysithea, .body-Elara {
+    -fx-fill: #D7D8E6;
 }
 
-.body-Mimas, .body-Enceladus, .body-Tethys, .body-Dione, .body-Rhea {
-    -fx-fill: #AF94A3;
+.body-Oberon, .body-Proteus, .body-Mimas, .body-Enceladus, .body-Tethys, .body-Dione, .body-Rhea {
+    -fx-fill: #D3D8E4;
 }
 
-.body-Titan, .body-Hyperion, .body-Iapetus, .body-Pan, .body-Daphnis {
-    -fx-fill: #AF94A3;
+.body-Triton, .body-Titan, .body-Hyperion, .body-Iapetus,  .body-Daphnis {
+    -fx-fill: #D0D8E2;
 }
 
 .body-Atlas, .body-Prometheus, .body-Pandora, .body-Epimetheus, .body-Janus {
-    -fx-fill: #AF94A3;
+    -fx-fill: #CCD8E0;
 }
 
 .body-Calypso, .body-Telesto, .body-Helene {
-     -fx-fill: #AF94A3;
+     -fx-fill: #C9D8DD;
  }
-
- .body-Miranda, .body-Ariel, .body-Umbriel, .body-Titania, .body-Oberon {
-     -fx-fill: #AF94A3;
- }
-
- .body-Naiad, .body-Thalassa, .body-Despina, .body-Galatea, .body-Larissa {
-      -fx-fill: #AF94A3;
- }
-
- .body-Larissa, .body-Proteus, .body-Triton, .body-Charon {
-    -fx-fill: #AF94A3;
-}

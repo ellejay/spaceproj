@@ -73,10 +73,6 @@
     -fx-background-position:center;
 }
 
-.route_label {
-	-fx-fill: white;
-}
-
 .routeList {
     -fx-highlight-fill: #fff;
     -fx-text-fill: #fff;

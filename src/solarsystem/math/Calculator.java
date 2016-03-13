@@ -87,7 +87,7 @@ public class Calculator {
 				transfer(current_p, current_e, target, true);
 
 			}
-			LOGGER.info(String.format("%6.0f %6.0f %6.0f (%s) \n", dv1, dv2, t, type));
+			LOGGER.info(String.format("%6.0f %6.0f %6.0f (%s)", dv1, dv2, t, type));
 		}
 		
 		// Sibling Transfer
@@ -179,7 +179,7 @@ public class Calculator {
 		}
 
 		// Log out phase angles
-		LOGGER.info(String.format("%s-%s phase angle before %1.0f after %1.0f\n", startPlanet.getName(),
+		LOGGER.info(String.format("%s-%s phase angle before %1.0f after %1.0f", startPlanet.getName(),
 				endPlanet.getName(), startPhase, endPhase));
 	
 	}

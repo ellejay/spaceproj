@@ -242,12 +242,11 @@ public class JourneyController extends SuperController implements Initializable 
                             // Rotate the path according the angle at which the path is triggered to be displayed
                             enterprise.setPathRotation(Math.toDegrees(startPlanet.getAngle()));
 
-                            /* Get the angular velocity of the most distant planet and use this to calculate the
+                            /* Get the angular velocity of the destination body and use this to calculate the
                              * period required so that the spacecraft will meet the destination body at the end of
                              * its orbit. */
-                            enterprise.setPeriod(360 / ((furthestPlanet.getAngularV() * Math.PI) / (transAngle)));
-                            //enterprise.setPeriod(2 * (calc.getTime() / 86400));
-
+                            double period = 360 / ((endPlanet.getAngularV() * Math.PI) / (transAngle));
+                            enterprise.setPeriod(period);
                         }
                         // For a parent/child transfer
                         else if (!phaseStart.equals(phaseEnd)) {
@@ -430,18 +429,23 @@ public class JourneyController extends SuperController implements Initializable 
                                 endAngle = Math.PI;
 
                                 /* Get the angle at which the orbit needs to be drawn on the view. Centre point
-                                 * should be directly opposite the start planet, so subject 180 degrees and increment
+                                 * should be directly opposite the start planet, so subtract 180 degrees and increment
                                  * to ensure the angle is positive. */
                                 drawAngle = startPlanet.getAngle() - Math.PI;
                                 if (drawAngle < 0) {
                                     drawAngle += 2 * Math.PI;
                                 }
 
-                                //@TODO need to fix this
+                                /* Get the angle that the destination body will move through whilst waiting for the
+                                 * spacecraft to arrive. Get the difference between the current position and the end
+                                 * point of the spacecraft's path, and add a number of full orbits based on the
+                                 * calculated journey time. */
                                 transAngle = drawAngle - endPlanet.getAngle();
                                 if (transAngle < 0) {
                                     transAngle += 2 * Math.PI;
                                 }
+                                double completedOrbits = Math.floor(calc.getTime() / endPlanet.getPeriodAsSeconds());
+                                transAngle += completedOrbits * 2 * Math.PI;
 
                                 /* Have all the necessary information to make the transfer, so move to the next
                                  * phase of the journey */
@@ -866,8 +870,13 @@ public class JourneyController extends SuperController implements Initializable 
 
         if (SPEED_FACTOR == 0.015625) {
             slowButton.setDisable(true);
+            speedButton.setDisable(false);
+        } else if (SPEED_FACTOR == 512) {
+            slowButton.setDisable(false);
+            speedButton.setDisable(true);
         } else {
             slowButton.setDisable(false);
+            speedButton.setDisable(false);
         }
     }
 
@@ -879,9 +888,14 @@ public class JourneyController extends SuperController implements Initializable 
             SPEED_FACTOR = SPEED_FACTOR * 2;
         }
 
-        if (SPEED_FACTOR == 512) {
+        if (SPEED_FACTOR == 0.015625) {
+            slowButton.setDisable(true);
+            speedButton.setDisable(false);
+        } else if (SPEED_FACTOR == 512) {
+            slowButton.setDisable(false);
             speedButton.setDisable(true);
         } else {
+            slowButton.setDisable(false);
             speedButton.setDisable(false);
         }
     }
