@@ -3,13 +3,14 @@ package solarsystem.test;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Assert.*;
+
+import static org.junit.Assert.*;
 
 /**
- * Test class for the journey calculator
+ * Test class for the Hyper object
  * @author Laura McGhie
  */
-public class CalculatorTest {
+public class HyperTest {
 
     @Before
     public void setUp() throws Exception {
@@ -22,7 +23,17 @@ public class CalculatorTest {
     }
 
     @Test
-    public void testTransfer_slow() throws Exception {
+    public void testPeriapse() throws Exception {
+
+    }
+
+    @Test
+    public void testSpeed_p() throws Exception {
+
+    }
+
+    @Test
+    public void testSpeed_i() throws Exception {
 
     }
 }
