@@ -71,6 +71,12 @@ public class Spaceship {
 	public void setPeriod(double period) { this.period = period; }
 
 	/**
+	 * Return the rotation period of the spacecraft in days
+	 * @return number of days to complete an orbit
+     */
+	public double getPeriod() { return this.period; }
+
+	/**
 	 * Set the angle of the orbit to the given parameter, so the x and y axises of the ellipse are not
 	 * horizontal and vertical
 	 * @param rotate the angle to rotate the path by

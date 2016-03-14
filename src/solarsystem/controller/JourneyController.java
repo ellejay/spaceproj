@@ -60,10 +60,12 @@ public class JourneyController extends SuperController implements Initializable 
     private boolean transferWindow = false;
     private double startAngle, endAngle, transAngle, drawAngle;
 
+    // Variables for managing the focus view
     private double orbitsSearch;
     private double focusScale;
     private double yPositionOut = 100;
     private double yPositionIn = 200;
+    private static double DEFAULT_FALCON_PERIOD = 30;
     private double transOrb1, transOrb2;
     private boolean transferringOrbits, newMove, transferComplete;
 
@@ -575,6 +577,9 @@ public class JourneyController extends SuperController implements Initializable 
                         double transferRadius = (endOrbit[1] + startOrbit[0]) / 2;
                         falcon.setCenterPoint(focusWidth - ((transferRadius - startOrbit[0]) * focusScale), focusHeight);
 
+                        // Ensure period is set to the default
+                        falcon.setPeriod(DEFAULT_FALCON_PERIOD);
+
                         // Finished processing the new step, so set to false
                         newStepFocus = false;
                     }
@@ -600,10 +605,25 @@ public class JourneyController extends SuperController implements Initializable 
 
                     /* If we have an unhandled new step, the journey is not complete, and the last transfer is
                      * finished then update the end orbit and mark the route for transfer. */
-                    if (newStepFocus && !phaseEnd.isEmpty() && transferComplete) {
+                    if (newStepFocus && !phaseEnd.isEmpty()) {
                         transferComplete = false;
                         transOrb1 = endOrbit[0];
                         transOrb2 = endOrbit[1];
+
+                        /* As long as the new step has been processed in the main view, use the transfer period to
+                         * change the speed of the focus spacecraft. This ensures the departure and arrival animations
+                         * have time to play if the transfer is fast. */
+                        if (!newStepMain) {
+                            double angleToTravel = Math.toDegrees(falcon.getAngle()) - 90;
+                            if (angleToTravel < 360) { angleToTravel += 360; }
+
+                            double period = ( angleToTravel / 360) * (enterprise.getPeriod() / 8 / SPEED_FACTOR);
+                            if (period > DEFAULT_FALCON_PERIOD) { period = DEFAULT_FALCON_PERIOD; }
+                            falcon.setPeriod(period);
+
+                            //LOGGER.info("FALCON PERIOD: " + period);
+                            newStepFocus = false;
+                        }
                     }
 
                     /* If the counter for the inward motion is below the midpoint, then the transfer is complete, so
@@ -614,6 +634,7 @@ public class JourneyController extends SuperController implements Initializable 
                         entryLine.setStroke(Color.TRANSPARENT);
                         yPositionIn = 200;
                         yPositionOut = 100;
+                        falcon.setPeriod(DEFAULT_FALCON_PERIOD);
                     }
 
                     /* When the spacecraft reaches the 90 degrees position and there is a transfer ongoing, move the
@@ -708,6 +729,9 @@ public class JourneyController extends SuperController implements Initializable 
                             (phaseStart.equals(phaseEnd) || phaseEnd.isEmpty())) {
                         nextPhase();
                     }
+
+                    // Ensure period is set to the default
+                    falcon.setPeriod(DEFAULT_FALCON_PERIOD);
 
                     /* Increment the angle of the spacecraft around its orbit by a constant - does not react to speed
                      * factor changes. */

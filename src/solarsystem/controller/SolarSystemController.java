@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -38,8 +39,12 @@ public class SolarSystemController extends SuperController implements Initializa
 	@FXML private Button resetButton;
 	@FXML private Button speedButton;
 	@FXML private Button slowButton;
+
 	private Timeline timeline;
 	private Map<String, BodyInSpace> childBodies = SpaceObjects.getPlanets();
+
+	// Set up logger for console messages
+	private final static Logger LOGGER = Logger.getLogger(PathSelectionController.class.getName());
     
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -159,6 +164,8 @@ public class SolarSystemController extends SuperController implements Initializa
 			slowButton.setDisable(false);
 			speedButton.setDisable(false);
 		}
+
+		//LOGGER.info("CURRENT SPEED FACTOR: " + SPEED_FACTOR);
     }
 
     /**
@@ -179,6 +186,8 @@ public class SolarSystemController extends SuperController implements Initializa
 			slowButton.setDisable(false);
 			speedButton.setDisable(false);
 		}
+
+		//LOGGER.info("CURRENT SPEED FACTOR: " + SPEED_FACTOR);
     }
 
 	/**
@@ -189,6 +198,8 @@ public class SolarSystemController extends SuperController implements Initializa
 
 		speedButton.setDisable(false);
 		slowButton.setDisable(false);
+
+		//LOGGER.info("CURRENT SPEED FACTOR: " + SPEED_FACTOR);
 	}
 
     /**
