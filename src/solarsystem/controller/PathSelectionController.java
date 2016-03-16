@@ -414,7 +414,7 @@ public class PathSelectionController extends SuperController implements Initiali
 						routePlanets.add(planet);
 
 						// Add information about this orbit to the route list so it is displayed to the user
-						routeList.setText(routeList.getText() + " " + planet + " Orbit\r\n\t" + orbit[0] + "km\r\n\t" +
+						routeList.setText(routeList.getText() + planet + " Orbit\r\n\t" + orbit[0] + "km\r\n\t" +
 								orbit[1] + "km\r\n");
 
 						// Mark the planet as being on the route
@@ -505,7 +505,7 @@ public class PathSelectionController extends SuperController implements Initiali
 				}
 				else {
 					newRouteList.append("Orbit\r\n\t");
-					newRouteList.append(routeOrbit.get(i)[0]).append("km ");
+					newRouteList.append(routeOrbit.get(i)[0]).append("km\r\n\t");
 					newRouteList.append(routeOrbit.get(i)[1]).append("km\r\n");
 				}
 				

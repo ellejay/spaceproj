@@ -109,6 +109,7 @@ public class Calculator {
 		// If the transfer does not meet any of the previous conditions, it is invalid
 		else {
 			LOGGER.severe("You cannot make this transfer");
+			return;
 		}
 
 		// Once transfer is complete, update current planet to the target
