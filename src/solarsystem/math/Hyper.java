@@ -9,7 +9,7 @@ class Hyper {
 	
 	private final double mass;
 	private final double periapse;
-	private final double a;
+	private final double semiMajorAxis;
 	private final double GRAVITATIONAL_C = 0.6612e-10;
 
 	/**
@@ -21,7 +21,7 @@ class Hyper {
 	public Hyper(double mass, double periapse, double speed) {
 		this.mass = mass;
 		this.periapse = periapse;
-		a = (GRAVITATIONAL_C * this.mass) / (speed * speed);
+		semiMajorAxis = (GRAVITATIONAL_C * this.mass) / (speed * speed);
 	}
 
 	/**
@@ -37,7 +37,7 @@ class Hyper {
 	 * @return speed in m/s
      */
 	public double speed_p() {
-		return Math.sqrt(GRAVITATIONAL_C * mass * (2.0 / periapse + 1.0 / a));
+		return Math.sqrt(GRAVITATIONAL_C * mass * (2.0 / periapse + 1.0 / semiMajorAxis));
 	}
 
 	/**
@@ -45,7 +45,7 @@ class Hyper {
 	 * @return speed in m/s
      */
 	public double speed_i() {
-		return Math.sqrt((GRAVITATIONAL_C * mass) / a);
+		return Math.sqrt((GRAVITATIONAL_C * mass) / semiMajorAxis);
 	}
 
 }

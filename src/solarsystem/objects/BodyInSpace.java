@@ -33,10 +33,9 @@ public class BodyInSpace {
 	 * @param period Number of days body takes to complete one full orbit
 	 * @param angle Current angle of the body along its orbital path
 	 * @param center Parent object of the body
-	 * @param orbit_scale Current scale displayed on the GUI
 	 */
-	public BodyInSpace(String name, double diameter, double mass, double orbit, double period, 
-			double angle, BodyInSpace center, double orbit_scale) {
+	public BodyInSpace(String name, double diameter, double mass, double orbit, double period,
+					   double angle, BodyInSpace center) {
 		// Assign parameters to specified properties
 		this.name = name;
 		this.diameter = diameter;
@@ -54,7 +53,7 @@ public class BodyInSpace {
 		/* Establish GUI object for the orbit of the planet, centred at the
 		 * the middle of the window. Add style class so only border of the 
 		 * object is displayed on screen. */
-		this.gui_orbit = new Circle(295, 295, orbit/1e6 * orbit_scale);
+		this.gui_orbit = new Circle(295, 295, orbit/1e6);
 		this.gui_orbit.getStyleClass().add("planet-orbit-path");
 	}
 

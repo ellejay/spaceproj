@@ -223,6 +223,7 @@ public class Calculator {
 	 * @param outward_journey indication of the journey direction
      */
 	private void transfer(BodyInSpace p, MathEllipse current, MathEllipse target, boolean outward_journey) {
+		// Max value for change in velocity
 		double tot = 1.0e20;
 
 		if (outward_journey) {
@@ -267,7 +268,6 @@ public class Calculator {
 		// If the speeds are acceptable, set the object variables and get the transfer time
 		if (Math.abs(d1) + Math.abs(d2) < tot)
 		{
-			//tot = Math.abs(d1) + Math.abs(d2);
 			dv1 = d1;
 			dv2 = d2;
 			t = 0.5 * e.period();
