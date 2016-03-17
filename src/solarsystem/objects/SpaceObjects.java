@@ -108,7 +108,6 @@ public class SpaceObjects {
 		neptuneChild.put("Galatea", new BodyInSpace("Galatea", 174, 4e18, 61.9e3, 0.42, 0.8, planetsList.get("Neptune")));
 		neptuneChild.put("Larissa", new BodyInSpace("Larissa", 185, 5e18, 73.5e3, 0.55, 6.1, planetsList.get("Neptune")));
 		neptuneChild.put("Proteus", new BodyInSpace("Proteus", 420, 5e19, 117.6e3, 1.12, 4.8, planetsList.get("Neptune")));
-		neptuneChild.put("Triton", new BodyInSpace("Triton", 2706, 3e19, 354.7e3, 5.87, 3.1, planetsList.get("Neptune")));
 
 		// Add moons of Pluto
 		plutoChild.put("Charon", new BodyInSpace("Charon", 1212, 1.586e21, 19596, 6.39, 2.3, planetsList.get("Pluto")));
