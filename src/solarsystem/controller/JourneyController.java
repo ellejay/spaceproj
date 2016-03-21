@@ -31,6 +31,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import solarsystem.objects.BodyInSpace;
+import solarsystem.objects.RouteStage;
 import solarsystem.objects.SpaceObjects;
 import solarsystem.objects.Spaceship;
 import solarsystem.math.Calculator;
@@ -124,7 +125,7 @@ public class JourneyController extends SuperController implements Initializable 
         };
 
         // Set up a calculator object for working out the transfer data
-        final Calculator calc = new Calculator(SpaceObjects.getBody(routePlanets.get(0)));
+        final Calculator calc = new Calculator(SpaceObjects.getBody(planetsOnPath.get(0).getBody()));
 
         // Set up two spaceship instances - one for the main planet view and one for the focus view
         final Spaceship enterprise = new Spaceship();
@@ -137,11 +138,12 @@ public class JourneyController extends SuperController implements Initializable 
 
         // Find the largest orbit distance in the route list
         double maxOrbit = Double.MIN_VALUE;
-        for (double[] orbit : routeOrbit) {
-            for (double val : orbit) {
-                if (val > maxOrbit) {
-                    maxOrbit = val;
-                }
+        for (RouteStage stage : planetsOnPath) {
+            if (stage.getPeriapsis() > maxOrbit) {
+                maxOrbit = stage.getPeriapsis();
+            }
+            if (stage.getApoapsis() > maxOrbit) {
+                maxOrbit = stage.getApoapsis();
             }
         }
 
@@ -163,19 +165,20 @@ public class JourneyController extends SuperController implements Initializable 
 
                 // Get information about the starting planet in the current journey stage
                 BodyInSpace startPlanet, endPlanet;
-                String phaseStart = routePlanets.get(planetIndex);
-                double[] startOrbit = routeOrbit.get(planetIndex);
+
+                String phaseStart = planetsOnPath.get(planetIndex).getBody();
+                RouteStage startStage = planetsOnPath.get(planetIndex);
                 startPlanet = SpaceObjects.getBody(phaseStart);
 
                 /* Attempt to get information about the destination planet in the journey stage, as long as
                  * we are not at the end of the journey.  */
                 boolean outwardMovement = true;
                 String phaseEnd;
-                double[] endOrbit;
-                if (routePlanets.size() > planetIndex + 1) {
-                    phaseEnd = routePlanets.get(planetIndex + 1);
-                    endOrbit = routeOrbit.get(planetIndex + 1);
+                RouteStage endStage;
+                if (planetsOnPath.size() > planetIndex + 1) {
+                    phaseEnd = planetsOnPath.get(planetIndex + 1).getBody();
                     endPlanet = SpaceObjects.getBody(phaseEnd);
+                    endStage = planetsOnPath.get(planetIndex + 1);
 
                     // Work out the direction of movement and set the scale of the view based on the most distant planet
                     if ((startPlanet.isSibling(endPlanet) && startPlanet.getOrbit() > endPlanet.getOrbit())
@@ -187,8 +190,8 @@ public class JourneyController extends SuperController implements Initializable 
                     }
                 } else {
                     phaseEnd = "";
-                    endOrbit = new double[]{0,0};
                     endPlanet = startPlanet;
+                    endStage = new RouteStage("null", 0, 0);
                 }
 
                 // Reset the currently displayed frame based on the next transition in the journey
@@ -311,18 +314,20 @@ public class JourneyController extends SuperController implements Initializable 
 
                         // Add information about the start point of this transition to the journey data string
                         completeJourneyData.append(startPlanet.getName()).append(" ");
-                        if (startOrbit[0] == 0 && startOrbit[1] == 0) {
+                        if (startStage.isLanded()) {
                             completeJourneyData.append("Surface");
                         } else {
-                            completeJourneyData.append(String.format("%.0fkm/%.0fkm", startOrbit[0], startOrbit[1]));
+                            completeJourneyData.append(String.format("%.0fkm/%.0fkm", startStage.getApoapsis(),
+                                    startStage.getPeriapsis()));
                         }
 
                         // Add information about the end point of this transition to the journey data string
                         completeJourneyData.append(" > ").append(endPlanet.getName()).append(" ");
-                        if (endOrbit[0] == 0 && endOrbit[1] == 0) {
+                        if (endStage.isLanded()) {
                             completeJourneyData.append("Surface");
                         } else {
-                            completeJourneyData.append(String.format("%.0fkm/%.0fkm", endOrbit[0], endOrbit[1]));
+                            completeJourneyData.append(String.format("%.0fkm/%.0fkm", endStage.getApoapsis(),
+                                    endStage.getPeriapsis()));
                         }
 
                         // Add the transition data to the journey data string
@@ -359,7 +364,8 @@ public class JourneyController extends SuperController implements Initializable 
                         /* Set the text on the sidebar to display the name of the current planet, as well as
                          * data regarding the current orbit. */
                         routeStage.setText(startPlanet.getName() + " Orbit");
-                        routeData.setText("Apoapsis = " + startOrbit[0] + "km\nPeriapsis = " + startOrbit[1] + "km");
+                        routeData.setText("Apoapsis = " + startStage.getApoapsis() + "km\nPeriapsis = "
+                                + startStage.getPeriapsis() + "km");
 
                         /* As long as there is another planet on the journey to move to, then set up the calculator
                          * with information about the transfer, and set a variable to indicate we are waiting for a
@@ -367,11 +373,11 @@ public class JourneyController extends SuperController implements Initializable 
                         if (!(phaseEnd.isEmpty())) {
 
                             MathEllipse transfer = null;
-                            if (!(endOrbit[0] == 0 && endOrbit[1] == 0)) {
+                            if (!(endStage.isLanded())) {
                                 /* As long as we are not landing on the planet, convert the inputted distances
                                  * into metres and create an ellipse */
-                                double r1 = endPlanet.getRadius() + 1.0e3 * endOrbit[0];
-                                double r2 = endPlanet.getRadius() + 1.0e3 * endOrbit[1];
+                                double r1 = endPlanet.getRadius() + 1.0e3 * endStage.getApoapsis();
+                                double r2 = endPlanet.getRadius() + 1.0e3 * endStage.getPeriapsis();
 
                                 transfer = new MathEllipse(endPlanet.getMass(), r2, r1);
                             }
@@ -534,20 +540,20 @@ public class JourneyController extends SuperController implements Initializable 
                 int planetIndex = steps / 2;
 
                 // Retrieve the starting planet of this stage and style the body in the focus pane for the start point
-                String phaseStart = routePlanets.get(planetIndex);
-                double[] startOrbit = routeOrbit.get(planetIndex);
+                String phaseStart = planetsOnPath.get(planetIndex).getBody();
+                RouteStage startStage = planetsOnPath.get(planetIndex);
                 BodyInSpace startPlanet = SpaceObjects.getBody(phaseStart);
                 planetFocus.getStyleClass().add("body-" + phaseStart);
 
                 // If we are not at the end of the journey, get the destination planet of this journey stage
                 String phaseEnd;
-                double[] endOrbit;
-                if (routePlanets.size() > planetIndex + 1) {
-                    phaseEnd = routePlanets.get(planetIndex + 1);
-                    endOrbit = routeOrbit.get(planetIndex + 1);
+                RouteStage endStage;
+                if (planetsOnPath.size() > planetIndex + 1) {
+                    phaseEnd = planetsOnPath.get(planetIndex + 1).getBody();
+                    endStage = planetsOnPath.get(planetIndex + 1);
                 } else {
                     phaseEnd = "";
-                    endOrbit = new double[]{0,0};
+                    endStage = new RouteStage("null", 0, 0);
                 }
 
                 // Reference to the width of the focus panel
@@ -562,7 +568,8 @@ public class JourneyController extends SuperController implements Initializable 
                         falcon.setParent(startPlanet);
 
                         // Work out the ellipse for the periapsis of the end orbit to the apoapsis of the start orbit
-                        MathEllipse transferPath = new MathEllipse(currentParent.getMass(), endOrbit[1], startOrbit[0]);
+                        MathEllipse transferPath = new MathEllipse(currentParent.getMass(), endStage.getPeriapsis(),
+                                startStage.getApoapsis());
 
                         /* If the width of the path is 0, then draw the ellipse with a fixed width corresponding to
                          * the size of the GUI object representing the body. */
@@ -574,8 +581,9 @@ public class JourneyController extends SuperController implements Initializable 
 
                         /* Set the centre point of the ellipse so that the body is at the focus of
                          * the ellipse, not the centre. */
-                        double transferRadius = (endOrbit[1] + startOrbit[0]) / 2;
-                        falcon.setCenterPoint(focusWidth - ((transferRadius - startOrbit[0]) * focusScale), focusHeight);
+                        double transferRadius = (endStage.getPeriapsis() + startStage.getApoapsis()) / 2;
+                        falcon.setCenterPoint(focusWidth - ((transferRadius - startStage.getApoapsis()) * focusScale),
+                                focusHeight);
 
                         // Ensure period is set to the default
                         falcon.setPeriod(DEFAULT_FALCON_PERIOD);
@@ -607,8 +615,8 @@ public class JourneyController extends SuperController implements Initializable 
                      * finished then update the end orbit and mark the route for transfer. */
                     if (newStepFocus && !phaseEnd.isEmpty()) {
                         transferComplete = false;
-                        transOrb1 = endOrbit[0];
-                        transOrb2 = endOrbit[1];
+                        transOrb1 = endStage.getApoapsis();
+                        transOrb2 = endStage.getPeriapsis();
 
                         /* As long as the new step has been processed in the main view, use the transfer period to
                          * change the speed of the focus spacecraft. This ensures the departure and arrival animations
@@ -648,8 +656,8 @@ public class JourneyController extends SuperController implements Initializable 
                         transferringOrbits = true;
 
                         // Move the line to the right edge of the starting orbit
-                        entryLine.setStartX(startOrbit[0] * focusScale + focusWidth);
-                        entryLine.setEndX(startOrbit[0] * focusScale + focusWidth);
+                        entryLine.setStartX(startStage.getApoapsis() * focusScale + focusWidth);
+                        entryLine.setEndX(startStage.getApoapsis() * focusScale + focusWidth);
 
                         // Increment the spacecraft along the exit line, and move to its new position
                         yPositionOut += 0.5;
@@ -707,12 +715,13 @@ public class JourneyController extends SuperController implements Initializable 
                     /* As long as the spacecraft is not landed on the planet, then work out the elliptical path for
                      * the orbit using a MathEllipse object, and center it so that the planet object is the focus of
                      * the ellipse, not the centre. */
-                    if (startOrbit[0] != 0 && startOrbit[1] != 0) {
-                        MathEllipse orbit = new MathEllipse(startPlanet.getMass(), startOrbit[0], startOrbit[1]);
+                    if (!startStage.isLanded()) {
+                        MathEllipse orbit = new MathEllipse(startPlanet.getMass(), startStage.getApoapsis(),
+                                startStage.getPeriapsis());
 
                         falcon.setRadius(orbit.semiMajor() * focusScale, orbit.semiMinor() * focusScale);
 
-                        double offset = ((startOrbit[0] - startOrbit[1]) / 2) * focusScale;
+                        double offset = ((startStage.getApoapsis() - startStage.getPeriapsis()) / 2) * focusScale;
                         falcon.setCenterPoint((sourcePane.getPrefWidth() / 2) + offset, sourcePane.getPrefHeight() / 2);
 
                     } else {
@@ -827,7 +836,7 @@ public class JourneyController extends SuperController implements Initializable 
     private void nextPhase() {
         /* If there is a new stage to move on to, then increment the
          * counter and indicate that we are on a new stage */
-        if (steps / 2 < routePlanets.size() - 1) {
+        if (steps / 2 < planetsOnPath.size() - 1) {
             steps++;
             newStepMain = true;
             newStepFocus = true;
@@ -1019,8 +1028,7 @@ public class JourneyController extends SuperController implements Initializable 
         stage = (Stage) routeStage.getScene().getWindow();
 
         // Empty the route list and reset the screen scale for displaying the path
-        routePlanets.clear();
-        routeOrbit.clear();
+        planetsOnPath.clear();
         SCREEN_SCALE = SpaceObjects.getScale("Sun").get(0);
 
         // Load the XML file for the Path Selector into a scene
@@ -1043,8 +1051,7 @@ public class JourneyController extends SuperController implements Initializable 
         stage = (Stage) routeStage.getScene().getWindow();
 
         // Empty the route list as the journey is now complete
-        routePlanets.clear();
-        routeOrbit.clear();
+        planetsOnPath.clear();
 
         // Load the XML file for the System Animation into a scene
         root = FXMLLoader.load(getClass().getResource("/solarsystem/resources/xml/system.fxml"));

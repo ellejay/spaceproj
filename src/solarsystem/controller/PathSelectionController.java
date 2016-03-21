@@ -25,6 +25,7 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 import solarsystem.objects.BodyInSpace;
+import solarsystem.objects.RouteStage;
 import solarsystem.objects.SpaceObjects;
 
 /**
@@ -261,8 +262,11 @@ public class PathSelectionController extends SuperController implements Initiali
 				systemPane.getChildren().add(current.getGUIObject());
 
 				// If the body is on the current route, mark it to show this
-				if (routePlanets.contains(current.getName())) {
-					markForRoute(current.getName());
+				for (RouteStage stage: planetsOnPath) {
+					if (stage.getBody().equals(current.getName())) {
+						markForRoute(current.getName());
+						break;
+					}
 				}
 			}
 
@@ -280,28 +284,27 @@ public class PathSelectionController extends SuperController implements Initiali
 	private void disableButtons(String name) {
 		try {
 			// Retrieve the last item in the current route
-			int lastItem = routePlanets.size() - 1;
-			String prev = routePlanets.get(lastItem);
-			double[] prevOrbit = routeOrbit.get(lastItem);
+			int lastItem = planetsOnPath.size() - 1;
+			RouteStage previousStage = planetsOnPath.get(lastItem);
 
 			// Get the BodyInSpace objects for the last item on the route, and the currently selected body
-			BodyInSpace previous = SpaceObjects.getBody(prev);
+			BodyInSpace previous = SpaceObjects.getBody(previousStage.getBody());
 			BodyInSpace current = SpaceObjects.getBody(name);
 
 			// If currently landed on the body and selecting the same body, allow orbit only
-			if (prev.equals(name) && prevOrbit[0] == 0.0 && prevOrbit[1] == 0.0) {
+			if (name.equals(previousStage.getBody()) && previousStage.isLanded()) {
 				orbitControl.setDisable(false);
 				landControl.setDisable(true);
 			}
 			/* If landed on a body and selecting a different body, then disable all as we
 			 * cannot make this transfer - must go into orbit around the original planet first */
-			else if (prevOrbit[0] == 0.0 && prevOrbit[1] == 0.0) {
+			else if (previousStage.isLanded()) {
 				landControl.setDisable(true);
 				orbitControl.setDisable(true);
 			}
 			/* If selecting the same body as previously, and we are not landed on that body, then we
 			 * can either land on this body or go into a different orbit around it */
-			else if (prev.equals(name)) {
+			else if (name.equals(previousStage.getBody())) {
 				landControl.setDisable(false);
 				orbitControl.setDisable(false);
 			}
@@ -398,24 +401,18 @@ public class PathSelectionController extends SuperController implements Initiali
 						}
 
 						// Set up an array and reorder the entered text so that the larger number always comes first
-						double orbit[] = new double[2];
+						RouteStage newStage;
 						if (apoapsis > periapsis) {
-							orbit[0] = apoapsis;
-							orbit[1] = periapsis;
+							newStage = new RouteStage(planet, apoapsis, periapsis);
 						} else {
-							orbit[0] = periapsis;
-							orbit[1] = apoapsis;
+							newStage = new RouteStage(planet, periapsis, apoapsis);
 						}
 
-						// Add the orbit to the route orbit list
-						routeOrbit.add(orbit);
-
-						// Add the destination planet to the planet route list
-						routePlanets.add(planet);
+						planetsOnPath.add(newStage);
 
 						// Add information about this orbit to the route list so it is displayed to the user
-						routeList.setText(routeList.getText() + planet + " Orbit\r\n\t" + orbit[0] + "km\r\n\t" +
-								orbit[1] + "km\r\n");
+						routeList.setText(routeList.getText() + planet + " Orbit\r\n\t" + newStage.getApoapsis() +
+								"km\r\n\t" + newStage.getPeriapsis() + "km\r\n");
 
 						// Mark the planet as being on the route
 						markForRoute(planet);
@@ -460,10 +457,8 @@ public class PathSelectionController extends SuperController implements Initiali
 		// Get the planet to land on from the planet name on the dialog
 		String planet = planetName.getText();
 
-		// As we are landing on the planet, set the orbit numbers to 0,0 and add the information the route lists
-		double[] landed = {0, 0};
-		routePlanets.add(planet);
-		routeOrbit.add(landed);
+		// As we are landing on the planet, use 0,0 and add the information the route lists
+		planetsOnPath.add(new RouteStage(planet, 0, 0));
 
 		// Add the route stage to the display list for the user
 		routeList.setText(routeList.getText() + " " + planet + " Surface\r\n");
@@ -480,36 +475,34 @@ public class PathSelectionController extends SuperController implements Initiali
 	 */
 	@FXML protected void removeLast() {
 
-		int lastItem = routePlanets.size() - 1;
+		int lastItem = planetsOnPath.size() - 1;
 
 		// As long as the route list has content, remove the item
 		if (!(lastItem < 0))  {
 
-			LOGGER.info("Removing " + routePlanets.get(lastItem) + " " + routeOrbit.get(lastItem)[0] + " "
-					+ routeOrbit.get(lastItem)[1] + " from the route list...");
+			LOGGER.info("Removing " + planetsOnPath.get(lastItem).getInfo() + " from the route list...");
 
 			// Unmark the item on the GUI and remove the item from the lists
-			unmarkForRoute(routePlanets.get(lastItem));
-			routePlanets.remove(lastItem);
-			routeOrbit.remove(lastItem);
+			unmarkForRoute(planetsOnPath.get(lastItem).getBody());
+			planetsOnPath.remove(lastItem);
 
 			/* Construct a new string to display the route to the user by iterating over all
 			 * the planets and adding the appropriate information to the string. Also mark the GUI objects,
 			 * in case the removed planet occurs earlier in the route, thus still needs to be marked. */
 			StringBuilder newRouteList = new StringBuilder();
-			for (int i = 0; i < routePlanets.size(); i++) {
-				newRouteList.append(routePlanets.get(i)).append(" ");
+			for (int i = 0; i < planetsOnPath.size(); i++) {
+				newRouteList.append(planetsOnPath.get(i).getBody()).append(" ");
 				
-				if (routeOrbit.get(i)[0] == 0 && routeOrbit.get(i)[1] == 0) {
+				if (planetsOnPath.get(i).isLanded()) {
 					newRouteList.append("Surface\r\n");
 				}
 				else {
 					newRouteList.append("Orbit\r\n\t");
-					newRouteList.append(routeOrbit.get(i)[0]).append("km\r\n\t");
-					newRouteList.append(routeOrbit.get(i)[1]).append("km\r\n");
+					newRouteList.append(planetsOnPath.get(i).getApoapsis()).append("km\r\n\t");
+					newRouteList.append(planetsOnPath.get(i).getPeriapsis()).append("km\r\n");
 				}
 				
-				markForRoute(routePlanets.get(i));
+				markForRoute(planetsOnPath.get(i).getBody());
 			}
 
 			// Display the route list on screen for the user
@@ -517,7 +510,7 @@ public class PathSelectionController extends SuperController implements Initiali
 
 			// Disable buttons for the new context - if the list is now empty, pass value to the method to indicate this
             if (lastItem != 0) {
-                disableButtons(routePlanets.get(lastItem - 1));
+                disableButtons(planetsOnPath.get(lastItem - 1).getBody());
             } else {
                 disableButtons("Start");
             }
@@ -600,7 +593,7 @@ public class PathSelectionController extends SuperController implements Initiali
 	@FXML protected void startJourney() throws IOException {
 
 		// If the current route does not have enough stages, reject the move since there is nothing to animate!
-		if (routePlanets.size() < 2) {
+		if (planetsOnPath.size() < 2) {
 			LOGGER.info("Your journey does not contain 2 stages - please add more and try again.");
 		} else {
 			// Use the button clicked on to get a reference to the window
