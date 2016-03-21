@@ -2,6 +2,7 @@ package solarsystem.test;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import solarsystem.math.MathEllipse;
 
@@ -16,9 +17,15 @@ public class MathEllipseTest {
     @Before
     public void setUp() throws Exception {
         // Use random numbers to test on variety of cases
-        a = (int) (Math.random() * 100000000 + 1);
+        a = (int) (Math.random() * 1000000 + 1);
         b = (int) (Math.random() * 1000000 + 1);
         c = (int) (Math.random() * 1000000 + 1);
+
+        if (b > c) {
+            double temp = b;
+            b = c;
+            c = temp;
+        }
     }
 
     @Test
@@ -36,24 +43,26 @@ public class MathEllipseTest {
     @Test
     public void testSemiMinor() throws Exception {
         MathEllipse ellipse = new MathEllipse(a, b, c);
-        Assert.assertTrue(ellipse.semiMinor() == Math.sqrt(b + c));
+
+        double semimajor = ((b + c) / 2 );
+        double e = Math.abs(c - b) / (2 * semimajor);
+        double res = semimajor * Math.sqrt(1 - (e * e));
+
+        Assert.assertTrue(Math.abs(ellipse.semiMinor() - res) < ( res / 5 ));
     }
 
     @Test
     public void testPeriapse() throws Exception {
         MathEllipse ellipse = new MathEllipse(a, b, c);
 
-        System.out.println(a);
-        System.out.println(ellipse.periapse() + " " + b);
-        Assert.assertTrue(Math.abs(ellipse.periapse() - b) < (ellipse.periapse()/10));
+        Assert.assertTrue(Math.abs(ellipse.periapse() - b) < (c/5));
     }
 
     @Test
     public void testApoapse() throws Exception {
         MathEllipse ellipse = new MathEllipse(a, b, c);
 
-        System.out.println(ellipse.apoapse() + " " + c);
-        Assert.assertTrue(Math.abs(ellipse.apoapse() - c) < (ellipse.apoapse()/10));
+        Assert.assertTrue(Math.abs(ellipse.apoapse() - c) < (c/5));
     }
 
     @Test
@@ -85,7 +94,7 @@ public class MathEllipseTest {
         double semiMajor = ( b + c ) / 2;
         double res = Math.sqrt(0.6612e-10 * a * (2.0 / b - 1.0 / semiMajor));
 
-        Assert.assertTrue(Math.round(ellipse.speed_p()) == Math.round(res));
+        Assert.assertTrue(Math.abs(ellipse.speed_p() - res) < (res/5));
     }
 
     @Test
@@ -95,6 +104,6 @@ public class MathEllipseTest {
         double semiMajor = ( b + c ) / 2;
         double res = Math.sqrt(0.6612e-10 * a * (2.0 / c - 1.0 / semiMajor));
 
-        Assert.assertTrue(Math.round(ellipse.speed_a()) == Math.round(res));
+        Assert.assertTrue(Math.abs(ellipse.speed_a() - res) < (res/5));
     }
 }

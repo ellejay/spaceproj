@@ -1,5 +1,7 @@
 package solarsystem.math;
 
+import java.security.InvalidParameterException;
+
 /**
  * Class used to keep information about an elliptical orbit around a given mass
  * for mathematical calculations.
@@ -10,7 +12,6 @@ public class MathEllipse {
 
 	private final double mass;
 	private final double semimajorAxis;
-	private final double semiminorAxis;
 	private final double eccentricity;
 	private static double GRAVITATIONAL_C = 0.6612e-10;
 
@@ -24,7 +25,6 @@ public class MathEllipse {
 	public MathEllipse(double mass, double periapse, double apoapse) {
 		this.mass = mass;
 		semimajorAxis = 0.5 * (periapse + apoapse);
-		semiminorAxis = Math.sqrt(periapse + apoapse);
 		eccentricity = Math.abs(apoapse - periapse) / (2 * semimajorAxis);
 	}
 
@@ -37,7 +37,6 @@ public class MathEllipse {
 	{
 		this.mass = mass;
 		semimajorAxis = radius;
-		semiminorAxis = radius;
 
 		// A circle by definition has an eccentricity of 0
 		eccentricity = 0.0;
@@ -59,7 +58,7 @@ public class MathEllipse {
 	 * Return the semi-minor axis of the given ellipse
 	 * @return semi-minor axis in m
      */
-	public double semiMinor() { return semiminorAxis; }
+	public double semiMinor() { return semimajorAxis * Math.sqrt(1 - (eccentricity * eccentricity)); }
 
 	/**
 	 * Return the semi-major axis of the given ellipse
