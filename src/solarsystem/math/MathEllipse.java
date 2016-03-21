@@ -10,6 +10,7 @@ public class MathEllipse {
 
 	private final double mass;
 	private final double semimajorAxis;
+	private final double semiminorAxis;
 	private final double eccentricity;
 	private static double GRAVITATIONAL_C = 0.6612e-10;
 
@@ -23,6 +24,7 @@ public class MathEllipse {
 	public MathEllipse(double mass, double periapse, double apoapse) {
 		this.mass = mass;
 		semimajorAxis = 0.5 * (periapse + apoapse);
+		semiminorAxis = Math.sqrt(periapse + apoapse);
 		eccentricity = Math.abs(apoapse - periapse) / (2 * semimajorAxis);
 	}
 
@@ -35,6 +37,7 @@ public class MathEllipse {
 	{
 		this.mass = mass;
 		semimajorAxis = radius;
+		semiminorAxis = radius;
 
 		// A circle by definition has an eccentricity of 0
 		eccentricity = 0.0;
@@ -47,7 +50,7 @@ public class MathEllipse {
      */
 	public String getEllipseData() {
 		String s;
-		s =  periapse() + " " + apoapse() + " " + period() + " " +  escape();
+		s =  periapse() + " " + apoapse() + " " + period();
 		s += " " + eccentricity + " " + semiMajor() + " " + semiMinor();
 		return s;
 	}
@@ -56,9 +59,7 @@ public class MathEllipse {
 	 * Return the semi-minor axis of the given ellipse
 	 * @return semi-minor axis in m
      */
-	public double semiMinor() {
-		return semimajorAxis * Math.sqrt(1 - (eccentricity * eccentricity));
-	}
+	public double semiMinor() { return semiminorAxis; }
 
 	/**
 	 * Return the semi-major axis of the given ellipse
@@ -90,18 +91,6 @@ public class MathEllipse {
      */
 	public double period() {
 		return 2.0 * Math.PI * Math.sqrt((semimajorAxis * semimajorAxis * semimajorAxis) / (GRAVITATIONAL_C * mass));
-	}
-
-
-	/**
-	 * Return the escape velocity of this orbital ellipse
-	 * @return escape velocity in m/s
-     */
-	private double escape() {
-		return Math.sqrt((2.0 * GRAVITATIONAL_C * mass) / periapse()) - speed_p();
-		// double va = Math.sqrt((2.0 * GRAVITATIONAL_C * mass) / apoapse()) - speed_a();
-		// periapse -- min printf ("At periapse %6.0f, At apoapse %6.0f\n", vp, va);
-		// return vp;
 	}
 
 	/**

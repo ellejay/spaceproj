@@ -5,7 +5,7 @@ package solarsystem.math;
  *
  * @author Laura McGhie
  */
-class Hyper {
+public class Hyper {
 	
 	private final double mass;
 	private final double periapse;
@@ -38,14 +38,6 @@ class Hyper {
      */
 	public double speed_p() {
 		return Math.sqrt(GRAVITATIONAL_C * mass * (2.0 / periapse + 1.0 / semiMajorAxis));
-	}
-
-	/**
-	 * Some other speed
-	 * @return speed in m/s
-     */
-	public double speed_i() {
-		return Math.sqrt((GRAVITATIONAL_C * mass) / semiMajorAxis);
 	}
 
 }

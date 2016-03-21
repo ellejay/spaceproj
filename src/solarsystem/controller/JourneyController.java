@@ -314,7 +314,7 @@ public class JourneyController extends SuperController implements Initializable 
                         if (startOrbit[0] == 0 && startOrbit[1] == 0) {
                             completeJourneyData.append("Surface");
                         } else {
-                            completeJourneyData.append(String.format("%.0fm/%.0fm", startOrbit[0], startOrbit[1]));
+                            completeJourneyData.append(String.format("%.0fkm/%.0fkm", startOrbit[0], startOrbit[1]));
                         }
 
                         // Add information about the end point of this transition to the journey data string
@@ -322,7 +322,7 @@ public class JourneyController extends SuperController implements Initializable 
                         if (endOrbit[0] == 0 && endOrbit[1] == 0) {
                             completeJourneyData.append("Surface");
                         } else {
-                            completeJourneyData.append(String.format("%.0fm/%.0fm", endOrbit[0], endOrbit[1]));
+                            completeJourneyData.append(String.format("%.0fkm/%.0fkm", endOrbit[0], endOrbit[1]));
                         }
 
                         // Add the transition data to the journey data string

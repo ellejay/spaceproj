@@ -27,10 +27,6 @@ public class SolarSystem extends Application {
         stage.setTitle("Space Explorer");
         stage.setScene(new Scene(root));
 
-        // Restrict height of the window
-        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-        stage.setMaxHeight(primaryScreenBounds.getHeight());
-
         // Disable resizing of the window as the program does not handle scales
         stage.setResizable(false);
 
