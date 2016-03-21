@@ -1,7 +1,5 @@
 package solarsystem.math;
 
-import java.security.InvalidParameterException;
-
 /**
  * Class used to keep information about an elliptical orbit around a given mass
  * for mathematical calculations.
